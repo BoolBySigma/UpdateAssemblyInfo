@@ -1,0 +1,49 @@
+{
+    "manifestVersion": 1,
+    "id": "update-assembly-info",
+    "name": "Update Assembly Info",
+    "version": "0.0.1",
+    "publisher": "bool",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "description": "Update assembly info during build",
+    "categories": [
+        "Build and release"
+    ],
+    "tags": [
+        "Assembly", "Info", "Version", "Utility task", "Build", "Continuous Integration"
+    ],
+    "icons": {
+        "default": "icon-128.png",
+        "large": "icon-512.png"
+    },
+    "content": {
+        "details": {
+            "path": "overview.md"
+        }
+    },
+    "files": [
+        {
+            "path": "update-assembly-info-task"
+        },
+        {
+            "path": "images",
+            "addressable": true
+        }
+    ],
+    "contributions": [
+        {
+            "id": "update-assembly-info-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "update-assembly-info-task"
+            }
+        }
+    ]
+}
