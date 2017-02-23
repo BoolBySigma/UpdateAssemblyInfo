@@ -7,8 +7,8 @@
     <ProjectGuid>{216860FF-201E-437F-8686-D846F3BC39D7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bool.PowerShell.TFSTools</RootNamespace>
-    <AssemblyName>Bool.PowerShell.TFSTools</AssemblyName>
+    <RootNamespace>Bool.PowerShell.UpdateAssemblyName</RootNamespace>
+    <AssemblyName>Bool.PowerShell.UpdateAssemblyName</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

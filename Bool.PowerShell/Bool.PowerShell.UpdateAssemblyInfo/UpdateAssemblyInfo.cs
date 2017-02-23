@@ -1,4 +1,4 @@
-﻿namespace Bool.PowerShell.TFSTools
+﻿namespace Bool.PowerShell.UpdateAssemblyName
 {
     using System;
     using System.Collections.Generic;
