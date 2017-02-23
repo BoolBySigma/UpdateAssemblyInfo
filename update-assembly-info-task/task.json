@@ -1,0 +1,32 @@
+{
+    "id": "eac0431e-6ffc-4dc6-be6e-d296e9686ca6",
+    "name": "update-assembly-info",
+    "friendlyName": "Update Assembly Info",
+    "description": "Update assembly info",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "Bool (by Sigma)",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 1
+    },
+    "instanceNameFormat": "Update Assembly: $(assemblyInfoFiles)",
+    "inputs": [
+        {
+            "name": "assemblyInfoFiles",
+            "type": "filePath",
+            "label": "Assembly Info",
+            "defaultValue": "**\\AssemblyInfo.cs",
+            "required": false,
+            "helpMarkDown": "Relative path from repo root of the assembly info file(s). Wildcards can be used. For example, <code>**\\AssemblyInfo.cs</code> for all AssemblyInfo.cs files in all sub folders."
+        }
+    ],
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\update.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
