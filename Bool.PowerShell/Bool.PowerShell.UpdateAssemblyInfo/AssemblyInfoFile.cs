@@ -1,4 +1,4 @@
-﻿namespace Bool.PowerShell.UpdateAssemblyName
+﻿namespace Bool.PowerShell.UpdateAssemblyInfo
 {
     using System;
     using System.Collections.Generic;
