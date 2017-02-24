@@ -18,16 +18,29 @@
             "type": "filePath",
             "label": "Assembly Info",
             "defaultValue": "**\\AssemblyInfo.*",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Relative path from repo root of the assembly info file(s). Wildcards can be used. For example, <code>\\*\\*\\AssemblyInfo.\\*</code> for all AssemblyInfo.* files in all sub folders."
+        },
+        {
+            "name": "descriptionOption",
+            "type": "pickList",
+            "label": "Assembly Description",
+            "defaultValue": "set",
+            "required": false,
+            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration).",
+            "options": {
+                "nochange": "Do Not Change",
+                "set": "Update"
+            }
         },
         {
             "name": "description",
             "type": "string",
             "label": "Assembly Description",
-            "defaultValue": "",
+            "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration)."
+            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration).",
+            "visibleRule": "descriptionOption = set"
         },
         {
             "name": "configuration",
