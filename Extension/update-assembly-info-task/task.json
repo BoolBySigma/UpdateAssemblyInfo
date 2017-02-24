@@ -29,7 +29,7 @@
             "required": false,
             "helpMarkDown": "",
             "options": {
-                "none": "No Update",
+                "none": "Do Not Update",
                 "update": "Update"
             }
         },
@@ -50,7 +50,7 @@
             "required": false,
             "helpMarkDown": "",
             "options": {
-                "none": "No Update",
+                "none": "Do Not Update",
                 "update": "Update"
             }
         },
@@ -71,7 +71,7 @@
             "required": false,
             "helpMarkDown": "",
             "options": {
-                "none": "No Update",
+                "none": "Do Not Update",
                 "update": "Update"
             }
         },
@@ -92,7 +92,7 @@
             "required": false,
             "helpMarkDown": "",
             "options": {
-                "none": "No Update",
+                "none": "Do Not Update",
                 "update": "Update"
             }
         },
@@ -113,7 +113,7 @@
             "required": false,
             "helpMarkDown": "",
             "options": {
-                "none": "No Update",
+                "none": "Do Not Update",
                 "update": "Update"
             }
         },
@@ -121,7 +121,7 @@
             "name": "copyright",
             "type": "string",
             "label": "",
-            "defaultValue": "Copyright © $(company)",
+            "defaultValue": "Copyright © $(company) $(year)",
             "required": false,
             "helpMarkDown": "",
             "visibleRule": "copyrightOption = update"
