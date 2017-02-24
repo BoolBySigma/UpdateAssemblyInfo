@@ -22,6 +22,14 @@
             "helpMarkDown": "Relative path from repo root of the assembly info file(s). Wildcards can be used. For example, <code>\\*\\*\\AssemblyInfo.\\*</code> for all AssemblyInfo.* files in all sub folders."
         },
         {
+            "name": "company",
+            "type": "string",
+            "label": "Assembly Company",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": ""
+        },
+        {
             "name": "configuration",
             "type": "string",
             "label": "Assembly Configuration",
