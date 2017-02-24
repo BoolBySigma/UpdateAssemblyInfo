@@ -19,36 +19,49 @@
             "label": "Assembly Info",
             "defaultValue": "**\\AssemblyInfo.*",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the assembly info file(s). Wildcards can be used. For example, <code>\\*\\*\\AssemblyInfo.\\*</code> for all AssemblyInfo.* files in all sub folders."
+            "helpMarkDown": "Relative path from repo root of the assembly info file(s). Variables and  wildcards can be used. For example, <code>$(Build.SourcesDirectory)</code> or <code>\\*\\*\\AssemblyInfo.\\*</code> for all AssemblyInfo.* files in all sub folders."
         },
         {
             "name": "descriptionOption",
             "type": "pickList",
             "label": "Assembly Description",
-            "defaultValue": "set",
+            "defaultValue": "none",
             "required": false,
-            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration).",
+            "helpMarkDown": "",
             "options": {
-                "nochange": "Do Not Change",
-                "set": "Update"
+                "none": "No Update",
+                "update": "Update"
             }
         },
         {
             "name": "description",
             "type": "string",
-            "label": "Assembly Description",
+            "label": "",
             "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration).",
-            "visibleRule": "descriptionOption = set"
+            "helpMarkDown": "Variables can be used, eg. $(Build.BuildNumber).",
+            "visibleRule": "descriptionOption = update"
+        },
+        {
+            "name": "configurationOption",
+            "type": "pickList",
+            "label": "Assembly Configuration",
+            "defaultValue": "none",
+            "required": false,
+            "helpMarkDown": "",
+            "options": {
+                "none": "No Update",
+                "update": "Update"
+            }
         },
         {
             "name": "configuration",
             "type": "string",
-            "label": "Assembly Configuration",
+            "label": "",
             "defaultValue": "$(BuildConfiguration)",
             "required": false,
-            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration)."
+            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration).",
+            "visibleRule": "configurationOption = update"
         },
         {
             "name": "company",
