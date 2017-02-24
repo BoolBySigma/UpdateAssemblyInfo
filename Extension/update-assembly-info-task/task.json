@@ -30,7 +30,7 @@
         {
             "name": "description",
             "type": "string",
-            "label": "",
+            "label": "Description",
             "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.BuildNumber)."
@@ -38,7 +38,7 @@
         {
             "name": "configuration",
             "type": "string",
-            "label": "",
+            "label": "Configuration",
             "defaultValue": "$(BuildConfiguration)",
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(BuildConfiguration)."
@@ -46,7 +46,7 @@
         {
             "name": "company",
             "type": "string",
-            "label": "",
+            "label": "Company",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used."
@@ -54,7 +54,7 @@
         {
             "name": "product",
             "type": "string",
-            "label": "",
+            "label": "Product",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used"
@@ -62,7 +62,7 @@
         {
             "name": "copyright",
             "type": "string",
-            "label": "",
+            "label": "Copyright",
             "defaultValue": "Copyright © $(Company) $(Year)",
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used. The value provided for \"Company\" can be inserted using variable $(Company). The current year can be inserted using variable $(Year). Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
