@@ -33,7 +33,7 @@
             "label": "Description",
             "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.BuildNumber)."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildNumber)</code>."
         },
         {
             "name": "configuration",
@@ -41,7 +41,7 @@
             "label": "Configuration",
             "defaultValue": "$(BuildConfiguration)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(BuildConfiguration)."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(BuildConfiguration)</code>."
         },
         {
             "name": "company",
@@ -65,7 +65,7 @@
             "label": "Copyright",
             "defaultValue": "Copyright © $(Company) $(Year)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used. The value provided for \"Company\" can be inserted using variable $(Company). The current year can be inserted using variable $(Year). Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used. The value provided for \"Company\" can be inserted using variable <code>$(Company)</code>. The current year can be inserted using variable <code>$(Year)</code>. Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
         },
         {
             "name": "fileVersionMajor",
@@ -73,7 +73,7 @@
             "label": "Major",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.SourceVersion) or $(Build.BuildId).",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.SourceVersion)</code> or <code>$(Build.BuildId)</code>.",
             "groupName": "fileVersion"
         },
         {
@@ -82,7 +82,7 @@
             "label": "Minor",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.SourceVersion) or $(Build.BuildId).",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.SourceVersion)</code> or <code>$(Build.BuildId)</code>.",
             "groupName": "fileVersion"
         },
         {
@@ -91,7 +91,7 @@
             "label": "Build",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.SourceVersion) or $(Build.BuildId).",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.SourceVersion)</code> or <code>$(Build.BuildId)</code>.",
             "groupName": "fileVersion"
         },
         {
@@ -100,7 +100,7 @@
             "label": "Revision",
             "defaultValue": "$(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.SourceVersion) or $(Build.BuildId).",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.SourceVersion)</code> or <code>$(Build.BuildId)</code>.",
             "groupName": "fileVersion"
         }
     ],
