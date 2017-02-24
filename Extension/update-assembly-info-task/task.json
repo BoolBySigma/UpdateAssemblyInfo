@@ -28,37 +28,12 @@
             "helpMarkDown": "Relative path from repo root of the assembly info file(s). Variables and  wildcards can be used. For example, <code>$(Build.SourcesDirectory)</code> or <code>\\*\\*\\AssemblyInfo.\\*</code> for all AssemblyInfo.* files in all sub folders."
         },
         {
-            "name": "descriptionOption",
-            "type": "pickList",
-            "label": "Assembly Description",
-            "defaultValue": "none",
-            "required": false,
-            "helpMarkDown": "",
-            "options": {
-                "none": "Do Not Update",
-                "update": "Update"
-            }
-        },
-        {
             "name": "description",
             "type": "string",
             "label": "",
             "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Variables can be used, eg. $(Build.BuildNumber).",
-            "visibleRule": "descriptionOption = update"
-        },
-        {
-            "name": "configurationOption",
-            "type": "pickList",
-            "label": "Assembly Configuration",
-            "defaultValue": "none",
-            "required": false,
-            "helpMarkDown": "",
-            "options": {
-                "none": "Do Not Update",
-                "update": "Update"
-            }
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.BuildNumber)."
         },
         {
             "name": "configuration",
@@ -66,20 +41,7 @@
             "label": "",
             "defaultValue": "$(BuildConfiguration)",
             "required": false,
-            "helpMarkDown": "Variables can be used, eg. $(BuildConfiguration).",
-            "visibleRule": "configurationOption = update"
-        },
-        {
-            "name": "companyOption",
-            "type": "pickList",
-            "label": "Assembly Company",
-            "defaultValue": "none",
-            "required": false,
-            "helpMarkDown": "",
-            "options": {
-                "none": "Do Not Update",
-                "update": "Update"
-            }
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(BuildConfiguration)."
         },
         {
             "name": "company",
@@ -87,20 +49,7 @@
             "label": "",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Variables can be used.",
-            "visibleRule": "companyOption = update"
-        },
-        {
-            "name": "productOption",
-            "type": "pickList",
-            "label": "Assembly Product",
-            "defaultValue": "none",
-            "required": false,
-            "helpMarkDown": "",
-            "options": {
-                "none": "Do Not Update",
-                "update": "Update"
-            }
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used."
         },
         {
             "name": "product",
@@ -108,20 +57,7 @@
             "label": "",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Variables can be used",
-            "visibleRule": "productOption = update"
-        },
-        {
-            "name": "copyrightOption",
-            "type": "pickList",
-            "label": "Assembly Copyright",
-            "defaultValue": "none",
-            "required": false,
-            "helpMarkDown": "",
-            "options": {
-                "none": "Do Not Update",
-                "update": "Update"
-            }
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used"
         },
         {
             "name": "copyright",
@@ -129,8 +65,7 @@
             "label": "",
             "defaultValue": "Copyright © $(Company) $(Year)",
             "required": false,
-            "helpMarkDown": "Variables can be used. The value provided for \"Company\" can be inserted using variable $(Company). The current year can be inserted using variable $(Year). Used togeather this could produce \"Copyright © YourCompanyName 2017\".",
-            "visibleRule": "copyrightOption = update"
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used. The value provided for \"Company\" can be inserted using variable $(Company). The current year can be inserted using variable $(Year). Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
         },
         {
             "name": "fileVersionMajor",
