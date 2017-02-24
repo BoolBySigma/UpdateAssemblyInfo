@@ -81,7 +81,7 @@
             "label": "",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "",
+            "helpMarkDown": "Variables can be used.",
             "visibleRule": "companyOption = update"
         },
         {
@@ -102,7 +102,7 @@
             "label": "",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "",
+            "helpMarkDown": "Variables can be used",
             "visibleRule": "productOption = update"
         },
         {
@@ -121,9 +121,9 @@
             "name": "copyright",
             "type": "string",
             "label": "",
-            "defaultValue": "Copyright © $(company) $(year)",
+            "defaultValue": "Copyright © $(Company) $(Year)",
             "required": false,
-            "helpMarkDown": "",
+            "helpMarkDown": "Variables can be used. The value provided for \"Company\" can be inserted using variable $(Company). The current year can be inserted using variable $(Year).",
             "visibleRule": "copyrightOption = update"
         }
     ],
