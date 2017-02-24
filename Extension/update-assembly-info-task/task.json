@@ -20,6 +20,14 @@
             "defaultValue": "**\\AssemblyInfo.*",
             "required": false,
             "helpMarkDown": "Relative path from repo root of the assembly info file(s). Wildcards can be used. For example, <code>\\*\\*\\AssemblyInfo.\\*</code> for all AssemblyInfo.* files in all sub folders."
+        },
+        {
+            "name": "configuration",
+            "type": "string",
+            "label": "Assembly Configuration",
+            "defaultValue": "$(BuildConfiguration)",
+            "required": false,
+            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration)."
         }
     ],
     "execution": {
