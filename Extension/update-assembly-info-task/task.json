@@ -60,7 +60,7 @@
             "label": "",
             "defaultValue": "$(BuildConfiguration)",
             "required": false,
-            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration).",
+            "helpMarkDown": "Variables can be used, eg. $(BuildConfiguration).",
             "visibleRule": "configurationOption = update"
         },
         {
