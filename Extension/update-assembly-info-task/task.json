@@ -104,6 +104,27 @@
             "required": false,
             "helpMarkDown": "",
             "visibleRule": "productOption = update"
+        },
+        {
+            "name": "copyrightOption",
+            "type": "pickList",
+            "label": "Assembly Copyright",
+            "defaultValue": "none",
+            "required": false,
+            "helpMarkDown": "",
+            "options": {
+                "none": "No Update",
+                "update": "Update"
+            }
+        },
+        {
+            "name": "copyright",
+            "type": "string",
+            "label": "",
+            "defaultValue": "Copyright © $(company)",
+            "required": false,
+            "helpMarkDown": "",
+            "visibleRule": "copyrightOption = update"
         }
     ],
     "execution": {
