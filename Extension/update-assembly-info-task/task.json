@@ -64,20 +64,46 @@
             "visibleRule": "configurationOption = update"
         },
         {
+            "name": "companyOption",
+            "type": "pickList",
+            "label": "Assembly Company",
+            "defaultValue": "none",
+            "required": false,
+            "helpMarkDown": "",
+            "options": {
+                "none": "No Update",
+                "update": "Update"
+            }
+        },
+        {
             "name": "company",
             "type": "string",
-            "label": "Assembly Company",
+            "label": "",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": ""
+            "helpMarkDown": "",
+            "visibleRule": "companyOption = update"
+        },
+        {
+            "name": "productOption",
+            "type": "pickList",
+            "label": "Assembly Product",
+            "defaultValue": "none",
+            "required": false,
+            "helpMarkDown": "",
+            "options": {
+                "none": "No Update",
+                "update": "Update"
+            }
         },
         {
             "name": "product",
             "type": "string",
-            "label": "Assembly Product",
+            "label": "",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": ""
+            "helpMarkDown": "",
+            "visibleRule": "productOption = update"
         }
     ],
     "execution": {
