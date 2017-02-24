@@ -19,7 +19,7 @@
             "label": "Assembly Info",
             "defaultValue": "**\\AssemblyInfo.*",
             "required": false,
-            "helpMarkDown": "Relative path from repo root of the assembly info file(s). Wildcards can be used. For example, **\\AssemblyInfo.* for all AssemblyInfo.* files in all sub folders."
+            "helpMarkDown": "Relative path from repo root of the assembly info file(s). Wildcards can be used. For example, <code>\\**\\AssemblyInfo.\\*</code> for all AssemblyInfo.* files in all sub folders."
         }
     ],
     "execution": {
