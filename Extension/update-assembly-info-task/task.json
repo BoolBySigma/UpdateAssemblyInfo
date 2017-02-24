@@ -138,7 +138,7 @@
             "label": "Major",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Variables can be used, eg. $(Build.BuildId).",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.SourceVersion) or $(Build.BuildId).",
             "groupName": "fileVersion"
         },
         {
@@ -147,7 +147,7 @@
             "label": "Minor",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Variables can be used, eg. $(Build.BuildId).",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.SourceVersion) or $(Build.BuildId).",
             "groupName": "fileVersion"
         },
         {
@@ -156,16 +156,16 @@
             "label": "Build",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Variables can be used, eg. $(Build.BuildId).",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.SourceVersion) or $(Build.BuildId).",
             "groupName": "fileVersion"
         },
         {
             "name": "fileVersionRevision",
             "type": "string",
             "label": "Revision",
-            "defaultValue": "",
+            "defaultValue": "$(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Variables can be used, eg. $(Build.BuildId).",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. $(Build.SourceVersion) or $(Build.BuildId).",
             "groupName": "fileVersion"
         }
     ],
