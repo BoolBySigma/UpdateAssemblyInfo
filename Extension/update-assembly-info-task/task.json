@@ -22,12 +22,12 @@
             "helpMarkDown": "Relative path from repo root of the assembly info file(s). Wildcards can be used. For example, <code>\\*\\*\\AssemblyInfo.\\*</code> for all AssemblyInfo.* files in all sub folders."
         },
         {
-            "name": "company",
+            "name": "description",
             "type": "string",
-            "label": "Assembly Company",
+            "label": "Assembly Description",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": ""
+            "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration)."
         },
         {
             "name": "configuration",
@@ -36,6 +36,22 @@
             "defaultValue": "$(BuildConfiguration)",
             "required": false,
             "helpMarkDown": "Configuration used during build. Variables can be used, eg. $(BuildConfiguration)."
+        },
+        {
+            "name": "company",
+            "type": "string",
+            "label": "Assembly Company",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": ""
+        },
+        {
+            "name": "product",
+            "type": "string",
+            "label": "Assembly Product",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": ""
         }
     ],
     "execution": {
