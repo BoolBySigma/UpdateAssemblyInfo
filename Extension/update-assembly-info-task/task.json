@@ -33,7 +33,7 @@
             "label": "Description",
             "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildNumber)</code>."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildNumber)</code> or <code>$(Build.SourceVersion)</code>."
         },
         {
             "name": "configuration",
