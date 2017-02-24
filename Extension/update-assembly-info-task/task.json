@@ -73,7 +73,7 @@
             "label": "Major",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.SourceVersion)</code> or <code>$(Build.BuildId)</code>.",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>.",
             "groupName": "fileVersion"
         },
         {
@@ -82,7 +82,7 @@
             "label": "Minor",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.SourceVersion)</code> or <code>$(Build.BuildId)</code>.",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>.",
             "groupName": "fileVersion"
         },
         {
@@ -91,16 +91,16 @@
             "label": "Build",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.SourceVersion)</code> or <code>$(Build.BuildId)</code>.",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>.",
             "groupName": "fileVersion"
         },
         {
             "name": "fileVersionRevision",
             "type": "string",
             "label": "Revision",
-            "defaultValue": "$(Build.SourceVersion)",
+            "defaultValue": "$(Build.BuildId)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.SourceVersion)</code> or <code>$(Build.BuildId)</code>.",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>.",
             "groupName": "fileVersion"
         }
     ],
