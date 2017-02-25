@@ -150,9 +150,9 @@ Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateA
 $files = @()
 
 if (Test-Path -LiteralPath $assemblyInfoFiles) {
-	$files += (Resolve-Path $assemblyInfoFiles).Path
+	$files += ((Resolve-Path $assemblyInfoFiles).Path -like "*\AssemblyInfo.*")
 } else {
-	$files = Get-ChildItem $assemblyInfoFiles -Recurse | % {$_.FullName}
+	$files = Get-ChildItem $assemblyInfoFiles -Recurse -Filter "*\AssemblyInfo.*" | % {$_.FullName}
 }
 
 if ($files) {
