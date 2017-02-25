@@ -57,7 +57,7 @@ try {
 		$fileVersionMajor = "`$(current)"
 	} else {
 		if (!(Is-Numeric($fileVersionMajor))) {
-			throw "File Version Major must be numeric value"
+			Write-VstsTaskError "Invalid value for File Version Major. `"$fileVersionMajor`" is not a numerical value."
 		}
 	}
 
@@ -66,7 +66,7 @@ try {
 		$fileVersionMinor = "`$(current)"
 	} else {
 		if (!(Is-Numeric($fileVersionMinor))) {
-			throw "File Version Minor must be numeric value"
+			Write-VstsTaskError "Invalid value for File Version Minor. `"$fileVersionMinor`" is not a numerical value."
 		}
 	}
 
@@ -75,7 +75,7 @@ try {
 		$fileVersionBuild = "`$(current)"
 	} else {
 		if (!(Is-Numeric($fileVersionBuild))) {
-			throw "File Version Build must be numeric value"
+			Write-VstsTaskError "Invalid value for File Version Build. `"$fileVersionBuild`" is not a numerical value."
 		}
 	}
 
@@ -84,7 +84,7 @@ try {
 		$fileVersionRevision = "`$(current)"
 	} else {
 		if (!(Is-Numeric($fileVersionRevision))) {
-			throw "File Version Revision must be numeric value"
+			Write-VstsTaskError "Invalid value for File Version Revision. `"$fileVersionRevision`" is not a numerical value."
 		}
 	}
 
