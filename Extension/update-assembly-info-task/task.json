@@ -110,7 +110,7 @@
             "label": "Informational Version",
             "defaultValue": "$(Assembly.FileVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used.<br/>Task-specific variables:<br/>* <code>$(Assembly.FileVersion)</code>: The assembly file version value.<br/>* <code>$(Assembly.Company)</code>: The value provided for Company. Requires Company to be specified.<br/>* <code>$(Year)</code>: Provides the current year.<br/>"
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used.<br/>Task-specific variables:<br/><ul><li><code>$(Assembly.FileVersion)</code>: The assembly file version value.</li><li><code>$(Assembly.Company)</code>: The value provided for Company. Requires Company to be specified.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>"
         }
     ],
     "execution": {
