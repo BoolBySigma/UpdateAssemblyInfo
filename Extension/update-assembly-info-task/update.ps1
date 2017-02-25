@@ -113,25 +113,17 @@ try {
 	$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionRevision)", $fileVersionRevision)
 	$informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
 
-
-	$parameters = @()
-
-	$parameters += New-Object PSObject -property @{Parameter="Description"; Value=$description}
-
-	$parameters | format-table -property Parameter, Value
-
-
-
-
 	# Print parameters
-	Write-Output "Description`t`t: $description"
-	Write-Output "Configuration`t`t: $configuration"
-	Write-Output "Company`t`t`t: $company"
-	Write-Output "Product`t`t`t: $product"
-	Write-Output "Copyright`t`t: $copyright"
-	Write-Output "Trademark`t`t: $trademark"
-	Write-Output "File Version`t`t: $fileVersion"
-	Write-Output "Informational Version`t: $informationalVersionDisplay"
+	$parameters = @()
+	$parameters += New-Object PSObject -Property @{Parameter="Description"; Value=$description}
+	$parameters += New-Object PSObject -Property @{Parameter="Configuration"; Value=$configuration}
+	$parameters += New-Object PSObject -Property @{Parameter="Company"; Value=$company}
+	$parameters += New-Object PSObject -Property @{Parameter="Product"; Value=$product}
+	$parameters += New-Object PSObject -Property @{Parameter="Copyright"; Value=$copyright}
+	$parameters += New-Object PSObject -Property @{Parameter="Trademark"; Value=$trademark}
+	$parameters += New-Object PSObject -Property @{Parameter="File Version"; Value=$fileVersion}
+	$parameters += New-Object PSObject -Property @{Parameter="Informational Version"; Value=$informationalVersionDisplay}
+	$parameters | format-table -property Parameter, Value
 
 	Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll")
 
