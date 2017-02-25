@@ -136,19 +136,6 @@ $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionRe
 $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
 
 # Print parameters
-$parameters = @()
-$parameters += New-Object PSObject -Property @{Parameter="Description"; Value=$description}
-$parameters += New-Object PSObject -Property @{Parameter="Configuration"; Value=$configuration}
-$parameters += New-Object PSObject -Property @{Parameter="Company"; Value=$company}
-$parameters += New-Object PSObject -Property @{Parameter="Product"; Value=$product}
-$parameters += New-Object PSObject -Property @{Parameter="Copyright"; Value=$copyright}
-$parameters += New-Object PSObject -Property @{Parameter="Trademark"; Value=$trademark}
-$parameters += New-Object PSObject -Property @{Parameter="File Version"; Value=$fileVersion}
-$parameters += New-Object PSObject -Property @{Parameter="Informational Version"; Value=$informationalVersionDisplay}
-
-$parameters | format-table -property Parameter, Value
-
-
 Write-Output "Description`t`t: $description"
 Write-Output "Configuration`t`t: $configuration"
 Write-Output "Company`t`t`t: $company"
@@ -169,11 +156,10 @@ if (Test-Path -LiteralPath $assemblyInfoFiles) {
 }
 
 if ($files) {
-Write-Output $files.count
-Write-Output $files
-
-Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion
-
+	Write-Output "Updating:"
+	Write-Output $files
+	
+	Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion
 } else {
-
+	Write-Output "Found no AssemblyInfo.* files to update"
 }
