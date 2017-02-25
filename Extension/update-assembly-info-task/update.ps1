@@ -152,7 +152,7 @@ $files = @()
 if (Test-Path -LiteralPath $assemblyInfoFiles) {
 	$files += ((Resolve-Path $assemblyInfoFiles).Path -like "*\AssemblyInfo.*")
 } else {
-	$files = Get-ChildItem $assemblyInfoFiles -Recurse -Filter "*\AssemblyInfo.*" | % {$_.FullName}
+	$files = Get-ChildItem $assemblyInfoFiles -Recurse | % {$_.FullName} | Where-Object {$_ -like "*\AssemblyInfo.*"}
 }
 
 if ($files) {
