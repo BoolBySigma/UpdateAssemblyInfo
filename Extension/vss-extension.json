@@ -9,7 +9,7 @@
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
-    "description": "Update assembly info during build",
+    "description": "Update assembly info of one or multiple projects during build",
     "categories": [
         "Build and release"
     ],
