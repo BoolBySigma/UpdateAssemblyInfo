@@ -117,6 +117,10 @@ $copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
 
 # Format informational version
 $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
+$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionMajor)", $fileVersionMajor)
+$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionMinor)", $fileVersionMinor)
+$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionBuild)", $fileVersionBuild)
+$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionRevision)", $fileVersionRevision)
 $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
 
 # Print parameters
