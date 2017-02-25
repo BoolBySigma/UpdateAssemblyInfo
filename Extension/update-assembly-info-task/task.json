@@ -108,7 +108,7 @@
             "name": "informationalVersion",
             "type": "string",
             "label": "Informational Version",
-            "defaultValue": "$(Assembly.Configuration) $(Assembly.FileVersion)",
+            "defaultValue": "$(Assembly.FileVersion)",
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>."
         }
