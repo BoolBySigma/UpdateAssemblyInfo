@@ -110,7 +110,7 @@
             "label": "Informational Version",
             "defaultValue": "$(Assembly.FileVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, inlcuding these task-specific variables:<ul><li><code>$(Assembly.FileVersion)</code>: The assembly file version value.</ul>"
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, inlcuding these task-specific variables:<ul><li><code>$(Assembly.FileVersion)</code>: The assembly file version value.</li><li><code>$(Assembly.FileVersionMajor)</code>: The assembly file version major value.</li><li><code>$(Assembly.FileVersionMinor)</code>: The assembly file version minor value.</li><li><code>$(Assembly.FileVersionBuild)</code>: The assembly file version build value.</li><li><code>$(Assembly.FileVersionRevision)</code>: The assembly file version revision value.</li></ul>"
         }
     ],
     "execution": {
