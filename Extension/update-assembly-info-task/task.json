@@ -66,7 +66,7 @@
             "label": "Copyright",
             "defaultValue": "Copyright © $(Assembly.Company) $(Year)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company. Requires Company to be specified.</li><li><code>$(Year)</code>: Provides the current year.</li></ul><br/>Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company. Requires Company to be specified.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
         },
         {
             "name": "fileVersionMajor",
