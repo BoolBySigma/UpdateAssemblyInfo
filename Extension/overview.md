@@ -1,5 +1,5 @@
 # Update Assembly Info
-Fetch build artifacts from any project and build definition.
+Update assembly info of one or multiple projects during build.
 
 ## Usage
 Add a new **Update Assembly Info** task from the **Utility** category...
