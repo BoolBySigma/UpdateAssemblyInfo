@@ -117,8 +117,6 @@ Write-Output "File Version`t: $fileVersion"
 
 Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll") -Verbose
 
-#Set-Location $Env:BUILD_SOURCESDIRECTORY
-
 $files = @()
 
 if (Test-Path -LiteralPath $assemblyInfoFiles) {
@@ -131,7 +129,7 @@ if ($files) {
 Write-Output $files.count
 Write-Output $files
 
-#Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyFileVersion $fileVersion
+Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyFileVersion $fileVersion
 
 } else {
 
