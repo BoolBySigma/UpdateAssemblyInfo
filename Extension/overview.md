@@ -10,8 +10,11 @@ Add a new **Update Assembly Info** task from the **Utility** category...
 
 ![Parameters](images/screenshot.png)
 Parameters include:
-* **Assembly Info**: Relative path from repo root of the assembly info file(s). Variables can be used, eg. `$(Build.SourcesDirectory)`. You can also use wildcards, eg. `\\*\\*\\AssemblyInfo.\\*` for all AssemblyInfo.* files in all sub folders.
-* **Description**: 
+* **Assembly Info**: Relative path from repo root of the assembly info file(s). Variables can be used, eg. `$(Build.SourcesDirectory)`. You can also use wildcards, eg. `**\AssemblyInfo.*` for all AssemblyInfo.* files in all sub folders.
+* **Description**: Left blank, the value is not updated. Variables can be used including these task-specific variables:
+    * `$(Assembly.Company)`: The value provided for Company.
+    * `$(Assembly.Product)`: The value provided for Product.
+    * `$(Year)`: Provides the current year.
 * **Configuration**:
 * **Company**:
 * **Product**:
