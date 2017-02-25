@@ -34,7 +34,7 @@
             "label": "Description",
             "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildNumber)</code> or <code>$(Build.SourceVersion)</code>."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>."
         },
         {
             "name": "configuration",
@@ -66,7 +66,7 @@
             "label": "Copyright",
             "defaultValue": "Copyright © $(Assembly.Company) $(Year)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company. Requires Company to be specified.</li><li><code>$(Assembly.Product)</code>: The value provided for Product. Requires Product to be specified.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
         },
         {
             "name": "fileVersionMajor",
@@ -110,7 +110,7 @@
             "label": "Informational Version",
             "defaultValue": "$(Assembly.FileVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, inlcuding these task-specific variables:<ul><li><code>$(Assembly.FileVersion)</code>: The assembly file version value.</li><li><code>$(Assembly.Company)</code>: The value provided for Company. Requires Company to be specified.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>"
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, inlcuding these task-specific variables:<ul><li><code>$(Assembly.FileVersion)</code>: The assembly file version value.</ul>"
         }
     ],
     "execution": {

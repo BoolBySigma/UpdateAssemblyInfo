@@ -106,31 +106,21 @@ if ([string]::IsNullOrEmpty($fileVersionRevision)) {
 $fileVersion = "$fileVersionMajor.$fileVersionMinor.$fileVersionBuild.$fileVersionRevision"
 
 # Format description
-if ($description.Contains("`$(Assembly.Company)")) {
-	$description = $description.Replace("`$(Assembly.Company)", $company)
-}
-if ($description.Contains("`$(Assembly.FileVersion)")) {
-	$description = $description.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
-}
-$descriptionDisplay = $description.Replace("`$(fileversion)", $fileVersion)
+$description = $description.Replace("`$(Assembly.Company)", $company)
+$description = $description.Replace("`$(Assembly.Product)", $product)
+$description = $description.Replace("`$(Year)", (Get-Date).Year)
 
 # Format copyright
-if ($copyright.Contains("`$(Assembly.Company)")) {
-	$copyright = $copyright.Replace("`$(Assembly.Company)", $company)
-}
-if ($copyright.Contains("`$(Assembly.Product)")) {
-	$copyright = $copyright.Replace("`$(Assembly.Product)", $product)
-}
+$copyright = $copyright.Replace("`$(Assembly.Company)", $company)
+$copyright = $copyright.Replace("`$(Assembly.Product)", $product)
 $copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
 
 # Format informational version
-if ($informationalVersion.Contains("`$(Assembly.FileVersion)")) {
-	$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
-}
+$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
 $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
 
 # Print parameters
-Write-Output "Description`t`t: $descriptionDisplay"
+Write-Output "Description`t`t: $description"
 Write-Output "Configuration`t`t: $configuration"
 Write-Output "Company`t`t`t: $company"
 Write-Output "Product`t`t`t: $product"
