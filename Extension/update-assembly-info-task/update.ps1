@@ -136,6 +136,19 @@ $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionRe
 $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
 
 # Print parameters
+$parameters = @()
+$parameters += New-Object PSObject -Property @{Parameter="Description"; Value=$description}
+$parameters += New-Object PSObject -Property @{Parameter="Configuration"; Value=$configuration}
+$parameters += New-Object PSObject -Property @{Parameter="Company"; Value=$company}
+$parameters += New-Object PSObject -Property @{Parameter="Product"; Value=$product}
+$parameters += New-Object PSObject -Property @{Parameter="Copyright"; Value=$copyright}
+$parameters += New-Object PSObject -Property @{Parameter="Trademark"; Value=$trademark}
+$parameters += New-Object PSObject -Property @{Parameter="File Version"; Value=$fileVersion}
+$parameters += New-Object PSObject -Property @{Parameter="Informational Version"; Value=$informationalVersionDisplay}
+
+$parameters | format-table -property Parameter, Value
+
+
 Write-Output "Description`t`t: $description"
 Write-Output "Configuration`t`t: $configuration"
 Write-Output "Company`t`t`t: $company"
