@@ -113,6 +113,16 @@ try {
 	$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionRevision)", $fileVersionRevision)
 	$informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
 
+
+	$parameters = @()
+
+	$parameters += New-Object PSObject -Paramter @{Parameter=Description; Value=$description}
+
+	$parameters | format-table -property Parameter, Value
+
+
+
+
 	# Print parameters
 	Write-Output "Description`t`t: $description"
 	Write-Output "Configuration`t`t: $configuration"
