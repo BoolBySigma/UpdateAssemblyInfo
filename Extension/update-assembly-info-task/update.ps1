@@ -125,12 +125,12 @@ if ($informationalVersion.Contains("`$(Assembly.FileVersion)")) {
 	$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
 }
 
-Write-Output "Description`t: $description"
-Write-Output "Configuration`t: $configuration"
-Write-Output "Company`t`t: $company"
-Write-Output "Product`t`t: $product"
-Write-Output "Copyright`t: $copyright"
-Write-Output "File Version`t: $fileVersion"
+Write-Output "Description`t`t: $description"
+Write-Output "Configuration`t`t: $configuration"
+Write-Output "Company`t`t`t: $company"
+Write-Output "Product`t`t`t: $product"
+Write-Output "Copyright`t`t`t: $copyright"
+Write-Output "File Version`t`t: $fileVersion"
 Write-Output "Informational Version`t: $informationalVersion"
 
 Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll") -Verbose
