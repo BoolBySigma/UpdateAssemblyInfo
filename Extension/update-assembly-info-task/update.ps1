@@ -21,6 +21,9 @@ param(
 	$copyright,
 
 	[string]
+	$trademark,
+
+	[string]
 	$fileVersionMajor,
 
 	[string]
@@ -64,6 +67,11 @@ if ([string]::IsNullOrEmpty($product)) {
 # Validate copyright
 if ([string]::IsNullOrEmpty($copyright)) {
 	$copyright = $null
+}
+
+# Validate trademark
+if ([string]::IsNullOrEmpty($trademark)) {
+	$trademark = $null
 }
 
 # Validate fileVersionMajor
@@ -115,6 +123,10 @@ $copyright = $copyright.Replace("`$(Assembly.Company)", $company)
 $copyright = $copyright.Replace("`$(Assembly.Product)", $product)
 $copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
 
+# Format trademark
+$trademark = $trademark.Replace("`$(Assembly.Company)", $company)
+$trademark = $trademark.Replace("`$(Assembly.Product)", $product)
+
 # Format informational version
 $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
 $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionMajor)", $fileVersionMajor)
@@ -129,6 +141,7 @@ Write-Output "Configuration`t`t: $configuration"
 Write-Output "Company`t`t`t: $company"
 Write-Output "Product`t`t`t: $product"
 Write-Output "Copyright`t`t: $copyright"
+Write-Output "Trademark`t`t: $trademark"
 Write-Output "File Version`t`t: $fileVersion"
 Write-Output "Informational Version`t: $informationalVersionDisplay"
 
