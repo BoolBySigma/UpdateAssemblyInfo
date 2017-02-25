@@ -66,7 +66,7 @@
             "label": "Copyright",
             "defaultValue": "Copyright © $(Assembly.Company) $(Year)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<br/><code>$(Assembly.Company)</code>: The value provided for Company. Requires Company to be specified.<br/><code>$(Year)</code>: Provides the current year.<br/>Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used.<br/>Task-specific variables:<br/><code>$(Assembly.Company)</code>: The value provided for Company. Requires Company to be specified.<br/><code>$(Year)</code>: Provides the current year.<br/>Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
         },
         {
             "name": "fileVersionMajor",
@@ -110,7 +110,7 @@
             "label": "Informational Version",
             "defaultValue": "$(Assembly.FileVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used.<br/>Task-specific variables:<br/>* <code>$(Assembly.FileVersion)</code>: The assembly file version value.<br/>* <code>$(Assembly.Company)</code>: The value provided for Company. Requires Company to be specified.<br/>* <code>$(Year)</code>: Provides the current year.<br/>"
         }
     ],
     "execution": {
