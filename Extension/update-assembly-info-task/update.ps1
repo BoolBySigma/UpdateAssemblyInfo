@@ -30,7 +30,10 @@ param(
 	$fileVersionBuild,
 
 	[string]
-	$fileVersionRevision
+	$fileVersionRevision,
+
+	[string]
+	$informationalVersion
 )
 
 function Is-Numeric ($value)
@@ -62,13 +65,6 @@ if ([string]::IsNullOrEmpty($product)) {
 if ([string]::IsNullOrEmpty($copyright)) {
 	$copyright = $null
 }
-if ($copyright.Contains("`$(Company)")) {
-	if ([string]::IsNullOrEmpty($company)) {
-		throw "When using variable `$(Company), Company must be set"
-	}
-	$copyright = $copyright.Replace("`$(Company)", $company)
-}
-$copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
 
 # Validate fileVersionMajor
 if ([string]::IsNullOrEmpty($fileVersionMajor)) {
@@ -106,7 +102,28 @@ if ([string]::IsNullOrEmpty($fileVersionRevision)) {
 	}
 }
 
+# Format copyright
+if ($copyright.Contains("`$(Assembly.Company)")) {
+	if ([string]::IsNullOrEmpty($company)) {
+		throw "When using variable `$(Assembly.Company), Company must be set"
+	}
+	$copyright = $copyright.Replace("`$(Assembly.Company)", $company)
+}
+$copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
+
+# Format file version
 $fileVersion = "$fileVersionMajor.$fileVersionMinor.$fileVersionBuild.$fileVersionRevision"
+
+# Format informational version
+if ($informationalVersion.Contains("`$(Assembly.Configuration)")) {
+	if ([string]::IsNullOrEmpty($company)) {
+		throw "When using variable `$(Assembly.Configuration), Configuration must be set"
+	}
+	$informationalVersion = $informationalVersion.Replace("`$(Assembly.Configuration)", $configuration)
+}
+if ($informationalVersion.Contains("`$(Assembly.FileVersion)")) {
+	$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
+}
 
 Write-Output "Description`t: $description"
 Write-Output "Configuration`t: $configuration"
@@ -114,6 +131,7 @@ Write-Output "Company`t`t: $company"
 Write-Output "Product`t`t: $product"
 Write-Output "Copyright`t: $copyright"
 Write-Output "File Version`t: $fileVersion"
+Write-Output "Informational Version`t: $informationalVersion"
 
 Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll") -Verbose
 
@@ -129,7 +147,7 @@ if ($files) {
 Write-Output $files.count
 Write-Output $files
 
-Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyFileVersion $fileVersion
+Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion
 
 } else {
 
