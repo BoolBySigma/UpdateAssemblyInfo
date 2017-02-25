@@ -11,7 +11,8 @@
         "Minor": 0,
         "Patch": 1
     },
-    "instanceNameFormat": "Update Assembly: $(assemblyInfoFiles)","groups": [
+    "instanceNameFormat": "Update Assembly: $(assemblyInfoFiles)",
+    "groups": [
         {
             "name": "fileVersion",
             "displayName": "File Version",
@@ -63,7 +64,7 @@
             "name": "copyright",
             "type": "string",
             "label": "Copyright",
-            "defaultValue": "Copyright © $(Company) $(Year)",
+            "defaultValue": "Copyright © $(Assembly.Company) $(Year)",
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used. The value provided for \"Company\" can be inserted using variable <code>$(Company)</code>. The current year can be inserted using variable <code>$(Year)</code>. Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
         },
@@ -102,6 +103,14 @@
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>.",
             "groupName": "fileVersion"
+        },
+        {
+            "name": "informationalVersion",
+            "type": "string",
+            "label": "Informational Version",
+            "defaultValue": "$(Build.BuildId)",
+            "required": false,
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>."
         }
     ],
     "execution": {

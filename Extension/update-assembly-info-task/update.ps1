@@ -33,9 +33,9 @@ param(
 	$fileVersionRevision
 )
 
-function Is-Numeric ($Value)
+function Is-Numeric ($value)
 {
-    return $Value -match "^[\d\.]+$"
+    return $value -match "^[\d\.]+$"
 }
 
 # Validate description
