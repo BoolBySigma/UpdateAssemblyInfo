@@ -116,7 +116,7 @@ try {
 
 	$parameters = @()
 
-	$parameters += New-Object PSObject -Paramter @{Parameter=Description; Value=$description}
+	$parameters += New-Object PSObject -property @{Parameter=Description; Value=$description}
 
 	$parameters | format-table -property Parameter, Value
 
