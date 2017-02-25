@@ -145,7 +145,7 @@ Write-Output "Trademark`t`t: $trademark"
 Write-Output "File Version`t`t: $fileVersion"
 Write-Output "Informational Version`t: $informationalVersionDisplay"
 
-Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll") -Verbose
+Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll")
 
 $files = @()
 

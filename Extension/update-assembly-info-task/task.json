@@ -2,7 +2,7 @@
     "id": "406f4a5c-0823-4881-87cd-008b5aa90bc5",
     "name": "update-assembly-info",
     "friendlyName": "Update Assembly Info",
-    "description": "Update assembly info",
+    "description": "Update assembly info of one or multiple projects",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Bool (by Sigma)",
