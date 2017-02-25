@@ -34,7 +34,7 @@
             "label": "Description",
             "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>"
         },
         {
             "name": "configuration",
