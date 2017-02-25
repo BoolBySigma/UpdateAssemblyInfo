@@ -164,5 +164,5 @@ if ($files) {
 	
 	Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion
 } else {
-	Write-Output "Found no AssemblyInfo.* files to update"
+	throw "AssemblyInfo.* file not found using search pattern \"$assemblyInfoFiles\"."
 }
