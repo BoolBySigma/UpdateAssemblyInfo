@@ -102,32 +102,35 @@ if ([string]::IsNullOrEmpty($fileVersionRevision)) {
 	}
 }
 
-# Format copyright
-if ($copyright.Contains("`$(Assembly.Company)")) {
-	if ([string]::IsNullOrEmpty($company)) {
-		throw "When using variable `$(Assembly.Company), Company must be set"
-	}
-	$copyright = $copyright.Replace("`$(Assembly.Company)", $company)
-}
-$copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
-
 # Format file version
 $fileVersion = "$fileVersionMajor.$fileVersionMinor.$fileVersionBuild.$fileVersionRevision"
 
-# Format informational version
-if ($informationalVersion.Contains("`$(Assembly.Configuration)")) {
-	if ([string]::IsNullOrEmpty($company)) {
-		throw "When using variable `$(Assembly.Configuration), Configuration must be set"
-	}
-	$informationalVersion = $informationalVersion.Replace("`$(Assembly.Configuration)", $configuration)
+# Format description
+if ($description.Contains("`$(Assembly.Company)")) {
+	$description = $description.Replace("`$(Assembly.Company)", $company)
 }
+if ($description.Contains("`$(Assembly.FileVersion)")) {
+	$description = $description.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
+}
+$descriptionDisplay = $description.Replace("`$(fileversion)", $fileVersion)
+
+# Format copyright
+if ($copyright.Contains("`$(Assembly.Company)")) {
+	$copyright = $copyright.Replace("`$(Assembly.Company)", $company)
+}
+if ($copyright.Contains("`$(Assembly.Product)")) {
+	$copyright = $copyright.Replace("`$(Assembly.Product)", $product)
+}
+$copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
+
+# Format informational version
 if ($informationalVersion.Contains("`$(Assembly.FileVersion)")) {
 	$informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
 }
-
 $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
 
-Write-Output "Description`t`t: $description"
+# Print parameters
+Write-Output "Description`t`t: $descriptionDisplay"
 Write-Output "Configuration`t`t: $configuration"
 Write-Output "Company`t`t`t: $company"
 Write-Output "Product`t`t`t: $product"
