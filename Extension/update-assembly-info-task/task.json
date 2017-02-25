@@ -122,7 +122,7 @@
         }
     ],
     "execution": {
-        "PowerShell": {
+        "PowerShell3": {
             "target": "$(currentDirectory)\\update.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
