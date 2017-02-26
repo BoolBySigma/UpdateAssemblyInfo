@@ -57,7 +57,7 @@ try {
 		$fileVersionMajor = "`$(current)"
 	} else {
 		if (!(Is-Numeric($fileVersionMajor))) {
-			Write-VstsTaskError "Invalid value for File Version Major. `"$fileVersionMajor`" is not a numerical value."
+			Write-VstsTaskError "Invalid value for File Version Major. `'$fileVersionMajor`' is not a numerical value."
 		}
 	}
 
@@ -66,7 +66,7 @@ try {
 		$fileVersionMinor = "`$(current)"
 	} else {
 		if (!(Is-Numeric($fileVersionMinor))) {
-			Write-VstsTaskError "Invalid value for File Version Minor. `"$fileVersionMinor`" is not a numerical value."
+			Write-VstsTaskError "Invalid value for File Version Minor. `'$fileVersionMinor`' is not a numerical value."
 		}
 	}
 
@@ -75,7 +75,7 @@ try {
 		$fileVersionBuild = "`$(current)"
 	} else {
 		if (!(Is-Numeric($fileVersionBuild))) {
-			Write-VstsTaskError "Invalid value for File Version Build. `"$fileVersionBuild`" is not a numerical value."
+			Write-VstsTaskError "Invalid value for File Version Build. `'$fileVersionBuild`' is not a numerical value."
 		}
 	}
 
@@ -84,7 +84,7 @@ try {
 		$fileVersionRevision = "`$(current)"
 	} else {
 		if (!(Is-Numeric($fileVersionRevision))) {
-			Write-VstsTaskError "Invalid value for File Version Revision. `"$fileVersionRevision`" is not a numerical value."
+			Write-VstsTaskError "Invalid value for File Version Revision. `'$fileVersionRevision`' is not a numerical value."
 		}
 	}
 
@@ -144,7 +144,7 @@ try {
 		
 		Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion
 	} else {
-		Write-VstsTaskError "AssemblyInfo.* file not found using search pattern `"$assemblyInfoFiles`"."
+		Write-VstsTaskError "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
 	}
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
