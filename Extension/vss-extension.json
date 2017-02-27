@@ -25,6 +25,14 @@
             "path": "overview.md"
         }
     },
+    "links": {
+        "home": {
+            "uri": "http//www.bool.se"
+        },
+        "issues": {
+            "uri": "https://github.com/BoolBySigma/UpdateAssemblyInfo/issues"
+        }
+    },
     "files": [
         {
             "path": "update-assembly-info-task"
