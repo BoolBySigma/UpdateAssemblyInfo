@@ -37,7 +37,7 @@ Parameters include:
 * **File Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`.
 * **File Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`.
 
-* **Having Problems?**
+## Having Problems?
 Please [create an issue on our Github](https://github.com/BoolBySigma/UpdateAssemblyInfo/issues) and we will try to help you.
 
 Icons made by [Freepik](http://www.freepik.com) from [Flaticon](http://www.flaticon.com) is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
