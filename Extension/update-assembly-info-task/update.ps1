@@ -94,11 +94,15 @@ try {
 	# Format description
 	$description = $description.Replace("`$(Assembly.Company)", $company)
 	$description = $description.Replace("`$(Assembly.Product)", $product)
+	$description = $description.Replace("`$(Assembly.Year)", (Get-Date).Year)
+	# Leave in for legacy functionality
 	$description = $description.Replace("`$(Year)", (Get-Date).Year)
 
 	# Format copyright
 	$copyright = $copyright.Replace("`$(Assembly.Company)", $company)
 	$copyright = $copyright.Replace("`$(Assembly.Product)", $product)
+	$copyright = $copyright.Replace("`$(Assembly.Year)", (Get-Date).Year)
+	# Leave in for legacy functionality
 	$copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
 
 	# Format trademark

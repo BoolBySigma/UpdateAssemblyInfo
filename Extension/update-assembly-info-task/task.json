@@ -34,7 +34,7 @@
             "label": "Description",
             "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>"
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Assembly.Year)</code>: Provides the current year.</li></ul>"
         },
         {
             "name": "configuration",
@@ -64,9 +64,9 @@
             "name": "copyright",
             "type": "string",
             "label": "Copyright",
-            "defaultValue": "Copyright © $(Assembly.Company) $(Year)",
+            "defaultValue": "Copyright © $(Assembly.Company) $(Assembly.Year)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Year)</code>: Provides the current year.</li></ul>Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Assembly.Year)</code>: Provides the current year.</li></ul>Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
         },
         {
             "name": "trademark",

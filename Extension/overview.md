@@ -14,14 +14,14 @@ Parameters include:
 * **Description**: Left blank, the value is not updated. Variables can be used including these task-specific variables:
     * `$(Assembly.Company)`: The value provided for Company.
     * `$(Assembly.Product)`: The value provided for Product.
-    * `$(Year)`: Provides the current year.
+    * `$(Assembly.Year)`: Provides the current year.
 * **Configuration**: Left blank, the value is not updated. Variables can be used, eg. `$(BuildConfiguration)`.
 * **Company**: Left blank, the value is not updated. Variables can be used.
 * **Product**: Left blank, the value is not updated. Variables can be used.
 * **Copyright**: Left blank, the value is not updated. Variables can be used, including these task-specific variables:
     * `$(Assembly.Company)`: The value provided for Company.
     * `$(Assembly.Product)`: The value provided for Product.
-    * `$(Year)`: Provides the current year.
+    * `$(Assembly.Year)`: Provides the current year.
     Used togeather this could produce "Copyright © YourCompanyName 2017".
 * **Trademark**: Left blank, the value is not updated. Variables can be used, including these task-specific variables:
     * `$(Assembly.Company)`: The value provided for Company.
