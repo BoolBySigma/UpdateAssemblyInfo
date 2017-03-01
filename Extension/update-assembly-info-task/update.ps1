@@ -26,10 +26,13 @@ function BuildInvalidVariableMessage($variableName) {
 }
 
 try {
+	$errors = 0
+
 	# Validate description
 	if (![string]::IsNullOrEmpty($description)) {
 		if ($description.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("Description"))
+			$errors += 1
 		}
 	}
 
@@ -37,6 +40,7 @@ try {
 	if (![string]::IsNullOrEmpty($configuration)) {
 		if ($configuration.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("Configuration"))
+			$errors += 1
 		}
 	}
 
@@ -44,6 +48,7 @@ try {
 	if (![string]::IsNullOrEmpty($company)) {
 		if ($company.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("Company"))
+			$errors += 1
 		}
 	}
 
@@ -51,6 +56,7 @@ try {
 	if ([string]::IsNullOrEmpty($product)) {
 		if ($product.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("Product"))
+			$errors += 1
 		}
 	}
 
@@ -58,6 +64,7 @@ try {
 	if (![string]::IsNullOrEmpty($copyright)) {
 		if ($copyright.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("Copyright"))
+			$errors += 1
 		}
 	}
 
@@ -65,6 +72,7 @@ try {
 	if (![string]::IsNullOrEmpty($trademark)) {
 		if ($trademark.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("Trademark"))
+			$errors += 1
 		}
 	}
 
@@ -72,6 +80,7 @@ try {
 	if (![string]::IsNullOrEmpty($informationalVersion)) {
 		if ($informationalVersion.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("Informational Version"))
+			$errors += 1
 		}
 	}
 
@@ -81,9 +90,11 @@ try {
 	} else {
 		if ($fileVersionMajor.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Major"))
+			$errors += 1
 		}
 		if (!(IsNumeric($fileVersionMajor))) {
 			Write-VstsTaskError "Invalid value for File Version Major. `'$fileVersionMajor`' is not a numerical value."
+			$errors += 1
 		}
 	}
 
@@ -93,9 +104,11 @@ try {
 	} else {
 		if ($fileVersionMinor.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Minor"))
+			$errors += 1
 		}
 		if (!(IsNumeric($fileVersionMinor))) {
 			Write-VstsTaskError "Invalid value for File Version Minor. `'$fileVersionMinor`' is not a numerical value."
+			$errors += 1
 		}
 	}
 
@@ -105,9 +118,11 @@ try {
 	} else {
 		if ($fileVersionBuild.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Build"))
+			$errors += 1
 		}
 		if (!(IsNumeric($fileVersionBuild))) {
 			Write-VstsTaskError "Invalid value for File Version Build. `'$fileVersionBuild`' is not a numerical value."
+			$errors += 1
 		}
 	}
 
@@ -117,9 +132,11 @@ try {
 	} else {
 		if ($fileVersionRevision.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Revision"))
+			$errors += 1
 		}
 		if (!(IsNumeric($fileVersionRevision))) {
 			Write-VstsTaskError "Invalid value for File Version Revision. `'$fileVersionRevision`' is not a numerical value."
+			$errors += 1
 		}
 	}
 
@@ -184,6 +201,11 @@ try {
 		Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion
 	} else {
 		Write-VstsTaskError "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
+		$errors += 1
+	}
+
+	if ($errors) {
+		Write-VstsSetResult -Result "Failed with $errors error(s)"
 	}
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
