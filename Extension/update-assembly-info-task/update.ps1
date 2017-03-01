@@ -16,47 +16,73 @@ $fileVersionBuild = Get-VstsInput -Name fileVersionBuild
 $fileVersionRevision = Get-VstsInput -Name fileVersionRevision
 $informationalVersion = Get-VstsInput -Name informationalVersion
 
-function Is-Numeric ($value)
+function IsNumeric ($value)
 {
     return $value -match "^[\d\.]+$"
 }
 
+function BuildInvalidVariableMessage($variableName) {
+	return "$variableName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
+}
+
 try {
 	# Validate description
-	if ([string]::IsNullOrEmpty($description)) {
-		$description = $null
+	if (![string]::IsNullOrEmpty($description)) {
+		if ($description.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("Description")
+		}
 	}
 
 	# Validate configuration
-	if ([string]::IsNullOrEmpty($configuration)) {
-		$configuration = $null
+	if (![string]::IsNullOrEmpty($configuration)) {
+		if ($configuration.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("Configuration")
+		}
 	}
 
 	# Validate company
-	if ([string]::IsNullOrEmpty($company)) {
-		$company = $null
+	if (![string]::IsNullOrEmpty($company)) {
+		if ($company.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("Company")
+		}
 	}
 
 	# Validate product
 	if ([string]::IsNullOrEmpty($product)) {
-		$product = $null
+		if ($product.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("Product")
+		}
 	}
 
 	# Validate copyright
-	if ([string]::IsNullOrEmpty($copyright)) {
-		$copyright = $null
+	if (![string]::IsNullOrEmpty($copyright)) {
+		if ($copyright.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("Copyright")
+		}
 	}
 
 	# Validate trademark
-	if ([string]::IsNullOrEmpty($trademark)) {
-		$trademark = $null
+	if (![string]::IsNullOrEmpty($trademark)) {
+		if ($trademark.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("Trademark")
+		}
+	}
+
+	# Validate information version
+	if (![string]::IsNullOrEmpty($informationalVersion)) {
+		if ($informationalVersion.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("Informational Version")
+		}
 	}
 
 	# Validate fileVersionMajor
 	if ([string]::IsNullOrEmpty($fileVersionMajor)) {
 		$fileVersionMajor = "`$(current)"
 	} else {
-		if (!(Is-Numeric($fileVersionMajor))) {
+		if ($fileVersionMajor.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("File Version Major")
+		}
+		if (!(IsNumeric($fileVersionMajor))) {
 			Write-VstsTaskError "Invalid value for File Version Major. `'$fileVersionMajor`' is not a numerical value."
 		}
 	}
@@ -65,7 +91,10 @@ try {
 	if ([string]::IsNullOrEmpty($fileVersionMinor)) {
 		$fileVersionMinor = "`$(current)"
 	} else {
-		if (!(Is-Numeric($fileVersionMinor))) {
+		if ($fileVersionMinor.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("File Version Minor")
+		}
+		if (!(IsNumeric($fileVersionMinor))) {
 			Write-VstsTaskError "Invalid value for File Version Minor. `'$fileVersionMinor`' is not a numerical value."
 		}
 	}
@@ -74,7 +103,10 @@ try {
 	if ([string]::IsNullOrEmpty($fileVersionBuild)) {
 		$fileVersionBuild = "`$(current)"
 	} else {
-		if (!(Is-Numeric($fileVersionBuild))) {
+		if ($fileVersionBuild.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("File Version Build")
+		}
+		if (!(IsNumeric($fileVersionBuild))) {
 			Write-VstsTaskError "Invalid value for File Version Build. `'$fileVersionBuild`' is not a numerical value."
 		}
 	}
@@ -83,7 +115,10 @@ try {
 	if ([string]::IsNullOrEmpty($fileVersionRevision)) {
 		$fileVersionRevision = "`$(current)"
 	} else {
-		if (!(Is-Numeric($fileVersionRevision))) {
+		if ($fileVersionRevision.Contains("`$(Invalid)")) {
+			Write-VstsTaskError BuildInvalidVariableMessage("File Version Revision")
+		}
+		if (!(IsNumeric($fileVersionRevision))) {
 			Write-VstsTaskError "Invalid value for File Version Revision. `'$fileVersionRevision`' is not a numerical value."
 		}
 	}
