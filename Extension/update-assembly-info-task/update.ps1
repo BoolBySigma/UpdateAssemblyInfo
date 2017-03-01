@@ -29,49 +29,49 @@ try {
 	# Validate description
 	if (![string]::IsNullOrEmpty($description)) {
 		if ($description.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("Description")
+			Write-VstsTaskError (BuildInvalidVariableMessage("Description"))
 		}
 	}
 
 	# Validate configuration
 	if (![string]::IsNullOrEmpty($configuration)) {
 		if ($configuration.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("Configuration")
+			Write-VstsTaskError (BuildInvalidVariableMessage("Configuration"))
 		}
 	}
 
 	# Validate company
 	if (![string]::IsNullOrEmpty($company)) {
 		if ($company.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("Company")
+			Write-VstsTaskError (BuildInvalidVariableMessage("Company"))
 		}
 	}
 
 	# Validate product
 	if ([string]::IsNullOrEmpty($product)) {
 		if ($product.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("Product")
+			Write-VstsTaskError (BuildInvalidVariableMessage("Product"))
 		}
 	}
 
 	# Validate copyright
 	if (![string]::IsNullOrEmpty($copyright)) {
 		if ($copyright.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("Copyright")
+			Write-VstsTaskError (BuildInvalidVariableMessage("Copyright"))
 		}
 	}
 
 	# Validate trademark
 	if (![string]::IsNullOrEmpty($trademark)) {
 		if ($trademark.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("Trademark")
+			Write-VstsTaskError (BuildInvalidVariableMessage("Trademark"))
 		}
 	}
 
 	# Validate information version
 	if (![string]::IsNullOrEmpty($informationalVersion)) {
 		if ($informationalVersion.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("Informational Version")
+			Write-VstsTaskError (BuildInvalidVariableMessage("Informational Version"))
 		}
 	}
 
@@ -80,7 +80,7 @@ try {
 		$fileVersionMajor = "`$(current)"
 	} else {
 		if ($fileVersionMajor.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("File Version Major")
+			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Major"))
 		}
 		if (!(IsNumeric($fileVersionMajor))) {
 			Write-VstsTaskError "Invalid value for File Version Major. `'$fileVersionMajor`' is not a numerical value."
@@ -92,7 +92,7 @@ try {
 		$fileVersionMinor = "`$(current)"
 	} else {
 		if ($fileVersionMinor.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("File Version Minor")
+			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Minor"))
 		}
 		if (!(IsNumeric($fileVersionMinor))) {
 			Write-VstsTaskError "Invalid value for File Version Minor. `'$fileVersionMinor`' is not a numerical value."
@@ -104,7 +104,7 @@ try {
 		$fileVersionBuild = "`$(current)"
 	} else {
 		if ($fileVersionBuild.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("File Version Build")
+			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Build"))
 		}
 		if (!(IsNumeric($fileVersionBuild))) {
 			Write-VstsTaskError "Invalid value for File Version Build. `'$fileVersionBuild`' is not a numerical value."
@@ -116,7 +116,7 @@ try {
 		$fileVersionRevision = "`$(current)"
 	} else {
 		if ($fileVersionRevision.Contains("`$(Invalid)")) {
-			Write-VstsTaskError BuildInvalidVariableMessage("File Version Revision")
+			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Revision"))
 		}
 		if (!(IsNumeric($fileVersionRevision))) {
 			Write-VstsTaskError "Invalid value for File Version Revision. `'$fileVersionRevision`' is not a numerical value."
