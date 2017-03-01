@@ -53,7 +53,7 @@ try {
 	}
 
 	# Validate product
-	if ([string]::IsNullOrEmpty($product)) {
+	if (![string]::IsNullOrEmpty($product)) {
 		if ($product.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("Product"))
 			$errors += 1
