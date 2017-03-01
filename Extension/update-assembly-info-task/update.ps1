@@ -205,7 +205,8 @@ try {
 	}
 
 	if ($errors) {
-		Write-VstsSetResult -Result "Failed with $errors error(s)"
+		Write-VstsTaskError "Failed with $errors error(s)"
+		Write-VstsSetResult -Result "Failed"
 	}
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
