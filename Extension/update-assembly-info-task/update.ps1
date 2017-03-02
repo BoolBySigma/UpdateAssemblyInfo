@@ -140,6 +140,11 @@ try {
 		}
 	}
 
+	if ($errors) {
+		Write-VstsTaskError "Failed with $errors error(s)"
+		Write-VstsSetResult -Result "Failed"
+	}
+
 	# Format file version
 	$fileVersion = "$fileVersionMajor.$fileVersionMinor.$fileVersionBuild.$fileVersionRevision"
 
@@ -201,11 +206,6 @@ try {
 		Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion
 	} else {
 		Write-VstsTaskError "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
-		$errors += 1
-	}
-
-	if ($errors) {
-		Write-VstsTaskError "Failed with $errors error(s)"
 		Write-VstsSetResult -Result "Failed"
 	}
 } finally {
