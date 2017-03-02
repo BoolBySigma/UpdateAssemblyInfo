@@ -34,7 +34,7 @@
             "label": "Description",
             "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Assembly.Year)</code>: Provides the current year.</li></ul>"
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Assembly.Year)</code>: Provides the current year.</li></ul>Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
         },
         {
             "name": "configuration",
@@ -42,7 +42,7 @@
             "label": "Configuration",
             "defaultValue": "$(BuildConfiguration)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(BuildConfiguration)</code>."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(BuildConfiguration)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
         },
         {
             "name": "company",
@@ -50,7 +50,7 @@
             "label": "Company",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
         },
         {
             "name": "product",
@@ -58,7 +58,7 @@
             "label": "Product",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used"
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
         },
         {
             "name": "copyright",
@@ -66,7 +66,7 @@
             "label": "Copyright",
             "defaultValue": "Copyright © $(Assembly.Company) $(Assembly.Year)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Assembly.Year)</code>: Provides the current year.</li></ul>Used togeather this could produce \"Copyright © YourCompanyName 2017\"."
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Assembly.Year)</code>: Provides the current year.</li></ul>Used togeather this could produce \"Copyright © YourCompanyName 2017\".</br></br>Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
         },
         {
             "name": "trademark",
@@ -74,7 +74,7 @@
             "label": "Trademark",
             "defaultValue": "$(Assembly.Company)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li></ul>"
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li></ul>Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
         },
         {
             "name": "fileVersionMajor",
@@ -82,7 +82,7 @@
             "label": "Major",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>.",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
             "groupName": "fileVersion"
         },
         {
@@ -91,7 +91,7 @@
             "label": "Minor",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>.",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
             "groupName": "fileVersion"
         },
         {
@@ -100,7 +100,7 @@
             "label": "Build",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>.",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
             "groupName": "fileVersion"
         },
         {
@@ -109,7 +109,7 @@
             "label": "Revision",
             "defaultValue": "$(Build.BuildId)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>.",
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
             "groupName": "fileVersion"
         },
         {
@@ -118,7 +118,7 @@
             "label": "Informational Version",
             "defaultValue": "$(Assembly.FileVersion)",
             "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, inlcuding these task-specific variables:<ul><li><code>$(Assembly.FileVersion)</code>: The assembly file version value.</li><li><code>$(Assembly.FileVersionMajor)</code>: The assembly file version major value. Requires Major to be specified.</li><li><code>$(Assembly.FileVersionMinor)</code>: The assembly file version minor value. Requires Minor to be specified.</li><li><code>$(Assembly.FileVersionBuild)</code>: The assembly file version build value. Requires Build to be specified.</li><li><code>$(Assembly.FileVersionRevision)</code>: The assembly file version revision value. Requires Revision to be specified.</li></ul>"
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, inlcuding these task-specific variables:<ul><li><code>$(Assembly.FileVersion)</code>: The assembly file version value.</li><li><code>$(Assembly.FileVersionMajor)</code>: The assembly file version major value. Requires Major to be specified.</li><li><code>$(Assembly.FileVersionMinor)</code>: The assembly file version minor value. Requires Minor to be specified.</li><li><code>$(Assembly.FileVersionBuild)</code>: The assembly file version build value. Requires Build to be specified.</li><li><code>$(Assembly.FileVersionRevision)</code>: The assembly file version revision value. Requires Revision to be specified.</li></ul>Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
         }
     ],
     "execution": {
