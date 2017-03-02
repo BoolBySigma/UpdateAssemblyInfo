@@ -24,7 +24,6 @@ Parameters include:
     * `$(Assembly.Product)`: The value provided for Product.
     * `$(Assembly.Year)`: Provides the current year.
     Used togeather this could produce "Copyright © YourCompanyName 2017".
-
     Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Trademark**: Left blank, the value is not updated. Variables can be used, including these task-specific variables:
     * `$(Assembly.Company)`: The value provided for Company.
