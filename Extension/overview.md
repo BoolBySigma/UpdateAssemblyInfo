@@ -15,6 +15,7 @@ Parameters include:
     * `$(Assembly.Company)`: The value provided for Company.
     * `$(Assembly.Product)`: The value provided for Product.
     * `$(Assembly.Year)`: Provides the current year.
+    Use variable `$(Invalid)` to throw error unless the value is changed. This can be useful when working with task groups or creating templates.
 * **Configuration**: Left blank, the value is not updated. Variables can be used, eg. `$(BuildConfiguration)`.
 * **Company**: Left blank, the value is not updated. Variables can be used.
 * **Product**: Left blank, the value is not updated. Variables can be used.
