@@ -14,6 +14,10 @@ $fileVersionMajor = Get-VstsInput -Name fileVersionMajor
 $fileVersionMinor = Get-VstsInput -Name fileVersionMinor
 $fileVersionBuild = Get-VstsInput -Name fileVersionBuild
 $fileVersionRevision = Get-VstsInput -Name fileVersionRevision
+$assemblyVersionMajor = Get-VstsInput -Name assemblyVersionMajor
+$assemblyVersionMinor = Get-VstsInput -Name assemblyVersionMinor
+$assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
+$assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
 $informationalVersion = Get-VstsInput -Name informationalVersion
 
 function IsNumeric ($value)
@@ -76,7 +80,7 @@ try {
 		}
 	}
 
-	# Validate information version
+	# Validate informational version
 	if (![string]::IsNullOrEmpty($informationalVersion)) {
 		if ($informationalVersion.Contains("`$(Invalid)")) {
 			Write-VstsTaskError (BuildInvalidVariableMessage("Informational Version"))
@@ -84,8 +88,25 @@ try {
 		}
 	}
 
+	function ValidateVersion($displayName, $parameter){
+		if ([string]::IsNullOrEmpty($parameter)) {
+			return "`$(current)"
+		} else {
+			if ($parameter.Contains("`$(Invalid)")) {
+				Write-VstsTaskError (BuildInvalidVariableMessage($displayName))
+				$errors += 1
+			}
+			if (!(IsNumeric($parameter))) {
+				Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
+				$errors += 1
+			}
+			return $parameter
+		}
+	}
+
 	# Validate fileVersionMajor
-	if ([string]::IsNullOrEmpty($fileVersionMajor)) {
+	$fileVersionMajor = ValidateVersion("File Version Major", $fileVersionMajor)
+	<#if ([string]::IsNullOrEmpty($fileVersionMajor)) {
 		$fileVersionMajor = "`$(current)"
 	} else {
 		if ($fileVersionMajor.Contains("`$(Invalid)")) {
@@ -96,7 +117,7 @@ try {
 			Write-VstsTaskError "Invalid value for File Version Major. `'$fileVersionMajor`' is not a numerical value."
 			$errors += 1
 		}
-	}
+	}#>
 
 	# Validate fileVersionMinor
 	if ([string]::IsNullOrEmpty($fileVersionMinor)) {
