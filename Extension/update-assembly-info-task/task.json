@@ -17,6 +17,11 @@
             "name": "fileVersion",
             "displayName": "File Version",
             "isExpanded": true
+        },
+        {
+            "name": "assemblyVersion",
+            "displayName": "Assembly Version",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -111,6 +116,42 @@
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
             "groupName": "fileVersion"
+        },
+        {
+            "name": "assemblyVersionMajor",
+            "type": "string",
+            "label": "Major",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
+            "groupName": "assemblyVersion"
+        },
+        {
+            "name": "assemblyVersionMinor",
+            "type": "string",
+            "label": "Minor",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
+            "groupName": "assemblyVersion"
+        },
+        {
+            "name": "assemblyVersionBuild",
+            "type": "string",
+            "label": "Build",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
+            "groupName": "assemblyVersion"
+        },
+        {
+            "name": "assemblyVersionRevision",
+            "type": "string",
+            "label": "Revision",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
+            "groupName": "assemblyVersion"
         },
         {
             "name": "informationalVersion",
