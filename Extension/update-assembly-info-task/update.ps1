@@ -72,49 +72,49 @@ function Block-InvalidVersion {
 }
 
 try {
-	# Validate description
+	# Check description
 	Block-InvalidVariable "Description" $description
 
-	# Validate configuration
+	# Check configuration
 	Block-InvalidVariable "Configuration" $configuration
 
-	# Validate company
+	# Check company
 	Block-InvalidVariable "Company" $company
 
-	# Validate product
+	# Check product
 	Block-InvalidVariable "Product" $product
 
-	# Validate copyright
+	# Check copyright
 	Block-InvalidVariable "Copyright" $copyright
 
-	# Validate trademark
+	# Check trademark
 	Block-InvalidVariable "Trademark" $trademark
 
-	# Validate informational version
+	# Check informational version
 	Block-InvalidVariable "Informational Version" $informationalVersion
 
-	# Validate fileVersionMajor
+	# Check fileVersionMajor
 	$fileVersionMajor = (Block-InvalidVersion "File Version Major" $fileVersionMajor)
 
-	# Validate fileVersionMinor
+	# Check fileVersionMinor
 	$fileVersionMinor = (Block-InvalidVersion "File Version Minor" $fileVersionMinor)
 
-	# Validate fileVersionBuild
+	# Check fileVersionBuild
 	$fileVersionBuild = (Block-InvalidVersion "File Version Build" $fileVersionBuild)
 
-	# Validate fileVersionRevision
+	# Check fileVersionRevision
 	$fileVersionRevision = (Block-InvalidVersion "File Version Revision" $fileVersionRevision)
 
-	# Validate assemblyVersionMajor
+	# Check assemblyVersionMajor
 	$assemblyVersionMajor = (Block-InvalidVersion "Assembly Version Major" $assemblyVersionMajor)
 
-	# Validate assemblyVersionMinor
+	# Check assemblyVersionMinor
 	$assemblyVersionMinor = (Block-InvalidVersion "Assembly Version Minor" $assemblyVersionMinor)
 
-	# Validate assemblyVersionBuild
+	# Check assemblyVersionBuild
 	$assemblyVersionBuild = (Block-InvalidVersion "Assembly Version Build" $assemblyVersionBuild)
 
-	# Validate assemblyVersionRevision
+	# Check assemblyVersionRevision
 	$assemblyVersionRevision = (Block-InvalidVersion "Assembly Version Revision" $assemblyVersionRevision)
 
 	if ($global:errors) {
