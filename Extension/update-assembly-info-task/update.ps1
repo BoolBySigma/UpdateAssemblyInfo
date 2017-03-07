@@ -20,6 +20,8 @@ $assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
 $assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
 $informationalVersion = Get-VstsInput -Name informationalVersion
 
+$errors = 0
+
 function IsNumeric ($value)
 {
     return $value -match "^[\d\.]+$"
@@ -29,16 +31,48 @@ function BuildInvalidVariableMessage($variableName) {
 	return "$variableName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
 }
 
-try {
-	$errors = 0
+function ValidateVersion {
+	param(
+		[string]
+		$displayName,
+		[string]
+		$parameter
+	)
 
-	# Validate description
-	if (![string]::IsNullOrEmpty($description)) {
-		if ($description.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("Description"))
-			$errors += 1
+	if ([string]::IsNullOrEmpty($parameter)) {
+		return "`$(current)"
+	} else {
+		if ($parameter.Contains("`$(Invalid)")) {
+			Write-VstsTaskError (BuildInvalidVariableMessage($displayName))
+			$gloabl:errors += 1
+		}
+		if (!(IsNumeric($parameter))) {
+			Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
+			$global:errors += 1
+		}
+		return $parameter
+	}
+}
+
+function ValidateIvalid {
+	param(
+		[string]
+		$displayName,
+		[string]
+		$parameter
+	)
+
+	if (![string]::IsNullOrEmpty($parameter)) {
+		if ($parameter.Contains("`$(Invalid)")) {
+			Write-VstsTaskError (BuildInvalidVariableMessage($displayName))
+			$global:errors += 1
 		}
 	}
+}
+
+try {
+	# Validate description
+	Validate "Description" $description
 
 	# Validate configuration
 	if (![string]::IsNullOrEmpty($configuration)) {
@@ -88,85 +122,17 @@ try {
 		}
 	}
 
-	function ValidateVersion{
-		param(
-			[string]
-			$displayName,
-			[string]
-			$parameter
-		)
-
-		if ([string]::IsNullOrEmpty($parameter)) {
-			return "`$(current)"
-		} else {
-			if ($parameter.Contains("`$(Invalid)")) {
-				Write-VstsTaskError (BuildInvalidVariableMessage($displayName))
-				$errors += 1
-			}
-			if (!(IsNumeric($parameter))) {
-				Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
-				$errors += 1
-			}
-			return $parameter
-		}
-	}
-
 	# Validate fileVersionMajor
 	$fileVersionMajor = (ValidateVersion "File Version Major" $fileVersionMajor)
-	<#if ([string]::IsNullOrEmpty($fileVersionMajor)) {
-		$fileVersionMajor = "`$(current)"
-	} else {
-		if ($fileVersionMajor.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Major"))
-			$errors += 1
-		}
-		if (!(IsNumeric($fileVersionMajor))) {
-			Write-VstsTaskError "Invalid value for File Version Major. `'$fileVersionMajor`' is not a numerical value."
-			$errors += 1
-		}
-	}#>
 
 	# Validate fileVersionMinor
-	if ([string]::IsNullOrEmpty($fileVersionMinor)) {
-		$fileVersionMinor = "`$(current)"
-	} else {
-		if ($fileVersionMinor.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Minor"))
-			$errors += 1
-		}
-		if (!(IsNumeric($fileVersionMinor))) {
-			Write-VstsTaskError "Invalid value for File Version Minor. `'$fileVersionMinor`' is not a numerical value."
-			$errors += 1
-		}
-	}
+	$fileVersionMinor = (ValidateVersion "File Version Minor" $fileVersionMinor)
 
 	# Validate fileVersionBuild
-	if ([string]::IsNullOrEmpty($fileVersionBuild)) {
-		$fileVersionBuild = "`$(current)"
-	} else {
-		if ($fileVersionBuild.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Build"))
-			$errors += 1
-		}
-		if (!(IsNumeric($fileVersionBuild))) {
-			Write-VstsTaskError "Invalid value for File Version Build. `'$fileVersionBuild`' is not a numerical value."
-			$errors += 1
-		}
-	}
+	$fileVersionBuild = (ValidateVersion "File Version Build" $fileVersionBuild)
 
 	# Validate fileVersionRevision
-	if ([string]::IsNullOrEmpty($fileVersionRevision)) {
-		$fileVersionRevision = "`$(current)"
-	} else {
-		if ($fileVersionRevision.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("File Version Revision"))
-			$errors += 1
-		}
-		if (!(IsNumeric($fileVersionRevision))) {
-			Write-VstsTaskError "Invalid value for File Version Revision. `'$fileVersionRevision`' is not a numerical value."
-			$errors += 1
-		}
-	}
+	$fileVersionRevision = (ValidateVersion "File Version Revision" $fileVersionRevision)
 
 	if ($errors) {
 		Write-VstsTaskError "Failed with $errors error(s)"
