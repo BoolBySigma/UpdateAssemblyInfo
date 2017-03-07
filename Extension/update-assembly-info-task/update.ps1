@@ -30,12 +30,28 @@ function IsNumeric {
     return $value -match "^[\d\.]+$"
 }
 
-function BuildInvalidVariableMessage {
+function Write-InvalidVariableError {
 	param(
 		[string]
-		$variableName
+		$displayName
 	)
-	return "$variableName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
+	Write-VstsTaskError "$displayName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
+}
+
+function Block-InvalidVariable {
+	param(
+		[string]
+		$displayName,
+		[string]
+		$parameter
+	)
+
+	if (![string]::IsNullOrEmpty($parameter)) {
+		if ($parameter.Contains("`$(Invalid)")) {
+			Write-InvalidVariableError $displayName
+			$global:errors += 1
+		}
+	}
 }
 
 function ValidateVersion {
@@ -49,10 +65,11 @@ function ValidateVersion {
 	if ([string]::IsNullOrEmpty($parameter)) {
 		return "`$(current)"
 	} else {
-		if ($parameter.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage $displayName)
+		Block-InvalidVariable $displayName $parameter
+		<#if ($parameter.Contains("`$(Invalid)")) {
+			Write-InvalidVariableError $displayName
 			$global:errors += 1
-		}
+		}#>
 		if (!(IsNumeric $parameter)) {
 			Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
 			$global:errors += 1
@@ -61,43 +78,27 @@ function ValidateVersion {
 	}
 }
 
-function ValidateInvalid {
-	param(
-		[string]
-		$displayName,
-		[string]
-		$parameter
-	)
-
-	if (![string]::IsNullOrEmpty($parameter)) {
-		if ($parameter.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage $displayName)
-			$global:errors += 1
-		}
-	}
-}
-
 try {
 	# Validate description
-	ValidateInvalid "Description" $description
+	Block-InvalidVariable "Description" $description
 
 	# Validate configuration
-	ValidateInvalid "Configuration" $configuration
+	Block-InvalidVariable "Configuration" $configuration
 
 	# Validate company
-	ValidateInvalid "Company" $company
+	Block-InvalidVariable "Company" $company
 
 	# Validate product
-	ValidateInvalid "Product" $product
+	Block-InvalidVariable "Product" $product
 
 	# Validate copyright
-	ValidateInvalid "Copyright" $copyright
+	Block-InvalidVariable "Copyright" $copyright
 
 	# Validate trademark
-	ValidateInvalid "Trademark" $trademark
+	Block-InvalidVariable "Trademark" $trademark
 
 	# Validate informational version
-	ValidateInvalid "Informational Version" $informationalVersion
+	Block-InvalidVariable "Informational Version" $informationalVersion
 
 	# Validate fileVersionMajor
 	$fileVersionMajor = (ValidateVersion "File Version Major" $fileVersionMajor)
