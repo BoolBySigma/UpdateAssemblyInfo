@@ -47,7 +47,7 @@ function Block-NonNumericParameter {
 	)
 
 	if (![string]::IsNullOrEmpty($parameter)) {
-		if ($parameter -match "^[\d\.]+$") {
+		if (!($parameter -match "^[\d\.]+$")) {
 			Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
 			$global:errors += 1
 		}
