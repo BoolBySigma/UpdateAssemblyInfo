@@ -20,7 +20,7 @@ $assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
 $assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
 $informationalVersion = Get-VstsInput -Name informationalVersion
 
-$errors = 0
+$global:errors = 0
 
 function IsNumeric {
 	param(
@@ -123,7 +123,7 @@ try {
 	# Validate assemblyVersionRevision
 	$assemblyVersionRevision = (ValidateVersion "Assembly Version Revision" $assemblyVersionRevision)
 
-	if ($errors) {
+	if ($global:errors) {
 		Write-VstsTaskError "Failed with $errors error(s)"
 		Write-VstsSetResult -Result "Failed"
 	}
