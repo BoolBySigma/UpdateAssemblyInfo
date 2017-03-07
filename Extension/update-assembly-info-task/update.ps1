@@ -72,7 +72,7 @@ function ValidateIvalid {
 
 try {
 	# Validate description
-	Validate "Description" $description
+	ValidateInvalid "Description" $description
 
 	# Validate configuration
 	if (![string]::IsNullOrEmpty($configuration)) {
