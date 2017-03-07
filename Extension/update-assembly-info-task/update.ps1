@@ -66,15 +66,7 @@ function Block-InvalidVersion {
 		return "`$(current)"
 	} else {
 		Block-InvalidVariable $displayName $parameter
-		<#if ($parameter.Contains("`$(Invalid)")) {
-			Write-InvalidVariableError $displayName
-			$global:errors += 1
-		}#>
 		Block-NonNumericParameter $displayName $parameter
-		<#if (!(IsNumeric $parameter)) {
-			Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
-			$global:errors += 1
-		}#>
 		return $parameter
 	}
 }
