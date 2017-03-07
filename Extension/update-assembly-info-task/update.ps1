@@ -40,7 +40,7 @@ function Block-InvalidVariable {
 
 function Block-NonNumericParameter {
 	param(
-		[ßtring]
+		[string]
 		$displayName,
 		[string]
 		$parameter
