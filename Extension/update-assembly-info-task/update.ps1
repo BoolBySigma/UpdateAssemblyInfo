@@ -24,7 +24,7 @@ $errors = 0
 
 function IsNumeric {
 	param(
-		[strint]
+		[string]
 		$value
 	)
     return $value -match "^[\d\.]+$"
