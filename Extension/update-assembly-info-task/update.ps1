@@ -22,22 +22,6 @@ $informationalVersion = Get-VstsInput -Name informationalVersion
 
 $global:errors = 0
 
-function IsNumeric {
-	param(
-		[string]
-		$value
-	)
-    return $value -match "^[\d\.]+$"
-}
-
-function Write-InvalidVariableError {
-	param(
-		[string]
-		$displayName
-	)
-	Write-VstsTaskError "$displayName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
-}
-
 function Block-InvalidVariable {
 	param(
 		[string]
@@ -48,13 +32,29 @@ function Block-InvalidVariable {
 
 	if (![string]::IsNullOrEmpty($parameter)) {
 		if ($parameter.Contains("`$(Invalid)")) {
-			Write-InvalidVariableError $displayName
+			Write-VstsTaskError "$displayName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
 			$global:errors += 1
 		}
 	}
 }
 
-function ValidateVersion {
+function Block-NonNumericParameter {
+	param(
+		[ßtring]
+		$displayName,
+		[string]
+		$parameter
+	)
+
+	if (![string]::IsNullOrEmpty($parameter)) {
+		if ($parameter -match "^[\d\.]+$") {
+			Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
+			$global:errors += 1
+		}
+	}	
+}
+
+function Block-InvalidVersion {
 	param(
 		[string]
 		$displayName,
@@ -70,10 +70,11 @@ function ValidateVersion {
 			Write-InvalidVariableError $displayName
 			$global:errors += 1
 		}#>
-		if (!(IsNumeric $parameter)) {
+		Block-NonNumericParameter $displayName $parameter
+		<#if (!(IsNumeric $parameter)) {
 			Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
 			$global:errors += 1
-		}
+		}#>
 		return $parameter
 	}
 }
@@ -101,28 +102,28 @@ try {
 	Block-InvalidVariable "Informational Version" $informationalVersion
 
 	# Validate fileVersionMajor
-	$fileVersionMajor = (ValidateVersion "File Version Major" $fileVersionMajor)
+	$fileVersionMajor = (Block-InvalidVersion "File Version Major" $fileVersionMajor)
 
 	# Validate fileVersionMinor
-	$fileVersionMinor = (ValidateVersion "File Version Minor" $fileVersionMinor)
+	$fileVersionMinor = (Block-InvalidVersion "File Version Minor" $fileVersionMinor)
 
 	# Validate fileVersionBuild
-	$fileVersionBuild = (ValidateVersion "File Version Build" $fileVersionBuild)
+	$fileVersionBuild = (Block-InvalidVersion "File Version Build" $fileVersionBuild)
 
 	# Validate fileVersionRevision
-	$fileVersionRevision = (ValidateVersion "File Version Revision" $fileVersionRevision)
+	$fileVersionRevision = (Block-InvalidVersion "File Version Revision" $fileVersionRevision)
 
 	# Validate assemblyVersionMajor
-	$assemblyVersionMajor = (ValidateVersion "Assembly Version Major" $assemblyVersionMajor)
+	$assemblyVersionMajor = (Block-InvalidVersion "Assembly Version Major" $assemblyVersionMajor)
 
 	# Validate assemblyVersionMinor
-	$assemblyVersionMinor = (ValidateVersion "Assembly Version Minor" $assemblyVersionMinor)
+	$assemblyVersionMinor = (Block-InvalidVersion "Assembly Version Minor" $assemblyVersionMinor)
 
 	# Validate assemblyVersionBuild
-	$assemblyVersionBuild = (ValidateVersion "Assembly Version Build" $assemblyVersionBuild)
+	$assemblyVersionBuild = (Block-InvalidVersion "Assembly Version Build" $assemblyVersionBuild)
 
 	# Validate assemblyVersionRevision
-	$assemblyVersionRevision = (ValidateVersion "Assembly Version Revision" $assemblyVersionRevision)
+	$assemblyVersionRevision = (Block-InvalidVersion "Assembly Version Revision" $assemblyVersionRevision)
 
 	if ($global:errors) {
 		Write-VstsTaskError "Failed with $errors error(s)"
