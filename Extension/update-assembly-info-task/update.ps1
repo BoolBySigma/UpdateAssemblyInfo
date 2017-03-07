@@ -22,12 +22,19 @@ $informationalVersion = Get-VstsInput -Name informationalVersion
 
 $errors = 0
 
-function IsNumeric ($value)
-{
+function IsNumeric {
+	param(
+		[strint]
+		$value
+	)
     return $value -match "^[\d\.]+$"
 }
 
-function BuildInvalidVariableMessage($variableName) {
+function BuildInvalidVariableMessage {
+	param(
+		[string]
+		$variableName
+	)
 	return "$variableName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
 }
 
@@ -43,10 +50,10 @@ function ValidateVersion {
 		return "`$(current)"
 	} else {
 		if ($parameter.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage($displayName))
-			$gloabl:errors += 1
+			Write-VstsTaskError (BuildInvalidVariableMessage $displayName)
+			$global:errors += 1
 		}
-		if (!(IsNumeric($parameter))) {
+		if (!(IsNumeric $parameter)) {
 			Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
 			$global:errors += 1
 		}
@@ -64,7 +71,7 @@ function ValidateInvalid {
 
 	if (![string]::IsNullOrEmpty($parameter)) {
 		if ($parameter.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage($displayName))
+			Write-VstsTaskError (BuildInvalidVariableMessage $displayName)
 			$global:errors += 1
 		}
 	}
@@ -75,52 +82,22 @@ try {
 	ValidateInvalid "Description" $description
 
 	# Validate configuration
-	if (![string]::IsNullOrEmpty($configuration)) {
-		if ($configuration.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("Configuration"))
-			$errors += 1
-		}
-	}
+	ValidateInvalid "Configuration" $configuration
 
 	# Validate company
-	if (![string]::IsNullOrEmpty($company)) {
-		if ($company.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("Company"))
-			$errors += 1
-		}
-	}
+	ValidateInvalid "Company" $company
 
 	# Validate product
-	if (![string]::IsNullOrEmpty($product)) {
-		if ($product.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("Product"))
-			$errors += 1
-		}
-	}
+	ValidateInvalid "Product" $product
 
 	# Validate copyright
-	if (![string]::IsNullOrEmpty($copyright)) {
-		if ($copyright.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("Copyright"))
-			$errors += 1
-		}
-	}
+	ValidateInvalid "Copyright" $copyright
 
 	# Validate trademark
-	if (![string]::IsNullOrEmpty($trademark)) {
-		if ($trademark.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("Trademark"))
-			$errors += 1
-		}
-	}
+	ValidateInvalid "Trademark" $trademark
 
 	# Validate informational version
-	if (![string]::IsNullOrEmpty($informationalVersion)) {
-		if ($informationalVersion.Contains("`$(Invalid)")) {
-			Write-VstsTaskError (BuildInvalidVariableMessage("Informational Version"))
-			$errors += 1
-		}
-	}
+	ValidateInvalid "Informational Version" $informationalVersion
 
 	# Validate fileVersionMajor
 	$fileVersionMajor = (ValidateVersion "File Version Major" $fileVersionMajor)
@@ -134,6 +111,18 @@ try {
 	# Validate fileVersionRevision
 	$fileVersionRevision = (ValidateVersion "File Version Revision" $fileVersionRevision)
 
+	# Validate assemblyVersionMajor
+	$assemblyVersionMajor = (ValidateVersion "Assembly Version Major" $assemblyVersionMajor)
+
+	# Validate assemblyVersionMinor
+	$assemblyVersionMinor = (ValidateVersion "Assembly Version Minor" $assemblyVersionMinor)
+
+	# Validate assemblyVersionBuild
+	$assemblyVersionBuild = (ValidateVersion "Assembly Version Build" $assemblyVersionBuild)
+
+	# Validate assemblyVersionRevision
+	$assemblyVersionRevision = (ValidateVersion "Assembly Version Revision" $assemblyVersionRevision)
+
 	if ($errors) {
 		Write-VstsTaskError "Failed with $errors error(s)"
 		Write-VstsSetResult -Result "Failed"
@@ -141,6 +130,9 @@ try {
 
 	# Format file version
 	$fileVersion = "$fileVersionMajor.$fileVersionMinor.$fileVersionBuild.$fileVersionRevision"
+
+	# Format assembly version
+	$assemblyVersion = "$assemblyVersionMajor.$assemblyVersionMinor.$assemblyVersionBuild.$assemblyVersionRevision"
 
 	# Format description
 	$description = $description.Replace("`$(Assembly.Company)", $company)
@@ -177,6 +169,7 @@ try {
 	$parameters += New-Object PSObject -Property @{Parameter="Copyright"; Value=$copyright}
 	$parameters += New-Object PSObject -Property @{Parameter="Trademark"; Value=$trademark}
 	$parameters += New-Object PSObject -Property @{Parameter="File Version"; Value=$fileVersion}
+	$parameters += New-Object PSObject -Property @{Parameter="Assembly Version"; Value=$assemblyVersion}
 	$parameters += New-Object PSObject -Property @{Parameter="Informational Version"; Value=$informationalVersionDisplay}
 	$parameters | format-table -property Parameter, Value
 
