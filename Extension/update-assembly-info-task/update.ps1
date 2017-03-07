@@ -54,7 +54,7 @@ function ValidateVersion {
 	}
 }
 
-function ValidateIvalid {
+function ValidateInvalid {
 	param(
 		[string]
 		$displayName,
