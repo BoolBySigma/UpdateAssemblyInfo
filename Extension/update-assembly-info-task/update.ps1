@@ -88,7 +88,14 @@ try {
 		}
 	}
 
-	function ValidateVersion($displayName, $parameter){
+	function ValidateVersion{
+		param(
+			[string]
+			$displayName,
+			[string]
+			$parameter
+		)
+
 		if ([string]::IsNullOrEmpty($parameter)) {
 			return "`$(current)"
 		} else {
@@ -105,7 +112,7 @@ try {
 	}
 
 	# Validate fileVersionMajor
-	$fileVersionMajor = ValidateVersion("File Version Major", $fileVersionMajor)
+	$fileVersionMajor = (ValidateVersion "File Version Major" $fileVersionMajor)
 	<#if ([string]::IsNullOrEmpty($fileVersionMajor)) {
 		$fileVersionMajor = "`$(current)"
 	} else {
