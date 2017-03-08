@@ -55,6 +55,10 @@ Parameters include:
 Use `$(Invalid)` to throw error and force the user to change the value to something useful. This can be useful when working with task groups or creating a template.
 Defining eg. 'Description' as 'This description is $(Invalid)' or simply '$(Invalid)' will throw an error and force the user to specify a meningful description.
 
+## Changelog
+* **2.0.11**: Added 'Com Visible' functionality.
+* **2.0.0**: Added 'Assembly Version' functionality.
+
 ## Having Problems?
 Please [create an issue on our Github](https://github.com/BoolBySigma/UpdateAssemblyInfo/issues) and we will try to help you.
 
