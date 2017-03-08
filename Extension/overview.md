@@ -35,11 +35,20 @@ Parameters include:
     * `$(Assembly.FileVersionMinor)`: The assembly file version minor value. Requires Minor to be specified.
     * `$(Assembly.FileVersionBuild)`: The assembly file version build value. Requires Build to be specified.
     * `$(Assembly.FileVersionRevision)`: The assembly file version revision value. Requires Revision to be specified.
+    * `$(Assembly.AssemblyVersion)`: The assembly version value.
+    * `$(Assembly.AssemblyVersionMajor)`: The assembly version major value. Requires Major to be specified.
+    * `$(Assembly.AssemblyVersionMinor)`: The assembly version minor value. Requires Minor to be specified.
+    * `$(Assembly.AssemblyVersionBuild)`: The assembly version build value. Requires Build to be specified.
+    * `$(Assembly.AssemblyVersionRevision)`: The assembly version revision value. Requires Revision to be specified.
     Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **File Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **File Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **File Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **File Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Assembly Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Assembly Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Assembly Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Assembly Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 
 ### The `$(Invalid)` variable
 Use `$(Invalid)` to throw error and force the user to change the value to something useful. This can be useful when working with task groups or creating a template.
