@@ -19,7 +19,7 @@ $assemblyVersionMinor = Get-VstsInput -Name assemblyVersionMinor
 $assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
 $assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
 $informationalVersion = Get-VstsInput -Name informationalVersion
-$comVisible = Get-VstsInput -Name comVisible
+$comVisible = Get-VstsInput -Name comVisible -AsBool
 
 $global:errors = 0
 
