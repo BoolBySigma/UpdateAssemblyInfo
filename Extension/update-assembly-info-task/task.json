@@ -82,6 +82,22 @@
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used, including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li></ul>Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
         },
         {
+            "name": "informationalVersion",
+            "type": "string",
+            "label": "Informational Version",
+            "defaultValue": "$(Assembly.FileVersion)",
+            "required": false,
+            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, inlcuding these task-specific variables:<ul><li><code>$(Assembly.FileVersion)</code>: The assembly file version value.</li><li><code>$(Assembly.FileVersionMajor)</code>: The assembly file version major value. Requires Major to be specified.</li><li><code>$(Assembly.FileVersionMinor)</code>: The assembly file version minor value. Requires Minor to be specified.</li><li><code>$(Assembly.FileVersionBuild)</code>: The assembly file version build value. Requires Build to be specified.</li><li><code>$(Assembly.FileVersionRevision)</code>: The assembly file version revision value. Requires Revision to be specified.</li><li><code>$(Assembly.AssemblyVersion)</code>: The assembly version value.</li><li><code>$(Assembly.AssemblyVersionMajor)</code>: The assembly version major value. Requires Major to be specified.</li><li><code>$(Assembly.AssemblyVersionMinor)</code>: The assembly version minor value. Requires Minor to be specified.</li><li><code>$(Assembly.AssemblyVersionBuild)</code>: The assembly version build value. Requires Build to be specified.</li><li><code>$(Assembly.AssemblyVersionRevision)</code>: The assembly version revision value. Requires Revision to be specified.</li></ul>Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
+        },
+        {
+            "name": "comVisible",
+            "type": "boolean",
+            "label": "Com Visible",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": ""
+        },
+        {
             "name": "fileVersionMajor",
             "type": "string",
             "label": "Major",
@@ -152,22 +168,6 @@
             "required": false,
             "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. <code>$(Build.BuildId)</code>. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful.",
             "groupName": "assemblyVersion"
-        },
-        {
-            "name": "informationalVersion",
-            "type": "string",
-            "label": "Informational Version",
-            "defaultValue": "$(Assembly.FileVersion)",
-            "required": false,
-            "helpMarkDown": "Left blank, the value is not updated. Variables can be used, inlcuding these task-specific variables:<ul><li><code>$(Assembly.FileVersion)</code>: The assembly file version value.</li><li><code>$(Assembly.FileVersionMajor)</code>: The assembly file version major value. Requires Major to be specified.</li><li><code>$(Assembly.FileVersionMinor)</code>: The assembly file version minor value. Requires Minor to be specified.</li><li><code>$(Assembly.FileVersionBuild)</code>: The assembly file version build value. Requires Build to be specified.</li><li><code>$(Assembly.FileVersionRevision)</code>: The assembly file version revision value. Requires Revision to be specified.</li><li><code>$(Assembly.AssemblyVersion)</code>: The assembly version value.</li><li><code>$(Assembly.AssemblyVersionMajor)</code>: The assembly version major value. Requires Major to be specified.</li><li><code>$(Assembly.AssemblyVersionMinor)</code>: The assembly version minor value. Requires Minor to be specified.</li><li><code>$(Assembly.AssemblyVersionBuild)</code>: The assembly version build value. Requires Build to be specified.</li><li><code>$(Assembly.AssemblyVersionRevision)</code>: The assembly version revision value. Requires Revision to be specified.</li></ul>Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
-        },
-        {
-            "name": "comVisible",
-            "type": "boolean",
-            "label": "Com Visible",
-            "defaultValue": false,
-            "required": false,
-            "helpMarkDown": ""
         }
     ],
     "execution": {

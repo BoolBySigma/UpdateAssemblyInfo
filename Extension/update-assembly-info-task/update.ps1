@@ -19,6 +19,7 @@ $assemblyVersionMinor = Get-VstsInput -Name assemblyVersionMinor
 $assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
 $assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
 $informationalVersion = Get-VstsInput -Name informationalVersion
+$comVisible = Get-VstsInput -Name comVisible
 
 $global:errors = 0
 
@@ -169,9 +170,10 @@ try {
 	$parameters += New-Object PSObject -Property @{Parameter="Product"; Value=$product}
 	$parameters += New-Object PSObject -Property @{Parameter="Copyright"; Value=$copyright}
 	$parameters += New-Object PSObject -Property @{Parameter="Trademark"; Value=$trademark}
+	$parameters += New-Object PSObject -Property @{Parameter="Informational Version"; Value=$informationalVersionDisplay}
+	$parameters += New-Object PSObject -Property @{Parameter="Com Visible"; Value=$comVisible}
 	$parameters += New-Object PSObject -Property @{Parameter="File Version"; Value=$fileVersion}
 	$parameters += New-Object PSObject -Property @{Parameter="Assembly Version"; Value=$assemblyVersion}
-	$parameters += New-Object PSObject -Property @{Parameter="Informational Version"; Value=$informationalVersionDisplay}
 	$parameters | format-table -property Parameter, Value
 
 	Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll")
