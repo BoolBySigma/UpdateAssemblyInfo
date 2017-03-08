@@ -41,6 +41,7 @@ Parameters include:
     * `$(Assembly.AssemblyVersionBuild)`: The assembly version build value. Requires Build to be specified.
     * `$(Assembly.AssemblyVersionRevision)`: The assembly version revision value. Requires Revision to be specified.
     Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Com Visible**: True or False
 * **File Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **File Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **File Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
