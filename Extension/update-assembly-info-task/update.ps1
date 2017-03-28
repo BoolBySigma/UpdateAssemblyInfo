@@ -186,7 +186,7 @@ try {
 			$files += $file
 		}
 	} else {
-		$files = Get-ChildItem $assemblyInfoFiles -Recurse | ForEach-Object {$_.FullName} | Where-Object {$_ -like "*\AssemblyInfo.*"}
+		$files = Get-ChildItem $assemblyInfoFiles -Recurse | ForEach-Object {$_.FullName}
 	}
 
 	if ($files) {
