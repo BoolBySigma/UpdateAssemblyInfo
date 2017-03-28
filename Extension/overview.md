@@ -55,7 +55,13 @@ Parameters include:
 Use `$(Invalid)` to throw error and force the user to change the value to something useful. This can be useful when working with task groups or creating a template.
 Defining eg. 'Description' as 'This description is $(Invalid)' or simply '$(Invalid)' will throw an error and force the user to specify a meningful description.
 
+### Output Variables
+Variables that can be used by subsequent tasks.
+* `$(Assembly.FileVersion)`: The assembly file version value.
+* `$(Assembly.AssemblyVersion)`: The assembly version value.
+
 ## Changelog
+* **2.0.13**: Added support for alternate file names and output parameters.
 * **2.0.11**: Added 'Com Visible' functionality.
 * **2.0.0**: Added 'Assembly Version' functionality.
 
