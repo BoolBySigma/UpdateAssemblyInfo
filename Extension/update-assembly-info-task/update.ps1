@@ -176,6 +176,11 @@ try {
 	$parameters += New-Object PSObject -Property @{Parameter="Assembly Version"; Value=$assemblyVersion}
 	$parameters | format-table -property Parameter, Value
 
+	# Exporting variables
+	Write-VstsSetVariable -Name 'Assembly.FileVersion' -Value $fileVersion
+	Write-VstsSetVariable -Name 'Assembly.AssemblyVersion' -Value $assemblyVersion
+
+	# Update files
 	Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll")
 
 	$files = @()
