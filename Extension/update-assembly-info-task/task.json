@@ -29,7 +29,7 @@
             "name": "assemblyInfoFiles",
             "type": "filePath",
             "label": "Assembly Info",
-            "defaultValue": "**\\AssemblyInfo.*",
+            "defaultValue": "**\\*AssemblyInfo.*",
             "required": true,
             "helpMarkDown": "Relative path from repo root of the assembly info file(s). Variables can be used, eg. <code>$(Build.SourcesDirectory)</code>. You can also use wildcards, eg. <code>\\*\\*\\AssemblyInfo.\\*</code> for all AssemblyInfo.* files in all sub folders."
         },

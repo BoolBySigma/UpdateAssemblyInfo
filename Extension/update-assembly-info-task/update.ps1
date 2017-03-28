@@ -181,10 +181,7 @@ try {
 	$files = @()
 
 	if (Test-Path -LiteralPath $assemblyInfoFiles) {
-		$file = (Resolve-Path $assemblyInfoFiles).Path
-		if ($file -like "*\AssemblyInfo.*") {
-			$files += $file
-		}
+		$files += (Resolve-Path $assemblyInfoFiles).Path
 	} else {
 		$files = Get-ChildItem $assemblyInfoFiles -Recurse | ForEach-Object {$_.FullName}
 	}
