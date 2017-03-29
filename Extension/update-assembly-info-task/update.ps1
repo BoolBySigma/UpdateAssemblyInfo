@@ -177,10 +177,6 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
     $parameters | format-table -property Parameter, Value
 
-    # Exporting variables
-    Write-VstsSetVariable -Name 'Assembly.FileVersion' -Value $fileVersion
-    Write-VstsSetVariable -Name 'Assembly.AssemblyVersion' -Value $assemblyVersion
-
     # Update files
     Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll")
 
@@ -194,12 +190,17 @@ try {
     }
 
     if ($files) {		
-		Write-Output "Updating..."
+        Write-Output "Updating..."
         $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible
 
         Write-Output "Updated:"
-		$result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
+        $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
         $result | format-table -property File, FileVersion, AssemblyVersion
+		
+        # Exporting variables
+		$firstResult = $result[0]
+        Write-VstsSetVariable -Name 'Assembly.FileVersion' -Value $firstResult.FileVersion
+        Write-VstsSetVariable -Name 'Assembly.AssemblyVersion' -Value $firstResult.AssemblyVersion
     }
     else {
         Write-VstsTaskError "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
