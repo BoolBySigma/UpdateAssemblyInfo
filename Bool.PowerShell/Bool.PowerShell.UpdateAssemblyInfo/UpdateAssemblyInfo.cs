@@ -36,7 +36,9 @@
             this.updater.CLSCompliant = this.CLSCompliant;
             this.updater.ComVisible = this.ComVisible;
             this.updater.Guid = this.Guid;
-            this.updater.InternalExecute();
+            var result = this.updater.InternalExecute();
+
+            this.WriteObject(result);
         }
 
         #region Properties

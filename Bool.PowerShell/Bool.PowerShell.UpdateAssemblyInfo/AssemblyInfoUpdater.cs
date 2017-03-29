@@ -16,7 +16,7 @@
         /// <summary>
         ///     Executes the logic for this workflow activity.
         /// </summary>
-        public void InternalExecute()
+        public List<UpdateResult> InternalExecute()
         {
             // initialize values
             var now = DateTime.Now;
@@ -33,6 +33,8 @@
             this.AssemblyVersions = new List<Version>();
             this.AssemblyFileVersions = new List<Version>();
             this.AssemblyInformationalVersions = new List<string>();
+
+            var result = new List<UpdateResult>();
 
             // update all files
             var files = this.Files;
@@ -108,14 +110,20 @@
                         File.SetAttributes(path, FileAttributes.ReadOnly);
                     }
 
-                    // log successful update
-                    //this.LogBuildMessage("AssemblyInfo file '" + path + "' was successfully updated.", BuildMessageImportance.High);
+                    result.Add(new UpdateResult()
+                    {
+                        File = path,
+                        FileVersion = fileVersion,
+                        AssemblyVersion = version
+                    });
                 }
 
                 this.AssemblyVersions = versions;
                 this.AssemblyFileVersions = fileVersions;
                 this.AssemblyInformationalVersions = infoVersions;
             }
+
+            return result;
         }
 
         #endregion
