@@ -57,6 +57,7 @@ Defining eg. 'Description' as 'This description is $(Invalid)' or simply '$(Inva
 
 ### Output Variables
 Variables that can be used by subsequent tasks.
+Values from the first assembly info file will be passed to variables if multiple files are updated.
 * `$(Assembly.FileVersion)`: The assembly file version value.
 * `$(Assembly.AssemblyVersion)`: The assembly version value.
 
