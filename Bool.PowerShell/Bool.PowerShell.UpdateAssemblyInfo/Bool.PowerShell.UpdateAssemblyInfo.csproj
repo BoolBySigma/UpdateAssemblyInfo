@@ -53,6 +53,7 @@
     <Compile Include="AssemblyInfoUpdater.cs" />
     <Compile Include="UpdateAssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Bool.snk" />
