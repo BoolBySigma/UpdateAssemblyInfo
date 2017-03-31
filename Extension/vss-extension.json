@@ -6,7 +6,7 @@
     "publisher": "bool",
     "targets": [
         {
-            "id": "Microsoft.VisualStudio.Services.Cloud"
+            "id": "Microsoft.VisualStudio.Services"
         }
     ],
     "description": "Update assembly info of one or multiple projects",
