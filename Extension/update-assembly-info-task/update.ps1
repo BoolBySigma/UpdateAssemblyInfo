@@ -80,7 +80,7 @@ function Set-NullIfEmpty {
     )
 
     if ([string]::IsNullOrEmpty($parameter)) {
-        return $null;
+        return $null
     }
 
     return $parameter
