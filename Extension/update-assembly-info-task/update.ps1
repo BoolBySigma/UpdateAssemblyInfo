@@ -73,6 +73,17 @@ function Block-InvalidVersion {
     }
 }
 
+function Set-NullIfEmpty {
+    param(
+        [string]
+        $parameter
+    )
+
+    if ([string]::IsNullOrEmpty($parameter)) {
+        $parameter = $null
+    }	
+}
+
 try {
     # Check description
     Block-InvalidVariable "Description" $description
@@ -162,6 +173,16 @@ try {
     $informationalVersion = $informationalVersion.Replace("`$(Assembly.AssemblyVersionRevision)", $assemblyVersionRevision)
 
     $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
+    
+    # Ensure null values if empty
+    Set-NullIfEmpty $description
+    Set-NullIfEmpty $configuration
+    Set-NullIfEmpty $company
+    Set-NullIfEmpty $product
+    Set-NullIfEmpty $copyright
+    Set-NullIfEmpty $trademark
+    Set-NullIfEmpty $informationalVersion
+
 
     # Print parameters
     $parameters = @()
