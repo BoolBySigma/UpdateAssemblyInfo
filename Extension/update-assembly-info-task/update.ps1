@@ -177,13 +177,13 @@ try {
     $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
     
     # Ensure null values if empty
-    $description Set-NullIfEmpty $description
-    $configuration Set-NullIfEmpty $configuration
-    $company Set-NullIfEmpty $company
-    $product Set-NullIfEmpty $product
-    $copyright Set-NullIfEmpty $copyright
-    $trademark Set-NullIfEmpty $trademark
-    $informationalVersion Set-NullIfEmpty $informationalVersion
+    $description = (Set-NullIfEmpty $description)
+    $configuration = (Set-NullIfEmpty $configuration)
+    $company = (Set-NullIfEmpty $company)
+    $product = (Set-NullIfEmpty $product)
+    $copyright = (Set-NullIfEmpty $copyright)
+    $trademark = (Set-NullIfEmpty $trademark)
+    $informationalVersion = (Set-NullIfEmpty $informationalVersion)
 
 
     # Print parameters
