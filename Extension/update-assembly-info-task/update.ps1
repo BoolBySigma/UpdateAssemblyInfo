@@ -80,8 +80,10 @@ function Set-NullIfEmpty {
     )
 
     if ([string]::IsNullOrEmpty($parameter)) {
-        $parameter = $null
-    }	
+        return $null;
+    }
+
+    return $parameter
 }
 
 try {
@@ -175,13 +177,13 @@ try {
     $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
     
     # Ensure null values if empty
-    Set-NullIfEmpty $description
-    Set-NullIfEmpty $configuration
-    Set-NullIfEmpty $company
-    Set-NullIfEmpty $product
-    Set-NullIfEmpty $copyright
-    Set-NullIfEmpty $trademark
-    Set-NullIfEmpty $informationalVersion
+    $description Set-NullIfEmpty $description
+    $configuration Set-NullIfEmpty $configuration
+    $company Set-NullIfEmpty $company
+    $product Set-NullIfEmpty $product
+    $copyright Set-NullIfEmpty $copyright
+    $trademark Set-NullIfEmpty $trademark
+    $informationalVersion Set-NullIfEmpty $informationalVersion
 
 
     # Print parameters
@@ -212,7 +214,7 @@ try {
 
     if ($files) {		
         Write-Output "Updating..."
-        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $null -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible
+        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible
 
         Write-Output "Updated:"
         $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
