@@ -3,24 +3,6 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 
-$assemblyInfoFiles = Get-VstsInput -Name assemblyInfoFiles -Require
-$description = Get-VstsInput -Name description
-$configuration = Get-VstsInput -Name configuration
-$company = Get-VstsInput -Name company
-$product = Get-VstsInput -Name product
-$copyright = Get-VstsInput -Name copyright
-$trademark = Get-VstsInput -Name trademark
-$fileVersionMajor = Get-VstsInput -Name fileVersionMajor
-$fileVersionMinor = Get-VstsInput -Name fileVersionMinor
-$fileVersionBuild = Get-VstsInput -Name fileVersionBuild
-$fileVersionRevision = Get-VstsInput -Name fileVersionRevision
-$assemblyVersionMajor = Get-VstsInput -Name assemblyVersionMajor
-$assemblyVersionMinor = Get-VstsInput -Name assemblyVersionMinor
-$assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
-$assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
-$informationalVersion = Get-VstsInput -Name informationalVersion
-$comVisible = Get-VstsInput -Name comVisible -AsBool
-
 $global:errors = 0
 
 function Block-InvalidVariable {
@@ -87,6 +69,24 @@ function Set-NullIfEmpty {
 }
 
 try {
+    $assemblyInfoFiles = Get-VstsInput -Name assemblyInfoFiles -Require
+    $description = Get-VstsInput -Name description
+    $configuration = Get-VstsInput -Name configuration
+    $company = Get-VstsInput -Name company
+    $product = Get-VstsInput -Name product
+    $copyright = Get-VstsInput -Name copyright
+    $trademark = Get-VstsInput -Name trademark
+    $fileVersionMajor = Get-VstsInput -Name fileVersionMajor
+    $fileVersionMinor = Get-VstsInput -Name fileVersionMinor
+    $fileVersionBuild = Get-VstsInput -Name fileVersionBuild
+    $fileVersionRevision = Get-VstsInput -Name fileVersionRevision
+    $assemblyVersionMajor = Get-VstsInput -Name assemblyVersionMajor
+    $assemblyVersionMinor = Get-VstsInput -Name assemblyVersionMinor
+    $assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
+    $assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
+    $informationalVersion = Get-VstsInput -Name informationalVersion
+    $comVisible = Get-VstsInput -Name comVisible -AsBool
+
     # Check description
     Block-InvalidVariable "Description" $description
 
