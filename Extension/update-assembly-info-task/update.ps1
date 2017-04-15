@@ -58,7 +58,7 @@ function Block-InvalidVersion {
     Write-VstsTaskDebug -Message "Block-InvalidVersion: $parameterName"
 
     if ([string]::IsNullOrEmpty($parameter)) {
-        Write-VstsTaskDebug -Message "$parameterName: `$(current)"
+        Write-VstsTaskDebug -Message "$parameterName`: `$(current)"
         return "`$(current)"
     }
     else {
@@ -76,10 +76,10 @@ function Set-NullIfEmpty {
         $parameter
     )
 
-    Write-VstsTaskDebug -Message "Set-NullIfEmpty: $parameterName"
+    Write-VstsTaskDebug -Message "Set-NullIfEmpty`: $parameterName"
 
     if ([string]::IsNullOrEmpty($parameter)) {
-        Write-VstsTaskDebug -Message "$parameterName: `$null"
+        Write-VstsTaskDebug -Message "$parameterName`: `$null"
         return $null
     }
 
@@ -151,8 +151,7 @@ try {
     $assemblyVersionRevision = (Block-InvalidVersion "Assembly Version Revision" "assemblyVersionRevision" $assemblyVersionRevision)
 
     if ($global:errors) {
-        Write-VstsTaskError "Failed with $errors error(s)"
-        Write-VstsSetResult -Result "Failed"
+        Write-VstsSetResult -Result "Failed" -Message "Failed with $errors error(s)"
     }
 
     # Format file version
