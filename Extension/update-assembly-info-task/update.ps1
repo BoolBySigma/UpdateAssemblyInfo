@@ -185,7 +185,6 @@ try {
     $trademark = (Set-NullIfEmpty $trademark)
     $informationalVersion = (Set-NullIfEmpty $informationalVersion)
 
-
     # Print parameters
     $parameters = @()
     $parameters += New-Object PSObject -Property @{Parameter = "Description"; Value = $description}
@@ -226,9 +225,11 @@ try {
         Write-VstsSetVariable -Name 'Assembly.AssemblyVersion' -Value $firstResult.AssemblyVersion
     }
     else {
-        Write-VstsTaskError "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
-        Write-VstsSetResult -Result "Failed"
+        Write-VstsSetResult -Result "Failed" -Message "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
     }
+}
+catch {
+    Write-VstsSetResult -Result "Failed" -Message $_.Exception.Message
 }
 finally {
     Trace-VstsLeavingInvocation $MyInvocation
