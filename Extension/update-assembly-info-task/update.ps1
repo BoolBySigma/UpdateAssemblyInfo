@@ -62,8 +62,8 @@ function Block-InvalidVersion {
         return "`$(current)"
     }
     else {
-        Block-InvalidVariable $displayName $parameter
-        Block-NonNumericParameter $displayName $parameter
+        Block-InvalidVariable $displayName $parameterName $parameter
+        Block-NonNumericParameter $displayName $parameterName $parameter
         return $parameter
     }
 }
