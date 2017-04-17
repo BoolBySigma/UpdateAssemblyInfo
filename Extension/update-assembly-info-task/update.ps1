@@ -155,17 +155,17 @@ try {
     }
 
     # Format file version
-    Write-VstsTaskDebug -Message "Formatting file version"
+    Write-VstsTaskDebug -Message "formatting file version"
     $fileVersion = "$fileVersionMajor.$fileVersionMinor.$fileVersionBuild.$fileVersionRevision"
     Write-VstsTaskDebug -Message "fileVersion: $fileVersion"
 
     # Format assembly version
-    Write-VstsTaskDebug -Message "Formatting assembly version"
+    Write-VstsTaskDebug -Message "formatting assembly version"
     $assemblyVersion = "$assemblyVersionMajor.$assemblyVersionMinor.$assemblyVersionBuild.$assemblyVersionRevision"
     Write-VstsTaskDebug -Message "assmeblyVersion: $assemblyVersion"
 
     # Format description
-    Write-VstsTaskDebug -Message "Formatting description"
+    Write-VstsTaskDebug -Message "formatting description"
     $description = $description.Replace("`$(Assembly.Company)", $company)
     $description = $description.Replace("`$(Assembly.Product)", $product)
     $description = $description.Replace("`$(Assembly.Year)", (Get-Date).Year)
@@ -174,7 +174,7 @@ try {
     Write-VstsTaskDebug -Message "description: $description"
 
     # Format copyright
-    Write-VstsTaskDebug -Message "Formatting copyright"
+    Write-VstsTaskDebug -Message "formatting copyright"
     $copyright = $copyright.Replace("`$(Assembly.Company)", $company)
     $copyright = $copyright.Replace("`$(Assembly.Product)", $product)
     $copyright = $copyright.Replace("`$(Assembly.Year)", (Get-Date).Year)
@@ -183,13 +183,13 @@ try {
     Write-VstsTaskDebug -Message "copyright: $copyright"
 
     # Format trademark
-    Write-VstsTaskDebug -Message "Formatting trademark"
+    Write-VstsTaskDebug -Message "formatting trademark"
     $trademark = $trademark.Replace("`$(Assembly.Company)", $company)
     $trademark = $trademark.Replace("`$(Assembly.Product)", $product)
     Write-VstsTaskDebug -Message "trademark: $trademark"
 
     # Format informational version
-    Write-VstsTaskDebug -Message "Formatting informational version"
+    Write-VstsTaskDebug -Message "formatting informational version"
     $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
     $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionMajor)", $fileVersionMajor)
     $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionMinor)", $fileVersionMinor)
@@ -235,13 +235,13 @@ try {
     $files = @()
 
 
-    Write-VstsTaskDebug -Message "Testing assembly info files path"
+    Write-VstsTaskDebug -Message "testing assembly info files path"
     if (Test-Path -LiteralPath $assemblyInfoFiles) {
-        Write-VstsTaskDebug -Message "Assembly info file path is absolute"
+        Write-VstsTaskDebug -Message "assembly info file path is absolute"
         $files += (Resolve-Path $assemblyInfoFiles).Path
     }
     else {
-        Write-VstsTaskDebug -Message "Getting assembly info files based on minimatch"
+        Write-VstsTaskDebug -Message "getting assembly info files based on minimatch"
         $files = Get-ChildItem $assemblyInfoFiles -Recurse | ForEach-Object {$_.FullName}
     }
 
@@ -250,13 +250,16 @@ try {
         Write-VstsTaskDebug -Message "$files"
         Write-Output "Updating..."
         $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible
+        Write-VstsTaskDebug -Message "updateResult: $updateResult"
 
         Write-Output "Updated:"
         $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
+        Write-VstsTaskDebug -Message "result: $result"
         $result | format-table -property File, FileVersion, AssemblyVersion
 		
-        # Exporting variables
+        Write-VstsTaskDebug -Message "exporting variables"
 		$firstResult = $result[0]
+        Write-VstsTaskDebug -Message "firstResult: $firstResult"
         Write-VstsSetVariable -Name 'Assembly.FileVersion' -Value $firstResult.FileVersion
         Write-VstsSetVariable -Name 'Assembly.AssemblyVersion' -Value $firstResult.AssemblyVersion
     }
