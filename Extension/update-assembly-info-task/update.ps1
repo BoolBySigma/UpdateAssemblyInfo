@@ -250,11 +250,9 @@ try {
         Write-VstsTaskDebug -Message "$files"
         Write-Output "Updating..."
         $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible
-        Write-VstsTaskDebug -Message "updateResult: $updateResult"
 
         Write-Output "Updated:"
         $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
-        Write-VstsTaskDebug -Message "result: $result"
         $result | format-table -property File, FileVersion, AssemblyVersion
 		
         Write-VstsTaskDebug -Message "exporting variables"
