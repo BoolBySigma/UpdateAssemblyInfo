@@ -104,6 +104,7 @@ try {
     $assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
     $informationalVersion = Get-VstsInput -Name informationalVersion
     $comVisible = Get-VstsInput -Name comVisible -AsBool
+	$ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
 
     # Check description
     Block-InvalidVariable "Description" "description" $description
@@ -227,6 +228,7 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
+    $parameters += New-Object PSObject -Property @{Parameter = "Add Missing Attriute"; Value = $ensureAttribute}
     $parameters | format-table -property Parameter, Value
 
     # Update files
@@ -249,7 +251,7 @@ try {
         Write-VstsTaskDebug -Message "files:"
         Write-VstsTaskDebug -Message "$files"
         Write-Output "Updating..."
-        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible
+        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -EnsureAttribute $ensureAttribute
 
         Write-Output "Updated:"
         $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
