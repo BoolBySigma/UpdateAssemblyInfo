@@ -233,8 +233,8 @@ try {
     $copyright =            (Set-NullIfEmpty "copyright" $copyright)
     $trademark =            (Set-NullIfEmpty "trademark" $trademark)
     $informationalVersion = (Set-NullIfEmpty "informationalVersion" $informationalVersion)
-	$fileVersion =          (Set-NullIfEmptyVersion "fileVersion" $fileVersion)
-	$assemblyVersion =      (Set-NullIfEmptyVersion "assemblyVersion" $assemblyVersion)
+	#$fileVersion =          (Set-NullIfEmptyVersion "fileVersion" $fileVersion)
+	#$assemblyVersion =      (Set-NullIfEmptyVersion "assemblyVersion" $assemblyVersion)
 
     # Print parameters
     $parameters = @()
