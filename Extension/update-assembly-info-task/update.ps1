@@ -234,7 +234,7 @@ try {
     $trademark =            (Set-NullIfEmpty "trademark" $trademark)
     $informationalVersion = (Set-NullIfEmpty "informationalVersion" $informationalVersion)
 	$fileVersion =          (Set-NullIfEmptyVersion "fileVersion" $fileVersion)
-	$assemblyVersion =      (Set-NullIfEmptyVersion "assemblyVersion $assemblyVersion
+	$assemblyVersion =      (Set-NullIfEmptyVersion "assemblyVersion $assemblyVersion)
 
     # Print parameters
     $parameters = @()
