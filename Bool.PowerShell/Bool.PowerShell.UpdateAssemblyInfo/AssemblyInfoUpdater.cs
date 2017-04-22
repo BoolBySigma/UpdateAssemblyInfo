@@ -48,7 +48,7 @@
                         throw new FileNotFoundException("AssemblyInfo file not found.", path);
                     }
 
-                    this.file = new AssemblyInfoFile(path);
+                    this.file = new AssemblyInfoFile(path, this.EnsureAttribute);
 
                     // update version attributes
                     version = this.UpdateVersion("AssemblyVersion", this.AssemblyVersion, this.MaxAssemblyVersion);
@@ -484,6 +484,9 @@
         [Description("Gets the updated assembly informational versions.")]
         public IEnumerable<string> AssemblyInformationalVersions { get; set; }
 
+        [Description("Specifiy whether or not to add missing attribute.")]
+        public bool? EnsureAttribute { get; set; }
+
         #endregion
 
         #region Private Helpers
@@ -507,11 +510,14 @@
         // Updates and returns the version of the specified attribute.
         private string UpdateVersion(string attributeName, string format, Version maxVersion)
         {
+            if (string.IsNullOrWhiteSpace(format)) {
+                return string.Empty;
+            }
+
             var oldValue = this.file[attributeName];
-            if (oldValue == null || string.IsNullOrWhiteSpace(format))
+            if (oldValue == null)
             {
-                // do nothing
-                return oldValue;
+                return string.Empty;
             }
 
             // parse old version (handle * character)

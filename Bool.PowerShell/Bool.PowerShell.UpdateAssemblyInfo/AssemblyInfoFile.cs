@@ -21,8 +21,10 @@
         /// <param name="path">
         ///     The AssemblyInfo file to parse.
         /// </param>
-        public AssemblyInfoFile(string path)
+        public AssemblyInfoFile(string path, bool? ensureAttribute)
         {
+            this.ensureAttribute = ensureAttribute;
+
             using (var sr = File.OpenText(path))
             {
                 var line = default(string);
@@ -108,7 +110,10 @@
             {
                 if (!this.attributes.ContainsKey(attributeName))
                 {
-                    // attribute not found
+                    if (this.ensureAttribute.HasValue && this.ensureAttribute.Value){                        
+                        return this.CreateAttribute(attributeName);
+                    }
+
                     return null;
                 }
 
@@ -131,6 +136,45 @@
             }
         }
 
+        private string CreateAttributeFormat(string attributeName){
+            switch (attributeName) {
+                case "ComVisible": {
+                            return "[assembly: " + attributeName + "({0})]";
+                        }
+                default: {
+                            return "[assembly: " + attributeName + "(\"{0}\")]";
+                        }
+            }
+        }
+
+        private string CreateAttributeValue(string attributeName){
+            switch (attributeName) {
+                case "AssemblyVersion":
+                case "AssemblyFileVersion": {
+                        return "1.0.0.0";
+                }
+                default: {
+                        return string.Empty;
+                }
+            }
+        }
+
+        private string CreateAttribute(string attributeName){
+
+            var attributeValue = this.CreateAttributeValue(attributeName);
+            
+            this.lines.Add(attributeValue);
+            var lineNumber = this.lines.Count - 1;
+
+            this.attributes[attributeName] = new MatchResult {
+                    Format = this.CreateAttributeFormat(attributeName),
+                    LineNumber = lineNumber,
+                    Value = attributeValue
+                };
+
+            return attributeValue;
+        }
+        
         #endregion
 
         #region Methods
@@ -187,6 +231,8 @@
 
         // assembly attributes
         private readonly IDictionary<string, MatchResult> attributes = new Dictionary<string, MatchResult>();
+
+        private bool? ensureAttribute = false;
 
         #endregion
     }

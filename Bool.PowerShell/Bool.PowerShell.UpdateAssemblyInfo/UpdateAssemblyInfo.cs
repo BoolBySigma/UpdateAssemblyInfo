@@ -36,6 +36,7 @@
             this.updater.CLSCompliant = this.CLSCompliant;
             this.updater.ComVisible = this.ComVisible;
             this.updater.Guid = this.Guid;
+            this.updater.EnsureAttribute = this.EnsureAttribute;
             var result = this.updater.InternalExecute();
 
             this.WriteObject(result);
@@ -408,6 +409,10 @@
         /// </summary>
         [Description("Gets the updated assembly informational versions.")]
         public IEnumerable<string> AssemblyInformationalVersions { get; set; }
+
+        [Description("Specifiy whether or not to add missing attribute.")]
+        [Parameter()]
+        public bool? EnsureAttribute { get; set; }
 
         #endregion
     }
