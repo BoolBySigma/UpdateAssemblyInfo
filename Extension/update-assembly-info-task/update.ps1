@@ -86,6 +86,24 @@ function Set-NullIfEmpty {
     return $parameter
 }
 
+function Set-NullIfEmptyVersion {
+	param(
+		[string]
+		$parameterName,
+		[string]
+		$paramter
+	)
+
+	Write-VstsTaskDebug -Message "Set-NullIfEmptyVersion`: $parameterName"
+
+	if ($parameter -eq "`$(current).`$(current).`$(current).`$(current)") {
+        Write-VstsTaskDebug -Message "$parameterName`: `$null"
+		return $null
+	}
+
+	return $parameter
+}
+
 try {
     $assemblyInfoFiles = Get-VstsInput -Name assemblyInfoFiles -Require
     $description = Get-VstsInput -Name description
@@ -215,6 +233,8 @@ try {
     $copyright =            (Set-NullIfEmpty "copyright" $copyright)
     $trademark =            (Set-NullIfEmpty "trademark" $trademark)
     $informationalVersion = (Set-NullIfEmpty "informationalVersion" $informationalVersion)
+	$fileVersion =          (Set-NullIfEmptyVersion "fileVersion" $fileVersion)
+	$assemblyVersion =      (Set-NullIfEmptyVersion "assemblyVersion $assemblyVersion
 
     # Print parameters
     $parameters = @()
@@ -228,7 +248,7 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
-    $parameters += New-Object PSObject -Property @{Parameter = "Add Missing Attriute"; Value = $ensureAttribute}
+    $parameters += New-Object PSObject -Property @{Parameter = "Add Missing Attriutes"; Value = $ensureAttribute}
     $parameters | format-table -property Parameter, Value
 
     # Update files
