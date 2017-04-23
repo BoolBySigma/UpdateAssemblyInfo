@@ -45,7 +45,7 @@
       "name": "description",
       "type": "string",
       "label": "Description",
-      "defaultValue": "$(Date:d) - Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
+      "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
       "required": false,
       "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Assembly.Year)</code>: Provides the current year.</li></ul>Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
     },
