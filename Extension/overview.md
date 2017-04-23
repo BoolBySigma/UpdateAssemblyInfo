@@ -68,7 +68,7 @@ Examples:
 See [list of date formats](https://ss64.com/ps/syntax-dateformats.html) for more examples.
 
 Can be combined, with or without separators, to produce custom date formats.
-Eg. `$(Date:yyyy, MMMM, MM, dddd, dd, HH, mm, ss)` will generate '2017, April, 04, Sunday, 23, 20, 22, 27'
+`$(Date:yyyy, MMMM, MM, dddd, dd, HH, mm, ss)` will generate eg. '2017, April, 04, Sunday, 23, 20, 22, 27'
 
 ### The `$(Invalid)` Variable
 Use `$(Invalid)` in any input field to throw error and force the user to change the value to something useful. This can be useful when working with task groups or creating a template.
