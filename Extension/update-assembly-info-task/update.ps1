@@ -3,7 +3,7 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 
-$global:errors = 0
+$script:errors = 0
 
 function Use-Parameter {
     param(
@@ -49,11 +49,13 @@ function Expand-DateVariable {
 
     Write-VstsTaskDebug -Message "Expand-DateVariable: $parameterName"
 
-    Write-VstsTaskDebug -Message "value: $value"
+    $script:dateVariableValue = $value
+
+    Write-VstsTaskDebug -Message "value: $script:dateVariableValue"
 
     $variableFormat = '(\$\(Date:([^\)]*)\))'
 
-    $matches = [regex]::Matches($value, $variableFormat, "Ignorecase")
+    $matches = [regex]::Matches($script:dateVariableValue, $variableFormat, "Ignorecase")
 
     $matches | ForEach-Object {
         if ($_.Success) {
@@ -63,10 +65,14 @@ function Expand-DateVariable {
             $date = Get-Date -Format "$($_.Groups[2].Value)"
             Write-VstsTaskDebug -Message "date: $date"
 
-            $value = $value -replace "$($_.Groups[1].Value)","$date"
-            Write-VstsTaskDebug -Message "value: $value"
+            $script:dateVariableValue = $script:dateVariableValue -replace "$($_.Groups[1].Value)","$date"
+            Write-VstsTaskDebug -Message "value: $script:dateVariableValue"
         }
     }
+
+    $value = $script:dateVariableValue
+
+    $script:dateVariableValue = null
 
     return $value
 }
@@ -86,7 +92,7 @@ function Block-InvalidVariable {
     if (![string]::IsNullOrEmpty($parameter)) {
         if ($parameter.Contains("`$(Invalid)")) {
             Write-VstsTaskError "$displayName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
-            $global:errors += 1
+            $script:errors += 1
         }
     }
 }
@@ -106,7 +112,7 @@ function Block-NonNumericParameter {
     if (![string]::IsNullOrEmpty($parameter)) {
         if (!($parameter -match "^[\d\.]+$")) {
             Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
-            $global:errors += 1
+            $script:errors += 1
         }
     }	
 }
@@ -219,7 +225,7 @@ try {
     $assemblyVersionRevision = (Block-InvalidVersion "Assembly Version Revision" "assemblyVersionRevision" $assemblyVersionRevision)
 
     if ($global:errors) {
-        Write-VstsSetResult -Result "Failed" -Message "Failed with $errors error(s)"
+        Write-VstsSetResult -Result "Failed" -Message "Failed with $script:errors error(s)"
     }
 
     # Format file version
