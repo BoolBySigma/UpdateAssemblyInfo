@@ -63,7 +63,7 @@ function Expand-DateVariable {
             $date = Get-Date -Format "$($_.Groups[2].Value)"
             Write-VstsTaskDebug -Message "date: $date"
 
-            $value = $value -replace "$_.Groups[1].Value","$date"
+            $value = $value -replace "$($_.Groups[1].Value)","$date"
             Write-VstsTaskDebug -Message "value: $value"
         }
     }
