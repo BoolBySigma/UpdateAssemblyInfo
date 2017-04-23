@@ -89,13 +89,13 @@ function Block-InvalidVariable {
         [string]
         $parameterName,
         [string]
-        $parameter
+        $value
     )
 
     Write-VstsTaskDebug -Message "Block-InvalidVariable: $parameterName"
 
-    if (![string]::IsNullOrEmpty($parameter)) {
-        if ($parameter.Contains("`$(Invalid)")) {
+    if (![string]::IsNullOrEmpty($value)) {
+        if ($value.Contains("`$(Invalid)")) {
             Write-VstsTaskError "$displayName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
             $script:errors += 1
         }
@@ -109,14 +109,14 @@ function Block-NonNumericParameter {
         [string]
         $parameterName,
         [string]
-        $parameter
+        $value
     )
 
     Write-VstsTaskDebug -Message "Block-NonNumericParameter: $parameterName"
 
-    if (![string]::IsNullOrEmpty($parameter)) {
-        if (!($parameter -match "^[\d\.]+$")) {
-            Write-VstsTaskError "Invalid value for `'$displayName`'. `'$parameter`' is not a numerical value."
+    if (![string]::IsNullOrEmpty($value)) {
+        if (!($value -match "^[\d\.]+$")) {
+            Write-VstsTaskError "Invalid value for `'$displayName`'. `'$value`' is not a numerical value."
             $script:errors += 1
         }
     }	
@@ -160,55 +160,39 @@ try {
     $comVisible = Get-VstsInput -Name comVisible -AsBool
 	$ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
 
-    # Check description
     $description = Use-Parameter "Description" "description" $description
-    #Block-InvalidVariable "Description" "description" $description
+    
+    $configuration = Use-Parameter "Configuration" "configuration" $configuration
 
-    # Check configuration
-    Block-InvalidVariable "Configuration" "configuration" $configuration
+    $company = Use-Parameter "Company" "company" $company
 
-    # Check company
-    Block-InvalidVariable "Company" "company" $company
+    $product = Use-Parameter "Product" "product" $product
 
-    # Check product
-    Block-InvalidVariable "Product" "product" $product
+    $copyright = Use-Parameter "Copyright" "copyright" $copyright
 
-    # Check copyright
-    Block-InvalidVariable "Copyright" "copyright" $copyright
+    $trademark = Use-Parameter "Trademark" "trademark" $trademark
 
-    # Check trademark
-    Block-InvalidVariable "Trademark" "trademark" $trademark
+    $informationalVersion = Use-Parameter "Informational Version" "informationalVersion" $informationalVersion
 
-    # Check informational version
-    Block-InvalidVariable "Informational Version" "informationalVersion" $informationalVersion
-
-    # Check fileVersionMajor
     $fileVersionMajor = Use-Version "File Version Major" "fileVersionMajor" $fileVersionMajor
-    #$fileVersionMajor = (Block-InvalidVersion "File Version Major" "fileVersionMajor" $fileVersionMajor)
-
-    # Check fileVersionMinor
+    
     $fileVersionMinor = Use-Version "File Version Minor" "fileVersionMinor" $fileVersionMinor
 
-    # Check fileVersionBuild
     $fileVersionBuild = Use-Version "File Version Build" "fileVersionBuild" $fileVersionBuild
 
-    # Check fileVersionRevision
     $fileVersionRevision = Use-Version "File Version Revision" "fileVersionRevision" $fileVersionRevision
 
-    # Check assemblyVersionMajor
     $assemblyVersionMajor = Use-Version "Assembly Version Major" "assemblyVersionMajor" $assemblyVersionMajor
 
-    # Check assemblyVersionMinor
     $assemblyVersionMinor = Use-Version "Assembly Version Minor" "assemblyVersionMinor" $assemblyVersionMinor
 
-    # Check assemblyVersionBuild
     $assemblyVersionBuild = Use-Version "Assembly Version Build" "assemblyVersionBuild" $assemblyVersionBuild
 
-    # Check assemblyVersionRevision
     $assemblyVersionRevision = Use-Version "Assembly Version Revision" "assemblyVersionRevision" $assemblyVersionRevision
 
     if ($global:errors) {
-        Write-VstsSetResult -Result "Failed" -Message "Failed with $script:errors error(s)"
+        throw [System.Exception] "Failed with $script:errors error(s)"
+        #Write-VstsSetResult -Result "Failed" -Message "Failed with $script:errors error(s)"
     }
 
     # Format file version
@@ -225,8 +209,8 @@ try {
     Write-VstsTaskDebug -Message "formatting description"
     $description = $description.Replace("`$(Assembly.Company)", $company)
     $description = $description.Replace("`$(Assembly.Product)", $product)
-    $description = $description.Replace("`$(Assembly.Year)", (Get-Date).Year)
     # Leave in for legacy functionality
+    $description = $description.Replace("`$(Assembly.Year)", (Get-Date).Year)
     $description = $description.Replace("`$(Year)", (Get-Date).Year)
     Write-VstsTaskDebug -Message "description: $description"
 
@@ -234,8 +218,8 @@ try {
     Write-VstsTaskDebug -Message "formatting copyright"
     $copyright = $copyright.Replace("`$(Assembly.Company)", $company)
     $copyright = $copyright.Replace("`$(Assembly.Product)", $product)
-    $copyright = $copyright.Replace("`$(Assembly.Year)", (Get-Date).Year)
     # Leave in for legacy functionality
+    $copyright = $copyright.Replace("`$(Assembly.Year)", (Get-Date).Year)
     $copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
     Write-VstsTaskDebug -Message "copyright: $copyright"
 
@@ -262,18 +246,10 @@ try {
 
     $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
     Write-VstsTaskDebug -Message "informationalVersionDisplay: $informationalVersionDisplay"
-    
-    # Ensure null values if empty
-    #$description =          (Set-NullIfEmpty "description" $description)
-    $configuration =        (Set-NullIfEmpty "configuration" $configuration)
-    $company =              (Set-NullIfEmpty "company" $company)
-    $product =              (Set-NullIfEmpty "product" $product)
-    $copyright =            (Set-NullIfEmpty "copyright" $copyright)
-    $trademark =            (Set-NullIfEmpty "trademark" $trademark)
-    $informationalVersion = (Set-NullIfEmpty "informationalVersion" $informationalVersion)
 
     # Print parameters
     $parameters = @()
+    $parameters += New-Object PSObject -Property @{Parameter = "Add Missing Attriutes"; Value = $ensureAttribute}
     $parameters += New-Object PSObject -Property @{Parameter = "Description"; Value = $description}
     $parameters += New-Object PSObject -Property @{Parameter = "Configuration"; Value = $configuration}
     $parameters += New-Object PSObject -Property @{Parameter = "Company"; Value = $company}
@@ -284,14 +260,12 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
-    $parameters += New-Object PSObject -Property @{Parameter = "Add Missing Attriutes"; Value = $ensureAttribute}
     $parameters | format-table -property Parameter, Value
 
     # Update files
     Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll")
 
     $files = @()
-
 
     Write-VstsTaskDebug -Message "testing assembly info files path"
     if (Test-Path -LiteralPath $assemblyInfoFiles) {
@@ -320,7 +294,8 @@ try {
         Write-VstsSetVariable -Name 'Assembly.AssemblyVersion' -Value $firstResult.AssemblyVersion
     }
     else {
-        Write-VstsSetResult -Result "Failed" -Message "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
+        throw [System.Exception] "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
+        #Write-VstsSetResult -Result "Failed" -Message "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
     }
 }
 catch {
