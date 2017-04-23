@@ -47,7 +47,7 @@
       "label": "Description",
       "defaultValue": "Build: $(Build.BuildNumber) - Commit: $(Build.SourceVersion)",
       "required": false,
-      "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li><li><code>$(Assembly.Year)</code>: Provides the current year.</li></ul>Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
+      "helpMarkDown": "Left blank, the value is not updated. Variables can be used including these task-specific variables:<ul><li><code>$(Assembly.Company)</code>: The value provided for Company.</li><li><code>$(Assembly.Product)</code>: The value provided for Product.</li></ul>Use the `$(Date:{...})` variable to generate date value. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
     },
     {
       "name": "configuration",
@@ -63,7 +63,7 @@
       "label": "Company",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Left blank, the value is not updated. Variables can be used. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
+      "helpMarkDown": "Left blank, the value is not updated. Variables can be used. Use the `$(Date:{...})` variable to generate date value. Use <code>$(Invalid)</code> to throw error and force the user to change the value to something useful."
     },
     {
       "name": "product",
