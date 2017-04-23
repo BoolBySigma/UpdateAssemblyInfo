@@ -5,6 +5,72 @@ Trace-VstsEnteringInvocation $MyInvocation
 
 $global:errors = 0
 
+function Use-Parameter {
+    param(
+        [string]
+        $displayName,
+        [string]
+        $parameterName,
+        [string]
+        $value
+    )
+
+    Write-VstsTaskDebug -Message "Use-Parameter: $parameterName"
+
+    Block-InvalidVariable $displayName $parameterName $value
+    $value = Expand-DateVariable $displayName $parameterName $value
+    $value = Set-NullIfEmpty $parameterName $value
+
+    return $value
+}
+
+function Use-Version {
+    param(
+        [string]
+        $displayName,
+        [string]
+        $parameterName,
+        [string]
+        $value
+    )
+
+    Write-VstsTaskDebug -Message "Use-Version: $parameterName"
+}
+
+function Expand-DateVariable {
+    param(
+        [string]
+        $displayName,
+        [string]
+        $parameterName,
+        [string]
+        $value
+    )
+
+    Write-VstsTaskDebug -Message "Expand-DateVariable: $parameterName"
+
+    Write-VstsTaskDebug -Message "value: $value"
+
+    $variableFormat = '(\$\(Date:([^\)]*)\))'
+
+    $matches = [regex]::Matches($value, $variableFormat, "Ignorecase")
+
+    $matches | ForEach-Object {
+        if ($_.Success) {
+            Write-VstsTaskDebug -Message "variable: $($_.Groups[1].Value)"
+            Write-VstsTaskDebug -Message "date format: $($_.Groups[2].Value)"
+
+            $date = Get-Date -Format "$($_.Groups[2].Value)"
+            Write-VstsTaskDebug -Message "date: $date"
+
+            $value = $value -replace "$_.Groups[1].Value","$date"
+            Write-VstsTaskDebug -Message "value: $value"
+        }
+    }
+
+    return $value
+}
+
 function Block-InvalidVariable {
     param(
         [string]
@@ -73,17 +139,17 @@ function Set-NullIfEmpty {
         [string]
         $parameterName,
         [string]
-        $parameter
+        $value
     )
 
     Write-VstsTaskDebug -Message "Set-NullIfEmpty`: $parameterName"
 
-    if ([string]::IsNullOrEmpty($parameter)) {
+    if ([string]::IsNullOrEmpty($value)) {
         Write-VstsTaskDebug -Message "$parameterName`: `$null"
         return $null
     }
 
-    return $parameter
+    return $value
 }
 
 try {
@@ -107,7 +173,8 @@ try {
 	$ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
 
     # Check description
-    Block-InvalidVariable "Description" "description" $description
+    $description = Use-Parameter "Description" "description" $description
+    #Block-InvalidVariable "Description" "description" $description
 
     # Check configuration
     Block-InvalidVariable "Configuration" "configuration" $configuration
@@ -208,7 +275,7 @@ try {
     Write-VstsTaskDebug -Message "informationalVersionDisplay: $informationalVersionDisplay"
     
     # Ensure null values if empty
-    $description =          (Set-NullIfEmpty "description" $description)
+    #$description =          (Set-NullIfEmpty "description" $description)
     $configuration =        (Set-NullIfEmpty "configuration" $configuration)
     $company =              (Set-NullIfEmpty "company" $company)
     $product =              (Set-NullIfEmpty "product" $product)
