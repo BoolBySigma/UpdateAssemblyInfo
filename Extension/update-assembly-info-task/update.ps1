@@ -49,9 +49,7 @@ function Expand-DateVariable {
 
     Write-VstsTaskDebug -Message "Expand-DateVariable: $parameterName"
 
-    $script:dateVariableValue = $value
-
-    Write-VstsTaskDebug -Message "value: $script:dateVariableValue"
+    Write-VstsTaskDebug -Message "value: $value"
 
     $variableFormat = '(\$\(Date:([^\)]*)\))'
 
@@ -65,14 +63,10 @@ function Expand-DateVariable {
             $date = Get-Date -Format "$($_.Groups[2].Value)"
             Write-VstsTaskDebug -Message "date: $date"
 
-            $script:dateVariableValue = $script:dateVariableValue -replace "$($_.Groups[1].Value)","$date"
-            Write-VstsTaskDebug -Message "value: $script:dateVariableValue"
+            $value = $value -replace [regex]::Escape($_.Groups[1].Value),"$date"
+            Write-VstsTaskDebug -Message "value: $value"
         }
     }
-
-    $value = $script:dateVariableValue
-
-    $script:dateVariableValue = null
 
     return $value
 }
