@@ -187,25 +187,25 @@ try {
     #$fileVersionMajor = (Block-InvalidVersion "File Version Major" "fileVersionMajor" $fileVersionMajor)
 
     # Check fileVersionMinor
-    $fileVersionMinor = (Block-InvalidVersion "File Version Minor" "fileVersionMinor" $fileVersionMinor)
+    $fileVersionMinor = Use-Version "File Version Minor" "fileVersionMinor" $fileVersionMinor
 
     # Check fileVersionBuild
-    $fileVersionBuild = (Block-InvalidVersion "File Version Build" "fileVersionBuild" $fileVersionBuild)
+    $fileVersionBuild = Use-Version "File Version Build" "fileVersionBuild" $fileVersionBuild
 
     # Check fileVersionRevision
-    $fileVersionRevision = (Block-InvalidVersion "File Version Revision" "fileVersionRevision" $fileVersionRevision)
+    $fileVersionRevision = Use-Version "File Version Revision" "fileVersionRevision" $fileVersionRevision
 
     # Check assemblyVersionMajor
-    $assemblyVersionMajor = (Block-InvalidVersion "Assembly Version Major" "assemblyVersionMajor" $assemblyVersionMajor)
+    $assemblyVersionMajor = Use-Version "Assembly Version Major" "assemblyVersionMajor" $assemblyVersionMajor
 
     # Check assemblyVersionMinor
-    $assemblyVersionMinor = (Block-InvalidVersion "Assembly Version Minor" "assemblyVersionMinor" $assemblyVersionMinor)
+    $assemblyVersionMinor = Use-Version "Assembly Version Minor" "assemblyVersionMinor" $assemblyVersionMinor
 
     # Check assemblyVersionBuild
-    $assemblyVersionBuild = (Block-InvalidVersion "Assembly Version Build" "assemblyVersionBuild" $assemblyVersionBuild)
+    $assemblyVersionBuild = Use-Version "Assembly Version Build" "assemblyVersionBuild" $assemblyVersionBuild
 
     # Check assemblyVersionRevision
-    $assemblyVersionRevision = (Block-InvalidVersion "Assembly Version Revision" "assemblyVersionRevision" $assemblyVersionRevision)
+    $assemblyVersionRevision = Use-Version "Assembly Version Revision" "assemblyVersionRevision" $assemblyVersionRevision
 
     if ($global:errors) {
         Write-VstsSetResult -Result "Failed" -Message "Failed with $script:errors error(s)"
