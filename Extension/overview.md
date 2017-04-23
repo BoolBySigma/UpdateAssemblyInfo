@@ -15,9 +15,8 @@ Parameters include:
 * **Description**: Left blank, the value is not updated. Variables can be used including these task-specific variables:
     * `$(Assembly.Company)`: The value provided for Company.
     * `$(Assembly.Product)`: The value provided for Product.
-    
-    Use the `$(Date:{...})` variable to generate date value.
-    Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+Use the `$(Date:{...})` variable to generate date value.
+Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Configuration**: Left blank, the value is not updated. Variables can be used, eg. `$(BuildConfiguration)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Company**: Left blank, the value is not updated. Variables can be used. Use the `$(Date:{...})` variable to generate date value. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Product**: Left blank, the value is not updated. Variables can be used. Use the `$(Date:{...})` variable to generate date value. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
