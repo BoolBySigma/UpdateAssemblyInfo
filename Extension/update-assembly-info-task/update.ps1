@@ -96,7 +96,7 @@ function Block-InvalidVariable {
 
     if (![string]::IsNullOrEmpty($value)) {
         if ($value.Contains("`$(Invalid)")) {
-            Write-VstsTaskError "$displayName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
+            Write-VstsTaskError -Message "$displayName contains the variable `$(Invalid). Most likely this is because the default value must be changed to something meaningful."
             $script:errors += 1
         }
     }
@@ -116,7 +116,7 @@ function Block-NonNumericParameter {
 
     if (![string]::IsNullOrEmpty($value)) {
         if (!($value -match "^[\d\.]+$")) {
-            Write-VstsTaskError "Invalid value for `'$displayName`'. `'$value`' is not a numerical value."
+            Write-VstsTaskError -Message "Invalid value for `'$displayName`'. `'$value`' is not a numerical value."
             $script:errors += 1
         }
     }	
@@ -297,6 +297,7 @@ try {
     }
 }
 catch {
+    Write-VstsTaskError -Message $_.Exception.Message
     Write-VstsSetResult -Result "Failed" -Message $_.Exception.Message
 }
 finally {
