@@ -15,20 +15,21 @@ Parameters include:
 * **Description**: Left blank, the value is not updated. Variables can be used including these task-specific variables:
     * `$(Assembly.Company)`: The value provided for Company.
     * `$(Assembly.Product)`: The value provided for Product.
-    * `$(Assembly.Year)`: Provides the current year.
+    Use the `$(Date:{...})` variable to generate date value.
     Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Configuration**: Left blank, the value is not updated. Variables can be used, eg. `$(BuildConfiguration)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
-* **Company**: Left blank, the value is not updated. Variables can be used. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
-* **Product**: Left blank, the value is not updated. Variables can be used. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Company**: Left blank, the value is not updated. Variables can be used. Use the `$(Date:{...})` variable to generate date value. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Product**: Left blank, the value is not updated. Variables can be used. Use the `$(Date:{...})` variable to generate date value. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Copyright**: Left blank, the value is not updated. Variables can be used, including these task-specific variables:
     * `$(Assembly.Company)`: The value provided for Company.
     * `$(Assembly.Product)`: The value provided for Product.
-    * `$(Assembly.Year)`: Provides the current year.
+    Use the `$(Date:{...})` variable to generate date value.
     Used togeather this could produce "Copyright © YourCompanyName 2017".
     Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Trademark**: Left blank, the value is not updated. Variables can be used, including these task-specific variables:
     * `$(Assembly.Company)`: The value provided for Company.
     * `$(Assembly.Product)`: The value provided for Product.
+    Use the `$(Date:{...})` variable to generate date value.
     Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Informational Version**: Left blank, the value is not updated. Variables can be used, inlcuding these task-specific variables:
     * `$(Assembly.FileVersion)`: The assembly file version value.
@@ -43,17 +44,17 @@ Parameters include:
     * `$(Assembly.AssemblyVersionRevision)`: The assembly version revision value. Requires Revision to be specified.
     Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Com Visible**: True or False
-* **File Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
-* **File Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
-* **File Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
-* **File Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
-* **Assembly Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
-* **Assembly Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
-* **Assembly Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
-* **Assembly Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **File Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **File Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **File Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **File Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Assembly Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Assembly Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Assembly Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
+* **Assembly Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 
 ### The `$(Date:{...})` Variable
-The `$(Date:{...})` variable is a powerful way of generating date values.
+The `$(Date:{...})` variable is a powerful way of generating date values. It can be used in all input fields.
 Examples:
 * `$(Date:yyyy)`: '2017' (Year in four digits)
 * `$(Date:MMMM)`: 'April'
@@ -63,7 +64,7 @@ Examples:
 * `$(Date:HH)`  : '20' (The hour in24 hour format)
 * `$(Date:mm)`  : '22' (The minute)
 * `$(Date:ss)`  : '27' (The second)
-See [full list of date formats](https://ss64.com/ps/syntax-dateformats.html) for more examples.
+See [list of date formats](https://ss64.com/ps/syntax-dateformats.html) for more examples.
 
 Can be combined, with or without separators, to produce custom date formats.
 Eg. `$(Date:yyyy, MMMM, MM, dddd, dd, HH, mm, ss)` will generate '2017, April, 04, Sunday, 23, 20, 22, 27'
