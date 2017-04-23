@@ -37,7 +37,7 @@
       "name": "ensureAttribute",
       "type": "boolean",
       "label": "Add Missing Attributes",
-      "defaultValue": false,
+      "defaultValue": true,
       "required": false,
       "helpMarkDown": "Adds attribute to assembly info file if it is missing. If the attribute is not specified in this task it will not be added."
     },
