@@ -42,6 +42,7 @@ Parameters include:
     * `$(Assembly.AssemblyVersionMinor)`: The assembly version minor value. Requires Minor to be specified.
     * `$(Assembly.AssemblyVersionBuild)`: The assembly version build value. Requires Build to be specified.
     * `$(Assembly.AssemblyVersionRevision)`: The assembly version revision value. Requires Revision to be specified.
+    Use the `$(Date:{...})` variable to generate date value.
     Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Com Visible**: True or False
 * **File Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
