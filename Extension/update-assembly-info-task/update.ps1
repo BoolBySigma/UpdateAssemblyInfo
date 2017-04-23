@@ -35,6 +35,17 @@ function Use-Version {
     )
 
     Write-VstsTaskDebug -Message "Use-Version: $parameterName"
+
+    if ([string]::IsNullOrEmpty($value)) {
+        Write-VstsTaskDebug -Message "$parameterName`: `$(current)"
+        return "`$(current)"
+    }
+    else {
+        Block-InvalidVariable $displayName $parameterName $value
+        $value = Expand-DateVariable $displayName $parameterName $value
+        Block-NonNumericParameter $displayName $parameterName $value
+        return $value
+    }
 }
 
 function Expand-DateVariable {
@@ -111,29 +122,6 @@ function Block-NonNumericParameter {
     }	
 }
 
-function Block-InvalidVersion {
-    param(
-        [string]
-        $displayName,
-        [string]
-        $parameterName,
-        [string]
-        $parameter
-    )
-
-    Write-VstsTaskDebug -Message "Block-InvalidVersion: $parameterName"
-
-    if ([string]::IsNullOrEmpty($parameter)) {
-        Write-VstsTaskDebug -Message "$parameterName`: `$(current)"
-        return "`$(current)"
-    }
-    else {
-        Block-InvalidVariable $displayName $parameterName $parameter
-        Block-NonNumericParameter $displayName $parameterName $parameter
-        return $parameter
-    }
-}
-
 function Set-NullIfEmpty {
     param(
         [string]
@@ -195,7 +183,8 @@ try {
     Block-InvalidVariable "Informational Version" "informationalVersion" $informationalVersion
 
     # Check fileVersionMajor
-    $fileVersionMajor = (Block-InvalidVersion "File Version Major" "fileVersionMajor" $fileVersionMajor)
+    $fileVersionMajor = Use-Version "File Version Major" "fileVersionMajor" $fileVersionMajor
+    #$fileVersionMajor = (Block-InvalidVersion "File Version Major" "fileVersionMajor" $fileVersionMajor)
 
     # Check fileVersionMinor
     $fileVersionMinor = (Block-InvalidVersion "File Version Minor" "fileVersionMinor" $fileVersionMinor)
