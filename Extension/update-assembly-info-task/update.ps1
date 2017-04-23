@@ -192,7 +192,6 @@ try {
 
     if ($global:errors) {
         throw [System.Exception] "Failed with $script:errors error(s)"
-        #Write-VstsSetResult -Result "Failed" -Message "Failed with $script:errors error(s)"
     }
 
     # Format file version
@@ -295,7 +294,6 @@ try {
     }
     else {
         throw [System.Exception] "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
-        #Write-VstsSetResult -Result "Failed" -Message "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
     }
 }
 catch {
