@@ -62,14 +62,23 @@ function Expand-Variables {
 
     Write-VstsTaskDebug -Message "value: $value"
 
-    Write-VstsTaskDebug -Message "expanding `$(DayOfYear)"
     $value = $value.Replace("`$(DayOfYear)", (Get-Date -UFormat %j))
 
-    Write-VstsTaskDebug -Message "expanding `$(Assembly.Company)"
     $value = $value.Replace("`$(Assembly.Company)", $script:company)
 
-    Write-VstsTaskDebug -Message "expanding `$(Assembly.Product)"
     $value = $value.Replace("`$(Assembly.Product)", $script:product)
+
+    $value = $value.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
+    $value = $value.Replace("`$(Assembly.FileVersionMajor)", $script:fileVersionMajor)
+    $value = $value.Replace("`$(Assembly.FileVersionMinor)", $script:fileVersionMinor)
+    $value = $value.Replace("`$(Assembly.FileVersionBuild)", $script:fileVersionBuild)
+    $value = $value.Replace("`$(Assembly.FileVersionRevision)", $script:fileVersionRevision)
+
+    $value = $value.Replace("`$(Assembly.AssemblyVersion)", "`$(version)")
+    $value = $value.Replace("`$(Assembly.AssemblyVersionMajor)", $script:assemblyVersionMajor)
+    $value = $value.Replace("`$(Assembly.AssemblyVersionMinor)", $script:assemblyVersionMinor)
+    $value = $value.Replace("`$(Assembly.AssemblyVersionBuild)", $script:assemblyVersionBuild)
+    $value = $value.Replace("`$(Assembly.AssemblyVersionRevision)", $script:assemblyVersionRevision)
 
     # Leave in for legacy functionality
     Write-VstsTaskDebug -Message "expanding legacy variables `$(Assembly.Year), `$(Year)"
@@ -175,36 +184,78 @@ function Set-NullIfEmpty {
     return $value
 }
 
+function Get-DisplayValue {
+    param(
+        [string]
+        $parameterName,
+        [string]
+        $value
+    )
+
+    Write-VstsTaskDebug -Message "Get-DisplayValue: $parameterName"
+    Write-VstsTaskDebug -Message "value: $value"
+
+    $value = $value.Replace("`$(fileversion)", $script:fileVersion)
+    $value = $value.Replace("`$(version)", $script:assemblyVersion)
+
+    Write-VstsTaskDebug -Message "value: $value"
+
+    return $value
+}
+
 try {
     $assemblyInfoFiles = Get-VstsInput -Name assemblyInfoFiles -Require
     $description = Get-VstsInput -Name description
     $configuration = Get-VstsInput -Name configuration
-    $company = Get-VstsInput -Name company
-    $product = Get-VstsInput -Name product
+    $script:company = Get-VstsInput -Name company
+    $script:product = Get-VstsInput -Name product
     $copyright = Get-VstsInput -Name copyright
     $trademark = Get-VstsInput -Name trademark
-    $fileVersionMajor = Get-VstsInput -Name fileVersionMajor
-    $fileVersionMinor = Get-VstsInput -Name fileVersionMinor
-    $fileVersionBuild = Get-VstsInput -Name fileVersionBuild
-    $fileVersionRevision = Get-VstsInput -Name fileVersionRevision
-    $assemblyVersionMajor = Get-VstsInput -Name assemblyVersionMajor
-    $assemblyVersionMinor = Get-VstsInput -Name assemblyVersionMinor
-    $assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
-    $assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
+    $script:fileVersionMajor = Get-VstsInput -Name fileVersionMajor
+    $script:fileVersionMinor = Get-VstsInput -Name fileVersionMinor
+    $script:fileVersionBuild = Get-VstsInput -Name fileVersionBuild
+    $script:fileVersionRevision = Get-VstsInput -Name fileVersionRevision
+    $script:assemblyVersionMajor = Get-VstsInput -Name assemblyVersionMajor
+    $script:assemblyVersionMinor = Get-VstsInput -Name assemblyVersionMinor
+    $script:assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
+    $script:assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
     $informationalVersion = Get-VstsInput -Name informationalVersion
     $comVisible = Get-VstsInput -Name comVisible -AsBool
-    $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
+    $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool  
 
-    $script:company = $company
-    $script:product = $product
+    $script:fileVersionMajor = Use-Version "File Version Major" "fileVersionMajor" $script:fileVersionMajor
+    
+    $script:fileVersionMinor = Use-Version "File Version Minor" "fileVersionMinor" $script:fileVersionMinor
+
+    $script:fileVersionBuild = Use-Version "File Version Build" "fileVersionBuild" $script:fileVersionBuild
+
+    $script:fileVersionRevision = Use-Version "File Version Revision" "fileVersionRevision" $script:fileVersionRevision
+
+    $script:assemblyVersionMajor = Use-Version "Assembly Version Major" "assemblyVersionMajor" $script:assemblyVersionMajor
+
+    $script:assemblyVersionMinor = Use-Version "Assembly Version Minor" "assemblyVersionMinor" $script:assemblyVersionMinor
+
+    $script:assemblyVersionBuild = Use-Version "Assembly Version Build" "assemblyVersionBuild" $script:assemblyVersionBuild
+
+    $script:assemblyVersionRevision = Use-Version "Assembly Version Revision" "assemblyVersionRevision" $script:assemblyVersionRevision
+
+    Write-VstsTaskDebug -Message "formatting file version"
+    $fileVersion = "$script:fileVersionMajor.$script:fileVersionMinor.$script:fileVersionBuild.$script:fileVersionRevision"
+    Write-VstsTaskDebug -Message "fileVersion: $fileVersion"
+    $script:fileVersion = $fileVersion
+
+    Write-VstsTaskDebug -Message "formatting assembly version"
+    $assemblyVersion = "$script:assemblyVersionMajor.$script:assemblyVersionMinor.$script:assemblyVersionBuild.$script:assemblyVersionRevision"
+    Write-VstsTaskDebug -Message "assmeblyVersion: $assemblyVersion"
+    $script:assemblyVersion = $assemblyVersion
 
     $description = Use-Parameter "Description" "description" $description
     
     $configuration = Use-Parameter "Configuration" "configuration" $configuration
 
-    $company = Use-Parameter "Company" "company" $company
+    $script:company = Use-Parameter "Company" "company" $script:company
 
-    $product = Use-Parameter "Product" "product" $product
+    $script:product = Use-Parameter "Product" "product" $script:product
 
     $copyright = Use-Parameter "Copyright" "copyright" $copyright
 
@@ -212,64 +263,20 @@ try {
 
     $informationalVersion = Use-Parameter "Informational Version" "informationalVersion" $informationalVersion
 
-    $fileVersionMajor = Use-Version "File Version Major" "fileVersionMajor" $fileVersionMajor
-    
-    $fileVersionMinor = Use-Version "File Version Minor" "fileVersionMinor" $fileVersionMinor
-
-    $fileVersionBuild = Use-Version "File Version Build" "fileVersionBuild" $fileVersionBuild
-
-    $fileVersionRevision = Use-Version "File Version Revision" "fileVersionRevision" $fileVersionRevision
-
-    $assemblyVersionMajor = Use-Version "Assembly Version Major" "assemblyVersionMajor" $assemblyVersionMajor
-
-    $assemblyVersionMinor = Use-Version "Assembly Version Minor" "assemblyVersionMinor" $assemblyVersionMinor
-
-    $assemblyVersionBuild = Use-Version "Assembly Version Build" "assemblyVersionBuild" $assemblyVersionBuild
-
-    $assemblyVersionRevision = Use-Version "Assembly Version Revision" "assemblyVersionRevision" $assemblyVersionRevision
-
     if ($global:errors) {
         throw [System.Exception] "Failed with $script:errors error(s)"
     }
 
-    # Format file version
-    Write-VstsTaskDebug -Message "formatting file version"
-    $fileVersion = "$fileVersionMajor.$fileVersionMinor.$fileVersionBuild.$fileVersionRevision"
-    Write-VstsTaskDebug -Message "fileVersion: $fileVersion"
-
-    # Format assembly version
-    Write-VstsTaskDebug -Message "formatting assembly version"
-    $assemblyVersion = "$assemblyVersionMajor.$assemblyVersionMinor.$assemblyVersionBuild.$assemblyVersionRevision"
-    Write-VstsTaskDebug -Message "assmeblyVersion: $assemblyVersion"
-
-    # Format informational version
-    Write-VstsTaskDebug -Message "formatting informational version"
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersion)", "`$(fileversion)")
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionMajor)", $fileVersionMajor)
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionMinor)", $fileVersionMinor)
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionBuild)", $fileVersionBuild)
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.FileVersionRevision)", $fileVersionRevision)
-
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.AssemblyVersion)", $assemblyVersion)
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.AssemblyVersionMajor)", $assemblyVersionMajor)
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.AssemblyVersionMinor)", $assemblyVersionMinor)
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.AssemblyVersionBuild)", $assemblyVersionBuild)
-    $informationalVersion = $informationalVersion.Replace("`$(Assembly.AssemblyVersionRevision)", $assemblyVersionRevision)
-    Write-VstsTaskDebug -Message "informationalVersion: $informationalVersion"
-
-    $informationalVersionDisplay = $informationalVersion.Replace("`$(fileversion)", $fileVersion)
-    Write-VstsTaskDebug -Message "informationalVersionDisplay: $informationalVersionDisplay"
-
     # Print parameters
     $parameters = @()
     $parameters += New-Object PSObject -Property @{Parameter = "Add Missing Attriutes"; Value = $ensureAttribute}
-    $parameters += New-Object PSObject -Property @{Parameter = "Description"; Value = $description}
-    $parameters += New-Object PSObject -Property @{Parameter = "Configuration"; Value = $configuration}
-    $parameters += New-Object PSObject -Property @{Parameter = "Company"; Value = $company}
-    $parameters += New-Object PSObject -Property @{Parameter = "Product"; Value = $product}
-    $parameters += New-Object PSObject -Property @{Parameter = "Copyright"; Value = $copyright}
-    $parameters += New-Object PSObject -Property @{Parameter = "Trademark"; Value = $trademark}
-    $parameters += New-Object PSObject -Property @{Parameter = "Informational Version"; Value = $informationalVersionDisplay}
+    $parameters += New-Object PSObject -Property @{Parameter = "Description"; Value = (Get-DisplayValue "description" $description)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Configuration"; Value = (Get-DisplayValue "configuration" $configuration)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Company"; Value = (Get-DisplayValue "company" $script:company)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Product"; Value = (Get-DisplayValue "product" $script:product)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Copyright"; Value = (Get-DisplayValue "copyright" $copyright)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Trademark"; Value = (Get-DisplayValue "trademark" $trademark)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Informational Version"; Value = (Get-DisplayValue "informationalVersionDisplay" $informationalVersionDisplay)}
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
@@ -294,7 +301,7 @@ try {
         Write-VstsTaskDebug -Message "files:"
         Write-VstsTaskDebug -Message "$files"
         Write-Output "Updating..."
-        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $company -AssemblyProduct $product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -EnsureAttribute $ensureAttribute
+        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $script:company -AssemblyProduct $script:product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -EnsureAttribute $ensureAttribute
 
         Write-Output "Updated:"
         $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
