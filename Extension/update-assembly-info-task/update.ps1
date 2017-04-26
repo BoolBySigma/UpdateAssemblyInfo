@@ -117,7 +117,7 @@ function Expand-DateVariables {
             $date = Get-Date -Format "$($_.Groups[2].Value)"
             Write-VstsTaskDebug -Message "date: $date"
 
-            $value = $value.Replace([regex]::Escape($_.Groups[1].Value), "$date")
+            $value = $value.Replace([regex]::Escape($_.Groups[1].Value), $date)
             Write-VstsTaskDebug -Message "value after date variable expansion: $value"
         }
     }
