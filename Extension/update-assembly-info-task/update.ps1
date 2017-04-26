@@ -276,7 +276,7 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Product"; Value = (Get-DisplayValue "product" $script:product)}
     $parameters += New-Object PSObject -Property @{Parameter = "Copyright"; Value = (Get-DisplayValue "copyright" $copyright)}
     $parameters += New-Object PSObject -Property @{Parameter = "Trademark"; Value = (Get-DisplayValue "trademark" $trademark)}
-    $parameters += New-Object PSObject -Property @{Parameter = "Informational Version"; Value = (Get-DisplayValue "informationalVersionDisplay" $informationalVersionDisplay)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Informational Version"; Value = (Get-DisplayValue "informationalVersion" $informationalVersion)}
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
