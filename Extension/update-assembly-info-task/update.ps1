@@ -58,12 +58,23 @@ function Expand-Variables {
         $value
     )
 
-    Write-VstsTaskDebug -Message "Expand-DateVariable: $parameterName"
+    Write-VstsTaskDebug -Message "Expand-Variables: $parameterName"
 
     Write-VstsTaskDebug -Message "value: $value"
 
     Write-VstsTaskDebug -Message "expanding `$(DayOfYear)"
     $value = $value.Replace("`$(DayOfYear)", (Get-Date -UFormat %j))
+
+    Write-VstsTaskDebug -Message "expanding `$(Assembly.Company)"
+    $value = $value.Replace("`$(Assembly.Company)", $script:company)
+
+    Write-VstsTaskDebug -Message "expanding `$(Assembly.Product)"
+    $value = $value.Replace("`$(Assembly.Product)", $script:product)
+
+    # Leave in for legacy functionality
+    Write-VstsTaskDebug -Message "expanding legacy variables `$(Assembly.Year), `$(Year)"
+    $value = $value.Replace("`$(Assembly.Year)", (Get-Date).Year)
+    $value = $value.Replace("`$(Year)", (Get-Date).Year)
 
     $value = Expand-DateVariable $displayName $parameterName $value
 
@@ -184,6 +195,9 @@ try {
     $comVisible = Get-VstsInput -Name comVisible -AsBool
     $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
 
+    $script:company = $company
+    $script:product = $product
+
     $description = Use-Parameter "Description" "description" $description
     
     $configuration = Use-Parameter "Configuration" "configuration" $configuration
@@ -227,30 +241,6 @@ try {
     Write-VstsTaskDebug -Message "formatting assembly version"
     $assemblyVersion = "$assemblyVersionMajor.$assemblyVersionMinor.$assemblyVersionBuild.$assemblyVersionRevision"
     Write-VstsTaskDebug -Message "assmeblyVersion: $assemblyVersion"
-
-    # Format description
-    Write-VstsTaskDebug -Message "formatting description"
-    $description = $description.Replace("`$(Assembly.Company)", $company)
-    $description = $description.Replace("`$(Assembly.Product)", $product)
-    # Leave in for legacy functionality
-    $description = $description.Replace("`$(Assembly.Year)", (Get-Date).Year)
-    $description = $description.Replace("`$(Year)", (Get-Date).Year)
-    Write-VstsTaskDebug -Message "description: $description"
-
-    # Format copyright
-    Write-VstsTaskDebug -Message "formatting copyright"
-    $copyright = $copyright.Replace("`$(Assembly.Company)", $company)
-    $copyright = $copyright.Replace("`$(Assembly.Product)", $product)
-    # Leave in for legacy functionality
-    $copyright = $copyright.Replace("`$(Assembly.Year)", (Get-Date).Year)
-    $copyright = $copyright.Replace("`$(Year)", (Get-Date).Year)
-    Write-VstsTaskDebug -Message "copyright: $copyright"
-
-    # Format trademark
-    Write-VstsTaskDebug -Message "formatting trademark"
-    $trademark = $trademark.Replace("`$(Assembly.Company)", $company)
-    $trademark = $trademark.Replace("`$(Assembly.Product)", $product)
-    Write-VstsTaskDebug -Message "trademark: $trademark"
 
     # Format informational version
     Write-VstsTaskDebug -Message "formatting informational version"

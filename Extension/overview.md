@@ -54,6 +54,29 @@ Parameters include:
 * **Assembly Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 * **Assembly Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Use the `$(Date:{...})` variable to generate date value (must generate a numeric value). Use `$(Invalid)` to throw error and force the user to change the value to something useful.
 
+### Variables
+* **Build Variables**: all [Vsts Build Variables](https://www.visualstudio.com/en-us/docs/build/define/variables) can be used.
+
+* **`$(DayOfYear)`**: generates the numeric day of the year, eg. '116'.
+
+* **`$(Date:{...})`**: generates date values in desired format.
+    Examples:
+    * `$(Date:yyyy)`: '2017' (Year in four digits)
+    * `$(Date:MMMM)`: 'April'
+    * `$(Date:MM)`  : '04' (Numeric month)
+    * `$(Date:dddd)`: 'Sunday'
+    * `$(Date:dd)`  : '23' (The day of the month)
+    * `$(Date:HH)`  : '20' (The hour in24 hour format)
+    * `$(Date:mm)`  : '22' (The minute)
+    * `$(Date:ss)`  : '27' (The second)
+    See [list of date formats](https://ss64.com/ps/syntax-dateformats.html) for more examples.
+
+    Can be combined, with or without separators, to produce custom date formats.
+    `$(Date:yyyy, MMMM, MM, dddd, dd, HH, mm, ss)` will generate eg. '2017, April, 04, Sunday, 23, 20, 22, 27'.
+
+* **`$(Invalid)`**: throws an error and force the user to change the value to something useful. This can be useful when working with task groups or creating a template.
+Defining eg. 'Description' as 'This description is $(Invalid)' or simply '$(Invalid)' will throw an error and force the user to specify a meningful description.
+
 ### The `$(Date:{...})` Variable
 The `$(Date:{...})` variable is a powerful way of generating date values. It can be used in all input fields.
 Examples:
