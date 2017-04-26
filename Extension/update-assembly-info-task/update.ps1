@@ -18,7 +18,7 @@ function Use-Parameter {
     Write-VstsTaskDebug -Message "Use-Parameter: $parameterName"
 
     Block-InvalidVariable $displayName $parameterName $value
-    $value = Expand-DateVariable $displayName $parameterName $value
+    $value = Expand-Variables $displayName $parameterName $value
     $value = Set-NullIfEmpty $parameterName $value
 
     return $value
@@ -42,10 +42,33 @@ function Use-Version {
     }
     else {
         Block-InvalidVariable $displayName $parameterName $value
-        $value = Expand-DateVariable $displayName $parameterName $value
+        $value = Expand-Variables $displayName $parameterName $value
         Block-NonNumericParameter $displayName $parameterName $value
         return $value
     }
+}
+
+function Expand-Variables {
+    param(
+        [string]
+        $displayName,
+        [string]
+        $parameterName,
+        [string]
+        $value
+    )
+
+    Write-VstsTaskDebug -Message "Expand-DateVariable: $parameterName"
+
+    Write-VstsTaskDebug -Message "value: $value"
+
+    $value = $value.Replace("`$(DayOfYear)", (Get-Date -UFormat %j))
+
+    $value = Expand-DateVariable $displayName $parameterName $value
+
+    Write-VstsTaskDebug -Message "value: $value"
+
+    return $value
 }
 
 function Expand-DateVariable {
@@ -74,7 +97,7 @@ function Expand-DateVariable {
             $date = Get-Date -Format "$($_.Groups[2].Value)"
             Write-VstsTaskDebug -Message "date: $date"
 
-            $value = $value -replace [regex]::Escape($_.Groups[1].Value),"$date"
+            $value = $value -replace [regex]::Escape($_.Groups[1].Value), "$date"
             Write-VstsTaskDebug -Message "value: $value"
         }
     }
@@ -158,7 +181,7 @@ try {
     $assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
     $informationalVersion = Get-VstsInput -Name informationalVersion
     $comVisible = Get-VstsInput -Name comVisible -AsBool
-	$ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
+    $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
 
     $description = Use-Parameter "Description" "description" $description
     
@@ -287,7 +310,7 @@ try {
         $result | format-table -property File, FileVersion, AssemblyVersion
 		
         Write-VstsTaskDebug -Message "exporting variables"
-		$firstResult = $result[0]
+        $firstResult = $result[0]
         Write-VstsTaskDebug -Message "firstResult: $firstResult"
         Write-VstsSetVariable -Name 'Assembly.FileVersion' -Value $firstResult.FileVersion
         Write-VstsSetVariable -Name 'Assembly.AssemblyVersion' -Value $firstResult.AssemblyVersion
