@@ -80,19 +80,18 @@ function Expand-Variables {
     $value = $value.Replace("`$(Assembly.AssemblyVersionBuild)", $script:assemblyVersionBuild)
     $value = $value.Replace("`$(Assembly.AssemblyVersionRevision)", $script:assemblyVersionRevision)
 
+    $value = Expand-DateVariables $displayName $parameterName $value
+
     # Leave in for legacy functionality
-    Write-VstsTaskDebug -Message "expanding legacy variables `$(Assembly.Year), `$(Year)"
     $value = $value.Replace("`$(Assembly.Year)", (Get-Date).Year)
     $value = $value.Replace("`$(Year)", (Get-Date).Year)
 
-    $value = Expand-DateVariable $displayName $parameterName $value
-
-    Write-VstsTaskDebug -Message "value: $value"
+    Write-VstsTaskDebug -Message "value after all variable expansions: $value"
 
     return $value
 }
 
-function Expand-DateVariable {
+function Expand-DateVariables {
     param(
         [string]
         $displayName,
@@ -102,7 +101,7 @@ function Expand-DateVariable {
         $value
     )
 
-    Write-VstsTaskDebug -Message "Expand-DateVariable: $parameterName"
+    Write-VstsTaskDebug -Message "Expand-DateVariables: $parameterName"
 
     Write-VstsTaskDebug -Message "value: $value"
 
@@ -119,9 +118,11 @@ function Expand-DateVariable {
             Write-VstsTaskDebug -Message "date: $date"
 
             $value = $value -replace [regex]::Escape($_.Groups[1].Value), "$date"
-            Write-VstsTaskDebug -Message "value: $value"
+            Write-VstsTaskDebug -Message "value after date variable expansion: $value"
         }
     }
+
+    Write-VstsTaskDebug -Message "value after all date variable expansions: $value"
 
     return $value
 }

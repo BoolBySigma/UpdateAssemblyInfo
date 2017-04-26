@@ -56,23 +56,23 @@ The following variables can be used in all input fields
 
 * **`$(Assembly.FileVersion)`**: The assembly file version value.
 
-* **`$(Assembly.FileVersionMajor)`**: The assembly file version major value. Requires Major to be specified.
+* **`$(Assembly.FileVersionMajor)`**: The assembly file version major value. Requires File Version Major to be specified.
 
-* **`$(Assembly.FileVersionMinor)`**: The assembly file version minor value. Requires Minor to be specified.
+* **`$(Assembly.FileVersionMinor)`**: The assembly file version minor value. Requires File Version Minor to be specified.
 
-* **`$(Assembly.FileVersionBuild)`**: The assembly file version build value. Requires Build to be specified.
+* **`$(Assembly.FileVersionBuild)`**: The assembly file version build value. Requires File Version Build to be specified.
 
-* **`$(Assembly.FileVersionRevision)`**: The assembly file version revision value. Requires Revision to be specified.
+* **`$(Assembly.FileVersionRevision)`**: The assembly file version revision value. Requires File Version Revision to be specified.
 
 * **`$(Assembly.AssemblyVersion)`**: The assembly version value.
 
-* **`$(Assembly.AssemblyVersionMajor)`**: The assembly version major value. Requires Major to be specified.
+* **`$(Assembly.AssemblyVersionMajor)`**: The assembly version major value. Requires Assembly Version Major to be specified.
 
-* **`$(Assembly.AssemblyVersionMinor)`**: The assembly version minor value. Requires Minor to be specified.
+* **`$(Assembly.AssemblyVersionMinor)`**: The assembly version minor value. Requires Assembly Version Minor to be specified.
 
-* **`$(Assembly.AssemblyVersionBuild)`**: The assembly version build value. Requires Build to be specified.
+* **`$(Assembly.AssemblyVersionBuild)`**: The assembly version build value. Requires Assembly Version Build to be specified.
 
-* **`$(Assembly.AssemblyVersionRevision)`**: The assembly version revision value. Requires Revision to be specified.
+* **`$(Assembly.AssemblyVersionRevision)`**: The assembly version revision value. Requires Assembly Version Revision to be specified.
 
 * **`$(Invalid)`**: throws an error and force the user to change the value to something useful. This can be useful when working with task groups or creating a template.
 Defining eg. 'Description' as 'This description is $(Invalid)' or simply '$(Invalid)' will throw an error and force the user to specify a meningful description.
