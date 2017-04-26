@@ -84,6 +84,7 @@ Values from the first assembly info file will be passed to variables if multiple
 * `$(Assembly.AssemblyVersion)`: The assembly version value.
 
 ## Changelog
+* **2.0.20**: Added $(DayOfYear) variable.
 * **2.0.18**: Added $(Date:{...}) variable. Enables adding missing attributes.
 * **2.0.13**: Added support for alternate file names and output parameters.
 * **2.0.11**: Added 'Com Visible' functionality.
