@@ -107,7 +107,7 @@ function Expand-DateVariables {
 
     $variableFormat = '(\$\(Date:([^\)]*)\))'
 
-    $matches = [regex]::Matches($value, $variableFormat, "Ignorecase")
+    $matches = [regex]::Matches($value, $variableFormat)
 
     $matches | ForEach-Object {
         if ($_.Success) {
