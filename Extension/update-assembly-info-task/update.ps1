@@ -62,6 +62,7 @@ function Expand-Variables {
 
     Write-VstsTaskDebug -Message "value: $value"
 
+    Write-VstsTaskDebug -Message "expanding `$(DayOfYear)"
     $value = $value.Replace("`$(DayOfYear)", (Get-Date -UFormat %j))
 
     $value = Expand-DateVariable $displayName $parameterName $value
