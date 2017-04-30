@@ -283,7 +283,7 @@ try {
         $buildUri = $projectUri + "/_apis/build/builds/$buildId?api-version=2.0"
         Write-VstsTaskDebug -Message "buildUri: $buildUri"
 
-        $build = (Invoke-RestMethod -Uri $buildIdURI -Method GET -Headers $authHeader)
+        $build = (Invoke-RestMethod -Uri $buildUri -Method GET -Headers $authHeader)
         Write-Host $build
     }
 
