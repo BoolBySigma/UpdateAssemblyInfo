@@ -280,7 +280,7 @@ try {
         }
 
         $buildId = Get-VstsTaskVariable -Name "Build.BuildId"
-        $buildUri = $projectUri + "/_apis/build/builds/$buildId?api-version=2.0"
+        $buildUri = $projectUri + "/_apis/build/builds/" + $buildId + "?api-version=2.0"
         Write-VstsTaskDebug -Message "buildUri: $buildUri"
 
         $build = (Invoke-RestMethod -Uri $buildUri -Method GET -Headers $authHeader)
