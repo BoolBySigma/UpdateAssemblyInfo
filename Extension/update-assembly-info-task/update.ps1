@@ -266,7 +266,7 @@ try {
 
     if (Test-BuildRevisionVariableInInputParameters) {
         if (!(Get-VstsTaskVariable -Name "System.EnableAccessToken" -AsBool)) {
-            throw [System.Exception] "'Allow Scripts to Access OAuth Token' must be enabled when using the `$(Rev) variable"
+            throw [System.Exception] "'Allow Scripts to Access OAuth Token' must be enabled when using the `$(Rev:r) variable"
         }
 
         $accountUri = Get-VstsTaskVariable -Name "System.TeamFoundationCollectionUri"
@@ -284,7 +284,14 @@ try {
         Write-VstsTaskDebug -Message "buildUri: $buildUri"
 
         $build = (Invoke-RestMethod -Uri $buildUri -Method GET -Headers $authHeader)
-        Write-Host $build
+        
+        if (!$build){
+            throw [System.Exception] "Could not find current build with id $buildId"
+        }
+
+        if (!$build.buildNumberRevision){
+            throw [System.Exception] "Using variable `$(Rev:r) requires `$(Rev:r) to be defined in definition parameter 'Build number format'"
+        }
     }
 
     $script:fileVersionMajor = Use-Version "File Version Major" "fileVersionMajor" $script:fileVersionMajor
