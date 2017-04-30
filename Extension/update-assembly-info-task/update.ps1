@@ -268,6 +268,23 @@ try {
         if (!(Get-VstsTaskVariable -Name "System.EnableAccessToken" -AsBool)) {
             throw [System.Exception] "'Allow Scripts to Access OAuth Token' must be enabled when using the `$(Rev) variable"
         }
+
+        $accountUri = Get-VstsTaskVariable -Name "System.TeamFoundationCollectionUri"
+        $projectId = Get-VstsTaskVariable -Name "System.TeamProjectId"
+        $projectUri = $accountUri + $projectId
+        Write-VstsTaskDebug -Message "projectUri: $projectUri"
+
+        $accessToken = Get-VstsTaskVariable -Name "System.AccessToken"
+        $authHeader = @{
+            Authorization = "Bearer $accessToken"
+        }
+
+        $buildId = Get-VstsTaskVariable -Name "Build.BuildId"
+        $buildUri = $projectUri + "/_apis/build/builds/$buildId?api-version=2.0"
+        Write-VstsTaskDebug -Message "buildUri: $buildUri"
+
+        $build = (Invoke-RestMethod -Uri $buildIdURI -Method GET -Headers $authHeader)
+        Write-Host $build
     }
 
     $script:fileVersionMajor = Use-Version "File Version Major" "fileVersionMajor" $script:fileVersionMajor
