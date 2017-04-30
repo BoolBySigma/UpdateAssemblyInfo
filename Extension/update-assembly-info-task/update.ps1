@@ -245,6 +245,9 @@ function Test-BuildRevisionVariableInInputParameters {
 }
 
 try {
+$buildDefinitionName = Get-VstsTaskVariable -Name "Build.DefinitionName"
+Write-Host "!!!!!!!! $buildDefinitionName"
+
     $assemblyInfoFiles = Get-VstsInput -Name assemblyInfoFiles -Require
     $script:description = Get-VstsInput -Name description
     $script:configuration = Get-VstsInput -Name configuration
