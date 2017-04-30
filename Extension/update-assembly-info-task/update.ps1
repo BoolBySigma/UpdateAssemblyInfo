@@ -205,14 +205,53 @@ function Get-DisplayValue {
     return $value
 }
 
+$script:buildRevisionVariablePattern = '(\$\(Rev:([^\)]*)\))'
+
+function Test-BuildRevisionVariableInInputParameters {
+    param(
+    )
+
+    Write-VstsTaskDebug -Message "Test-BuildRevisionVariableInInputParameters"
+
+    $parameters = @(
+        $script:description,
+        $script:configuration,
+        $script:company,
+        $script:product,
+        $script:copyright,
+        $script:trademark,
+        $script:fileVersionMajor,
+        $script:fileVersionMinor,
+        $script:fileVersionBuild,
+        $script:fileVersionRevision,
+        $script:assemblyVersionMajor,
+        $script:assemblyVersionMinor,
+        $script:assemblyVersionBuild,
+        $script:assemblyVersionRevision,
+        $script:informationalVersion
+    )
+
+    foreach ($parameter in $parameters) {
+        $match = [regex]::Match($parameter, $script:buildRevisionVariablePattern)
+        if ($match.Success) {
+            Write-VstsTaskDebug -Message "parameter value: $parameter"
+            Write-VstsTaskDebug -Message "variable value: $match"
+            return $true
+        }
+    }
+    
+    Write-VstsTaskDebug -Message "no build revision variable"
+    return $false
+}
+
 try {
     $assemblyInfoFiles = Get-VstsInput -Name assemblyInfoFiles -Require
-    $description = Get-VstsInput -Name description
-    $configuration = Get-VstsInput -Name configuration
+    $script:description = Get-VstsInput -Name description
+    $script:configuration = Get-VstsInput -Name configuration
     $script:company = Get-VstsInput -Name company
     $script:product = Get-VstsInput -Name product
-    $copyright = Get-VstsInput -Name copyright
-    $trademark = Get-VstsInput -Name trademark
+    $script:copyright = Get-VstsInput -Name copyright
+    $script:trademark = Get-VstsInput -Name trademark
     $script:fileVersionMajor = Get-VstsInput -Name fileVersionMajor
     $script:fileVersionMinor = Get-VstsInput -Name fileVersionMinor
     $script:fileVersionBuild = Get-VstsInput -Name fileVersionBuild
@@ -221,9 +260,13 @@ try {
     $script:assemblyVersionMinor = Get-VstsInput -Name assemblyVersionMinor
     $script:assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
     $script:assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
-    $informationalVersion = Get-VstsInput -Name informationalVersion
+    $script:informationalVersion = Get-VstsInput -Name informationalVersion
     $comVisible = Get-VstsInput -Name comVisible -AsBool
-    $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool  
+    $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
+
+    if (Test-BuildRevisionVariableInInputParameters){
+        Write-VstsTaskDebug -Message "Found Rev"
+    }
 
     $script:fileVersionMajor = Use-Version "File Version Major" "fileVersionMajor" $script:fileVersionMajor
     
@@ -251,19 +294,19 @@ try {
     Write-VstsTaskDebug -Message "assmeblyVersion: $assemblyVersion"
     $script:assemblyVersion = $assemblyVersion
 
-    $description = Use-Parameter "Description" "description" $description
+    $script:description = Use-Parameter "Description" "description" $script:description
     
-    $configuration = Use-Parameter "Configuration" "configuration" $configuration
+    $script:configuration = Use-Parameter "Configuration" "configuration" $script:configuration
 
     $script:company = Use-Parameter "Company" "company" $script:company
 
     $script:product = Use-Parameter "Product" "product" $script:product
 
-    $copyright = Use-Parameter "Copyright" "copyright" $copyright
+    $script:copyright = Use-Parameter "Copyright" "copyright" $script:copyright
 
-    $trademark = Use-Parameter "Trademark" "trademark" $trademark
+    $script:trademark = Use-Parameter "Trademark" "trademark" $script:trademark
 
-    $informationalVersion = Use-Parameter "Informational Version" "informationalVersion" $informationalVersion
+    $script:informationalVersion = Use-Parameter "Informational Version" "informationalVersion" $script:informationalVersion
 
     if ($global:errors) {
         throw [System.Exception] "Failed with $script:errors error(s)"
@@ -272,13 +315,13 @@ try {
     # Print parameters
     $parameters = @()
     $parameters += New-Object PSObject -Property @{Parameter = "Add Missing Attriutes"; Value = $ensureAttribute}
-    $parameters += New-Object PSObject -Property @{Parameter = "Description"; Value = (Get-DisplayValue "description" $description)}
-    $parameters += New-Object PSObject -Property @{Parameter = "Configuration"; Value = (Get-DisplayValue "configuration" $configuration)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Description"; Value = (Get-DisplayValue "description" $script:description)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Configuration"; Value = (Get-DisplayValue "configuration" $script:configuration)}
     $parameters += New-Object PSObject -Property @{Parameter = "Company"; Value = (Get-DisplayValue "company" $script:company)}
     $parameters += New-Object PSObject -Property @{Parameter = "Product"; Value = (Get-DisplayValue "product" $script:product)}
-    $parameters += New-Object PSObject -Property @{Parameter = "Copyright"; Value = (Get-DisplayValue "copyright" $copyright)}
-    $parameters += New-Object PSObject -Property @{Parameter = "Trademark"; Value = (Get-DisplayValue "trademark" $trademark)}
-    $parameters += New-Object PSObject -Property @{Parameter = "Informational Version"; Value = (Get-DisplayValue "informationalVersion" $informationalVersion)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Copyright"; Value = (Get-DisplayValue "copyright" $script:copyright)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Trademark"; Value = (Get-DisplayValue "trademark" $script:trademark)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Informational Version"; Value = (Get-DisplayValue "informationalVersion" $script:informationalVersion)}
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
@@ -303,7 +346,7 @@ try {
         Write-VstsTaskDebug -Message "files:"
         Write-VstsTaskDebug -Message "$files"
         Write-Output "Updating..."
-        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $description -AssemblyConfiguration $configuration -AssemblyCompany $script:company -AssemblyProduct $script:product -AssemblyCopyright $copyright -AssemblyTrademark $trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -EnsureAttribute $ensureAttribute
+        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $script:description -AssemblyConfiguration $script:configuration -AssemblyCompany $script:company -AssemblyProduct $script:product -AssemblyCopyright $script:copyright -AssemblyTrademark $script:trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $script:informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -EnsureAttribute $ensureAttribute
 
         Write-Output "Updated:"
         $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
