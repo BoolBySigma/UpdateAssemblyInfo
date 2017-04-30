@@ -245,9 +245,6 @@ function Test-BuildRevisionVariableInInputParameters {
 }
 
 try {
-$buildDefinitionName = Get-VstsTaskVariable -Name "Build.DefinitionName"
-Write-Host "!!!!!!!! $buildDefinitionName"
-
     $assemblyInfoFiles = Get-VstsInput -Name assemblyInfoFiles -Require
     $script:description = Get-VstsInput -Name description
     $script:configuration = Get-VstsInput -Name configuration
@@ -267,8 +264,10 @@ Write-Host "!!!!!!!! $buildDefinitionName"
     $comVisible = Get-VstsInput -Name comVisible -AsBool
     $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
 
-    if (Test-BuildRevisionVariableInInputParameters){
-        Write-VstsTaskDebug -Message "Found Rev"
+    if (Test-BuildRevisionVariableInInputParameters) {
+        if (!(Get-VstsTaskVariable -Name "System.EnableAccessToken" -AsBool)) {
+            throw [System.Exception] "'Allow Scripts to Access OAuth Token' must be enabled when using the `$(Rev) variable"
+        }
     }
 
     $script:fileVersionMajor = Use-Version "File Version Major" "fileVersionMajor" $script:fileVersionMajor
