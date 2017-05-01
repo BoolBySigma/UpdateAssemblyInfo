@@ -113,15 +113,16 @@ function Expand-DateVariables {
     $matches = [regex]::Matches($value, $variableFormat)
 
     $matches | ForEach-Object {
-        if ($_.Success) {
-            Write-VstsTaskDebug -Message "variable: $($_.Groups[1].Value)"
-            Write-VstsTaskDebug -Message "date format: $($_.Groups[2].Value)"
+        if ($_.Success) {            
+            $variable = $_.Groups[1].Value
+            Write-VstsTaskDebug -Message "variable: $variable"
+            $dateFormat = $_.Groups[2].Value
+            Write-VstsTaskDebug -Message "date format: $dateFormat"
 
-            $date = Get-Date -Format "$($_.Groups[2].Value)"
+            $date = Get-Date -Format "$dateFormat"
             Write-VstsTaskDebug -Message "date: $date"
 
-            #$value = $value.Replace([regex]::Escape($_.Groups[1].Value), $date)
-            $value = $value.Replace($_.Groups[1].Value, $date)
+            $value = $value.Replace($variable, $date)
             Write-VstsTaskDebug -Message "value after date variable expansion: $value"
         }
     }
