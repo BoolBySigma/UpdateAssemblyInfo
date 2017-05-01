@@ -310,7 +310,7 @@ function Get-BuildNumberRevision {
     Write-VstsTaskDebug -Message "build: $build"
 
     if (!$build.buildNumberRevision) {
-        throw [System.Exception] "`$(Rev:r) must be defined in definition parameter 'Build number format' when using variable `$(Rev:r)"
+        throw [System.Exception] "'Build number format' must contain `$(Rev:r) when using variable `$(Rev:r)"
     }
 
     $buildNumberRevision = $build.buildNumberRevision
