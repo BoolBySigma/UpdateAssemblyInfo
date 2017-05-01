@@ -436,6 +436,8 @@ try {
         Write-VstsTaskDebug -Message "firstResult: $firstResult"
         Write-VstsSetVariable -Name 'Assembly.FileVersion' -Value $firstResult.FileVersion
         Write-VstsSetVariable -Name 'Assembly.AssemblyVersion' -Value $firstResult.AssemblyVersion
+
+        Write-VstsSetVariable -Name 'Build.BuildNumberRevision' -Value $script:buildNumberRevision
     }
     else {
         throw [System.Exception] "AssemblyInfo.* file not found using search pattern `'$assemblyInfoFiles`'."
