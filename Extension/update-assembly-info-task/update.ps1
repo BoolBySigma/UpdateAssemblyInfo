@@ -5,6 +5,8 @@ Trace-VstsEnteringInvocation $MyInvocation
 
 $script:errors = 0
 
+$script:buildNumberRevisionVariableFormat = '(\$\(Rev:([^\)]*)\))'
+
 function Use-Parameter {
     param(
         [string]
@@ -81,6 +83,7 @@ function Expand-Variables {
     $value = $value.Replace("`$(Assembly.AssemblyVersionRevision)", $script:assemblyVersionRevision)
 
     $value = Expand-DateVariables $displayName $parameterName $value
+    $value = Expand-BuildNumberRevisionVariables $displayName $parameterName $value
 
     # Leave in for legacy functionality
     $value = $value.Replace("`$(Assembly.Year)", (Get-Date).Year)
@@ -124,6 +127,42 @@ function Expand-DateVariables {
     }
 
     Write-VstsTaskDebug -Message "value after all date variable expansions: $value"
+
+    return $value
+}
+
+function Expand-BuildNumberRevisionVariables {
+    param(
+        [string]
+        $displayName,
+        [string]
+        $parameterName,
+        [string]
+        $value
+    )
+
+    Write-VstsTaskDebug -Message "Expand-BuildNumberRevisionVariables: $parameterName"
+
+    Write-VstsTaskDebug -Message "value: $value"
+
+    $matches = [regex]::Matches($value, $script:buildNumberRevisionVariableFormat)
+
+    $matches | ForEach-Object {
+        if ($_.Success) {
+            $variable = $_.Groups[1].Value
+            Write-VstsTaskDebug -Message "variable: $variable"
+            $revisionFormat = $_.Groups[2].Value
+            Write-VstsTaskDebug -Message "revision format: $revisionFormat"
+
+            $revisionFormat = $revisionFormat.Replace("r", "0");
+            Write-VstsTaskDebug -Message "revision format: $revisionFormat"
+
+            $value = $value.Replace($variable, $script:buildNumberRevision.ToString($revisionFormat))
+            Write-VstsTaskDebug -Message "value after revision variable expansion: $value"
+        }
+    }
+
+    Write-VstsTaskDebug -Message "value after all revision variable expansions: $value"
 
     return $value
 }
@@ -205,13 +244,11 @@ function Get-DisplayValue {
     return $value
 }
 
-$script:buildRevisionVariablePattern = '(\$\(Rev:([^\)]*)\))'
-
-function Test-BuildRevisionVariableInInputParameters {
+function Test-BuildNumberRevisionVariableUsed {
     param(
     )
 
-    Write-VstsTaskDebug -Message "Test-BuildRevisionVariableInInputParameters"
+    Write-VstsTaskDebug -Message "Test-BuildNumberRevisionVariableUsed"
 
     $parameters = @(
         $script:description,
@@ -232,7 +269,7 @@ function Test-BuildRevisionVariableInInputParameters {
     )
 
     foreach ($parameter in $parameters) {
-        $match = [regex]::Match($parameter, $script:buildRevisionVariablePattern)
+        $match = [regex]::Match($parameter, $script:buildNumberRevisionVariableFormat)
         if ($match.Success) {
             Write-VstsTaskDebug -Message "parameter value: $parameter"
             Write-VstsTaskDebug -Message "variable value: $match"
@@ -242,6 +279,43 @@ function Test-BuildRevisionVariableInInputParameters {
     
     Write-VstsTaskDebug -Message "no build revision variable"
     return $false
+}
+
+function Get-BuildNumberRevision {
+    param(
+    )
+
+    Write-VstsTaskDebug -Message "Get-BuildNumberRevision"
+    
+    $accountUri = Get-VstsTaskVariable -Name "System.TeamFoundationCollectionUri"
+    $projectId = Get-VstsTaskVariable -Name "System.TeamProjectId"
+    $projectUri = $accountUri + $projectId
+    Write-VstsTaskDebug -Message "projectUri: $projectUri"
+
+    $accessToken = Get-VstsTaskVariable -Name "System.AccessToken"
+    $authHeader = @{
+        Authorization = "Bearer $accessToken"
+    }
+
+    $buildId = Get-VstsTaskVariable -Name "Build.BuildId"
+    $buildUri = $projectUri + "/_apis/build/builds/" + $buildId + "?api-version=2.0"
+    Write-VstsTaskDebug -Message "buildUri: $buildUri"
+
+    $build = (Invoke-RestMethod -Uri $buildUri -Method GET -Headers $authHeader)
+        
+    if (!$build) {
+        throw [System.Exception] "Could not find current build with id $buildId"
+    }
+    Write-VstsTaskDebug -Message "build: $build"
+
+    if (!$build.buildNumberRevision) {
+        throw [System.Exception] "`$(Rev:r) must be defined in definition parameter 'Build number format' when using variable `$(Rev:r)"
+    }
+
+    $buildNumberRevision = $build.buildNumberRevision
+    Write-VstsTaskDebug -Message "buildNumberRevision: $buildNumberRevision"
+
+    return $buildNumberRevision
 }
 
 try {
@@ -264,34 +338,12 @@ try {
     $comVisible = Get-VstsInput -Name comVisible -AsBool
     $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
 
-    if (Test-BuildRevisionVariableInInputParameters) {
+    if (Test-BuildNumberRevisionVariableUsed) {
         if (!(Get-VstsTaskVariable -Name "System.EnableAccessToken" -AsBool)) {
             throw [System.Exception] "'Allow Scripts to Access OAuth Token' must be enabled when using the `$(Rev:r) variable"
         }
 
-        $accountUri = Get-VstsTaskVariable -Name "System.TeamFoundationCollectionUri"
-        $projectId = Get-VstsTaskVariable -Name "System.TeamProjectId"
-        $projectUri = $accountUri + $projectId
-        Write-VstsTaskDebug -Message "projectUri: $projectUri"
-
-        $accessToken = Get-VstsTaskVariable -Name "System.AccessToken"
-        $authHeader = @{
-            Authorization = "Bearer $accessToken"
-        }
-
-        $buildId = Get-VstsTaskVariable -Name "Build.BuildId"
-        $buildUri = $projectUri + "/_apis/build/builds/" + $buildId + "?api-version=2.0"
-        Write-VstsTaskDebug -Message "buildUri: $buildUri"
-
-        $build = (Invoke-RestMethod -Uri $buildUri -Method GET -Headers $authHeader)
-        
-        if (!$build){
-            throw [System.Exception] "Could not find current build with id $buildId"
-        }
-
-        if (!$build.buildNumberRevision){
-            throw [System.Exception] "Using variable `$(Rev:r) requires `$(Rev:r) to be defined in definition parameter 'Build number format'"
-        }
+        $script:buildNumberRevision = Get-BuildNumberRevision
     }
 
     $script:fileVersionMajor = Use-Version "File Version Major" "fileVersionMajor" $script:fileVersionMajor
