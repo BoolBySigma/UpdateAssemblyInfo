@@ -1,37 +1,11 @@
 # Update Assembly Info
-Update assembly info of one or multiple projects during build.
-
-## Usage
-Add a new **Update Assembly Info** task from the **Utility** category...
-
-![Task](images/task.png)
-
-...and configure it as needed.
-
-![Parameters](images/screenshot.png)
-Parameters include:
-* **Assembly Info**: Relative path from repo root of the assembly info file(s). Variables can be used, eg. `$(Build.SourcesDirectory)`. You can also use wildcards, eg. `**\AssemblyInfo.*` for all AssemblyInfo.* files in all sub folders.
-* **Add Missing Attributes**: Adds attribute to assembly info file if it is missing. If the attribute is not specified in this task it will not be added.
-* **Description**: Left blank, the value is not updated. Variables can be used including.
-* **Configuration**: Left blank, the value is not updated. Variables can be used, eg. `$(BuildConfiguration)`.
-* **Company**: Left blank, the value is not updated. Variables can be used.
-* **Product**: Left blank, the value is not updated. Variables can be used.
-* **Copyright**: Left blank, the value is not updated. Variables can be used.
-* **Trademark**: Left blank, the value is not updated. Variables can be used.
-* **Informational Version**: Left blank, the value is not updated. Variables can be used.
-* **Com Visible**: True or False
-* **File Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
-* **File Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
-* **File Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
-* **File Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
-* **Assembly Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
-* **Assembly Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
-* **Assembly Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
-* **Assembly Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
+Update assembly info of one or multiple files or projects during build. Supports a multitude of variables, formatting and detailed input options.
 
 ### Variables
 The following variables can be used in all input fields
 * **Build Variables**: all [Vsts Build Variables](https://www.visualstudio.com/en-us/docs/build/define/variables) can be used.
+
+* **`$(Rev)`**: the build number revision, requires `$(Rev)` variable to be present in 'Build Number Format' (otherwise the information is not available on the build). Use `$(Rev:r)` for '1', `$(Rev:rr)` for '01', `$(Rev:rrr)` for '001' and so on.
 
 * **`$(DayOfYear)`**: generates the numeric day of the year, eg. '116'.
 
@@ -82,8 +56,38 @@ Variables that can be used by subsequent tasks.
 Values from the first assembly info file will be passed to variables if multiple files are updated.
 * `$(Assembly.FileVersion)`: The assembly file version value.
 * `$(Assembly.AssemblyVersion)`: The assembly version value.
+* `$(Build.BuildNumberRevision)`: The build number revision as an integer. If you are using `$(Rev:rrr)` to generate eg. '004', `$(Build.BuildNumberRevision)` will output '4'.
+
+## Usage
+Add a new **Update Assembly Info** task from the **Utility** category...
+
+![Task](images/task.png)
+
+...and configure it as needed.
+
+![Parameters](images/screenshot.png)
+Parameters include:
+* **Assembly Info**: Relative path from repo root of the assembly info file(s). Variables can be used, eg. `$(Build.SourcesDirectory)`. You can also use wildcards, eg. `**\AssemblyInfo.*` for all AssemblyInfo.* files in all sub folders.
+* **Add Missing Attributes**: Adds attribute to assembly info file if it is missing. If the attribute is not specified in this task it will not be added.
+* **Description**: Left blank, the value is not updated. Variables can be used including.
+* **Configuration**: Left blank, the value is not updated. Variables can be used, eg. `$(BuildConfiguration)`.
+* **Company**: Left blank, the value is not updated. Variables can be used.
+* **Product**: Left blank, the value is not updated. Variables can be used.
+* **Copyright**: Left blank, the value is not updated. Variables can be used.
+* **Trademark**: Left blank, the value is not updated. Variables can be used.
+* **Informational Version**: Left blank, the value is not updated. Variables can be used.
+* **Com Visible**: True or False
+* **File Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
+* **File Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
+* **File Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
+* **File Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
+* **Assembly Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
+* **Assembly Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
+* **Assembly Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
+* **Assembly Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
 
 ## Changelog
+* **2.0.23**: Added $(Rev) variable.
 * **2.0.20**: Added $(DayOfYear) variable.
 * **2.0.18**: Added $(Date:{...}) variable. Enables adding missing attributes.
 * **2.0.13**: Added support for alternate file names and output parameters.
