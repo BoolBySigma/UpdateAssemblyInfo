@@ -5,7 +5,7 @@ Update assembly info of one or multiple files or projects during build. Supports
 The following variables can be used in all input fields
 * **Build Variables**: all [Vsts Build Variables](https://www.visualstudio.com/en-us/docs/build/define/variables) can be used.
 
-* **`$(Rev)`**: the build number revision, requires `$(Rev)` variable to be present in 'Build Number Format' (otherwise the information is not available on the build). Use `$(Rev:r)` for '1', `$(Rev:rr)` for '01', `$(Rev:rrr)` for '001' and so on.
+* **`$(Rev)`**: the build number revision.Rrequires **Allow Scripts to Access OAuth Token** to be **enabled** and the `$(Rev)` variable to be present in 'Build Number Format' (otherwise the information is not available on the build). Use `$(Rev:r)` for '1', `$(Rev:rr)` for '01', `$(Rev:rrr)` for '001' and so on.
 
 * **`$(DayOfYear)`**: generates the numeric day of the year, eg. '116'.
 
