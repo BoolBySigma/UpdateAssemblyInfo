@@ -22,6 +22,11 @@
       "name": "assemblyVersion",
       "displayName": "Assembly Version",
       "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
     }
   ],
   "inputs": [
@@ -184,10 +189,11 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "",
+      "groupName": "advanced",
       "properties": {
         "resizable": "true",
-        "rows": "10",
-        "maxLength": "500"
+        "rows": "5",
+        "maxLength": "10"
       }
     }
   ],
