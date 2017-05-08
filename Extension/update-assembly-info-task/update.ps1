@@ -72,7 +72,7 @@ function Use-CustomAttributesParameter {
     $pairs | ForEach-Object {
         $_ = $_.Trim()
         $pair = $_.Split("=", [System.StringSplitOptions]::RemoveEmptyEntries)
-        if (pair.Count -eq 0){
+        if ($pair.Count -eq 0){
             Write-VstsTaskError -Message "Custom attribute '$_' is invalid. Make sure the attribute is in form 'AttributeName=AttributeValue'."
             $script:errors += 1
             return
