@@ -476,7 +476,7 @@ try {
         Write-VstsTaskDebug -Message "files:"
         Write-VstsTaskDebug -Message "$files"
         Write-Output "Updating..."
-        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $script:description -AssemblyConfiguration $script:configuration -AssemblyCompany $script:company -AssemblyProduct $script:product -AssemblyCopyright $script:copyright -AssemblyTrademark $script:trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $script:informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -EnsureAttribute $ensureAttribute
+        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $script:description -AssemblyConfiguration $script:configuration -AssemblyCompany $script:company -AssemblyProduct $script:product -AssemblyCopyright $script:copyright -AssemblyTrademark $script:trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $script:informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -EnsureAttribute $ensureAttribute -CustomAttributes $customAttributes
 
         Write-Output "Updated:"
         $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
