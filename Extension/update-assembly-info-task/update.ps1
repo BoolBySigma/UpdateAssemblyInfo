@@ -50,6 +50,41 @@ function Use-Version {
     }
 }
 
+function Use-CustomAttributesParameter {
+    param(
+        [string]
+        $value
+    )
+
+    Write-VstsTaskDebug -Message "Use-CustomAttributesParameter"
+
+    $value = Use-Parameter "Custom Attributes" "customAttributes" $value
+
+    if ([string]::IsNullOrEmpty($value)){
+        return @{}
+    }
+
+    $keyValuePairs = $value.Split([Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
+    Write-VstsTaskDebug -Message "keyValuePairs initial split: $keyValuePairs"
+    $keyValuePairs = $keyValuePairs.Where( {![string]::IsNullOrWhiteSpace($_)})
+    Write-VstsTaskDebug -Message "keyValuePairs empty entries removed: $keyValuePairs"
+
+    $attributes = [ordered]@{}
+
+    $keyValuePairs | ForEach-Object { 
+        $keyValuePair = $_.Split("=")
+        Write-VstsTaskDebug -Message "keyValuePair: $keyValuePair"
+        if ($keyValuePair.Count -eq 1) {
+            $attributes.Add($keyValuePair[0].Trim(), $null)
+        }
+        else {
+            $attributes.Add($keyValuePair[0].Trim(), $keyValuePair[1].Trim())
+        }
+    }
+
+    return $attributes
+}
+
 function Expand-Variables {
     param(
         [string]
@@ -266,7 +301,8 @@ function Test-BuildNumberRevisionVariableUsed {
         $script:assemblyVersionMinor,
         $script:assemblyVersionBuild,
         $script:assemblyVersionRevision,
-        $script:informationalVersion
+        $script:informationalVersion,
+        $script:customAttributes
     )
 
     foreach ($parameter in $parameters) {
@@ -338,6 +374,7 @@ try {
     $script:informationalVersion = Get-VstsInput -Name informationalVersion
     $comVisible = Get-VstsInput -Name comVisible -AsBool
     $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
+    $script:customAttributes = Get-VstsInput -Name customAttributes
 
     if (Test-BuildNumberRevisionVariableUsed) {
         if (!(Get-VstsTaskVariable -Name "System.EnableAccessToken" -AsBool)) {
@@ -387,6 +424,8 @@ try {
 
     $script:informationalVersion = Use-Parameter "Informational Version" "informationalVersion" $script:informationalVersion
 
+    $customAttributes = Use-CustomAttributesParameter $script:customAttributes
+
     if ($global:errors) {
         throw [System.Exception] "Failed with $script:errors error(s)"
     }
@@ -405,6 +444,10 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
     $parameters | format-table -property Parameter, Value
+
+    Write-Output [Environment]::NewLine
+    Write-Output "Custom Attributes"
+    Write-Output $customAttributes
 
     # Update files
     Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll")
