@@ -64,22 +64,33 @@ function Use-CustomAttributesParameter {
         return @{}
     }
 
-    $keyValuePairs = $value.Split([Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
-    Write-VstsTaskDebug -Message "keyValuePairs initial split: $keyValuePairs"
-    $keyValuePairs = $keyValuePairs.Where( {![string]::IsNullOrWhiteSpace($_)})
-    Write-VstsTaskDebug -Message "keyValuePairs empty entries removed: $keyValuePairs"
+    $pairs = $value.Split([Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
+    $pairs = $pairs.Where( {![string]::IsNullOrWhiteSpace($_)})
 
     $attributes = [ordered]@{}
 
-    $keyValuePairs | ForEach-Object { 
-        $keyValuePair = $_.Split("=")
-        Write-VstsTaskDebug -Message "keyValuePair: $keyValuePair"
-        if ($keyValuePair.Count -eq 1) {
-            $attributes.Add($keyValuePair[0].Trim(), $null)
+    $pairs | ForEach-Object {
+        $_ = $_.Trim()
+        $pair = $_.Split("=", [System.StringSplitOptions]::RemoveEmptyEntries)
+        if (pair.Count -eq 0){
+            Write-VstsTaskError -Message "Custom attribute '$_' is invalid. Make sure the attribute is in form 'AttributeName=AttributeValue'."
+            $script:errors += 1
+            return
+        }
+
+        $pairKey = $pair[0].Trim()
+        $pairValue = $null
+
+        if ($pair.Count -eq 1) {
+            Write-VstsTaskError -Message "Custom attribute '$pairKey' is missing value. Make sure the attribute is in form 'AttributeName=AttributeValue'."
+            $script:errors += 1
         }
         else {
-            $attributes.Add($keyValuePair[0].Trim(), $keyValuePair[1].Trim())
+            $pairValue = $pair[1].Trim()
         }
+
+        Write-VstsTaskDebug -Message "attribute key: $pairKey, value: $pairValue"
+        $attributes.Add($pairKey, $pairValue)
     }
 
     return $attributes
@@ -443,7 +454,7 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
-    $customAttributes.Keys | ForEach-Object { $parameters += New-Object PSObject -Property @{Parameter = "$_"; Value = "$($customAttributes[$_])"} }
+    $customAttributes.GetEnumerator() | ForEach-Object { $parameters += New-Object PSObject -Property @{Parameter = "$($_.Key)"; Value = "$($_.Value)"} }
     $parameters | format-table -property Parameter, Value
 
     # Update files
