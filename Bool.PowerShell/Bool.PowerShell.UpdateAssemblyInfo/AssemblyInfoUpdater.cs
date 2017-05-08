@@ -91,8 +91,8 @@
                     this.UpdateAttribute("CLSCompliant", this.CLSCompliant.HasValue ? BooleanToString(path, this.CLSCompliant.Value) : null, false);
                     this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? BooleanToString(path, this.ComVisible.Value) : null, false);
 
-                    foreach (KeyValuePair<string, string> pair in this.CustomAttributes) {
-                        this.UpdateAttribute(pair.Key, pair.Value, false);
+                    foreach (DictionaryEntry entry in this.CustomAttributes) {
+                        this.UpdateAttribute(entry.Key.ToString(), entry.Value.ToString(), false);
                     }
 
                     // write to file (unset and set back ReadOnly attribute if present).
