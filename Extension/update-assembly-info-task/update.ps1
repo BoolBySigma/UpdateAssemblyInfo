@@ -443,7 +443,7 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
-    $customAttributes | ForEach-Object { $parameters += New-Object PSObject -Property @{Parameter = "$_"; Value = "$customAttributes[$_]"} }
+    $customAttributes.Keys | ForEach-Object { $parameters += New-Object PSObject -Property @{Parameter = "$_"; Value = "$customAttributes[$_]"} }
     $parameters | format-table -property Parameter, Value
 
     # Update files
