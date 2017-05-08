@@ -1,29 +1,29 @@
 {
-    "id": "406f4a5c-0823-4881-87cd-008b5aa90bc5",
-    "name": "update-assembly-info",
-    "friendlyName": "Update Assembly Info",
-    "description": "Update assembly info of one or multiple projects",
-    "helpMarkDown": "Having Problems? Please [create an issue on our Github](https://github.com/BoolBySigma/UpdateAssemblyInfo/issues) and we will try to help you.",
-    "category": "Utility",
-    "author": "Bool (by Sigma)",
-    "version": {
-        "Major": 0,
-        "Minor": 0,
-        "Patch": 1
+  "id": "406f4a5c-0823-4881-87cd-008b5aa90bc5",
+  "name": "update-assembly-info",
+  "friendlyName": "Update Assembly Info",
+  "description": "Update assembly info of one or multiple projects",
+  "helpMarkDown": "Having Problems? Please [create an issue on our Github](https://github.com/BoolBySigma/UpdateAssemblyInfo/issues) and we will try to help you.",
+  "category": "Utility",
+  "author": "Bool (by Sigma)",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "instanceNameFormat": "Update Assembly: $(assemblyInfoFiles)",
+  "groups": [
+    {
+      "name": "fileVersion",
+      "displayName": "File Version",
+      "isExpanded": true
     },
-    "instanceNameFormat": "Update Assembly: $(assemblyInfoFiles)",
-    "groups": [
-        {
-            "name": "fileVersion",
-            "displayName": "File Version",
-            "isExpanded": true
-        },
-        {
-            "name": "assemblyVersion",
-            "displayName": "Assembly Version",
-            "isExpanded": false
-        }
-    ],
+    {
+      "name": "assemblyVersion",
+      "displayName": "Assembly Version",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "assemblyInfoFiles",
@@ -176,13 +176,26 @@
       "required": false,
       "helpMarkDown": "Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`.",
       "groupName": "assemblyVersion"
+    },
+    {
+      "name": "customAttributes",
+      "type": "multiLine",
+      "label": "Custom Attributes",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
     }
   ],
-    "execution": {
-        "PowerShell3": {
-            "target": "$(currentDirectory)\\update.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
-        }
+  "execution": {
+    "PowerShell3": {
+      "target": "$(currentDirectory)\\update.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
     }
+  }
 }
