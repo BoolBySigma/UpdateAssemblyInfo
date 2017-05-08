@@ -1,6 +1,7 @@
 ﻿namespace Bool.PowerShell.UpdateAssemblyInfo
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Management.Automation;
@@ -37,6 +38,7 @@
             this.updater.ComVisible = this.ComVisible;
             this.updater.Guid = this.Guid;
             this.updater.EnsureAttribute = this.EnsureAttribute;
+            this.updater.CustomAttributes = this.CustomAttributes;
             var result = this.updater.InternalExecute();
 
             this.WriteObject(result);
@@ -413,6 +415,12 @@
         [Description("Specifiy whether or not to add missing attribute.")]
         [Parameter()]
         public bool? EnsureAttribute { get; set; }
+
+        /// <summary>
+        ///     Gets the custom attributes.
+        /// </summary>
+        [Description("Gets the custom attributes.")]
+        public Hashtable CustomAttributes { get; set; }
 
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿namespace Bool.PowerShell.UpdateAssemblyInfo
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
@@ -89,6 +90,10 @@
                     this.UpdateAttribute("AssemblyKeyName", this.AssemblyKeyName, false);
                     this.UpdateAttribute("CLSCompliant", this.CLSCompliant.HasValue ? BooleanToString(path, this.CLSCompliant.Value) : null, false);
                     this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? BooleanToString(path, this.ComVisible.Value) : null, false);
+
+                    foreach (KeyValuePair<string, string> pair in this.CustomAttributes) {
+                        this.UpdateAttribute(pair.Key, pair.Value, false);
+                    }
 
                     // write to file (unset and set back ReadOnly attribute if present).
                     var fileAttributes = File.GetAttributes(path);
@@ -486,6 +491,9 @@
 
         [Description("Specifiy whether or not to add missing attribute.")]
         public bool? EnsureAttribute { get; set; }
+
+        [Description("Gets the custom attributes.")]
+        public Hashtable CustomAttributes { get; set; }
 
         #endregion
 
