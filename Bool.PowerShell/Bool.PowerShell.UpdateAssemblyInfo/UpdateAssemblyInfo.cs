@@ -420,6 +420,7 @@
         ///     Gets the custom attributes.
         /// </summary>
         [Description("Gets the custom attributes.")]
+        [Parameter()]
         public Hashtable CustomAttributes { get; set; }
 
         #endregion
