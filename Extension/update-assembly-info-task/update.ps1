@@ -445,10 +445,10 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
     $parameters | format-table -property Parameter, Value
 
-    Write-Output $([Environment]::NewLine)
+    Write-Output ""
     Write-Output "Custom Attributes"
     Write-Output $customAttributes
-    Write-Output $([Environment]::NewLine)
+    Write-Output ""
 
     # Update files
     Import-Module (Join-Path -Path $PSScriptRoot -ChildPath "Bool.PowerShell.UpdateAssemblyInfo.dll")
