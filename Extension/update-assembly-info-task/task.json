@@ -193,7 +193,7 @@
       "properties": {
         "resizable": "true",
         "rows": "5",
-        "maxLength": "10"
+        "maxLength": "500"
       }
     }
   ],
