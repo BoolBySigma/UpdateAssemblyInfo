@@ -103,7 +103,7 @@
       "helpMarkDown": "Left blank, the value is not updated. Variables can be used."
     },
     {
-      "name": "comVisibleNew",
+      "name": "comVisible",
       "type": "radio",
       "label": "Com Visible",
       "defaultValue": "none",
