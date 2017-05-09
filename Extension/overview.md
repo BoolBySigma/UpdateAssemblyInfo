@@ -93,6 +93,7 @@ Example:
 Left blank, the value is not updated. Variables can be used.
 
 ## Changelog
+* **2.0.27**: Added 'Do Not Update' option for Com Visible attribute.
 * **2.0.25**: Added support for custom attributes.
 * **2.0.23**: Added $(Rev) variable.
 * **2.0.20**: Added $(DayOfYear) variable.
