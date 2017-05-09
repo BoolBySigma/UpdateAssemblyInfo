@@ -104,11 +104,16 @@
     },
     {
       "name": "comVisible",
-      "type": "string",
-      "label": "Com Visible String",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": ""
+      "type": "pickList",
+      "label": "Com Visible",
+      "defaultValue": "none",
+      "options": {
+        "none": "Unchanged",
+        "true": "True",
+        "false": "False"
+      },
+      "required": true,
+      "helpMarkDown": "Choose whether to compile a project (defined in a tsconfig.json file) or files."
     },
     {
       "name": "comVisibleOld",
