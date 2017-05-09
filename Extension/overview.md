@@ -85,6 +85,12 @@ Parameters include:
 * **Assembly Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
 * **Assembly Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
 * **Assembly Version - Revision**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
+* **Custom Attributes**: Input custom attribute and value in format `AttributeName=AttributeValue`. Use a new line for each new custom attribute.
+Example:
+`AttributeName1=AttributeValue1`
+`AttributeName2=AttributeValue2`
+`AttributeName3=AttributeValue3`
+Left blank, the value is not updated. Variables can be used.
 
 ## Changelog
 * **2.0.23**: Added $(Rev) variable.

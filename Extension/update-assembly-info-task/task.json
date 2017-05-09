@@ -188,7 +188,7 @@
       "label": "Custom Attributes",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Input custom attribute and value in format `AttributeName=AttributeValue`. Use a new line for each new custom attribute. Left blank, the value is not updated. Variables can be used.",
+      "helpMarkDown": "Input custom attribute and value in format `AttributeName=AttributeValue`. Use a new line for each new custom attribute.</br>Example:</br>`AttributeName1=AttributeValue1`</br>`AttributeName2=AttributeValue2`</br>`AttributeName3=AttributeValue3`</br>Left blank, the value is not updated. Variables can be used.",
       "groupName": "customAttributes",
       "properties": {
         "resizable": "true",
