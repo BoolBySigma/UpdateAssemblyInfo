@@ -96,6 +96,33 @@ function Use-CustomAttributesParameter {
     return $attributes
 }
 
+function Use-ComVisibleParameter {
+    param(
+        [string]
+        $value
+    )
+
+    Write-VstsTaskDebug -Message "Use-CustomAttributesParameter"
+
+    $value = $value.ToLower();
+    Write-VstsTaskDebug -Message "value: $value"
+
+    if ($value -eq "none"){
+        return $null
+    }
+
+    if ($value -eq ([Boolean]::FalseString.ToLower())){
+        return $false
+    }
+
+    if ($value -eq ([Boolean]::TrueString.ToLower())){
+        return $true
+    }
+
+    Write-VstsTaskError -Message "'$value' is not a valid value for Com Visible."
+    $script:errors += 1
+}
+
 function Expand-Variables {
     param(
         [string]
@@ -383,7 +410,7 @@ try {
     $script:assemblyVersionBuild = Get-VstsInput -Name assemblyVersionBuild
     $script:assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
     $script:informationalVersion = Get-VstsInput -Name informationalVersion
-    $comVisible = Get-VstsInput -Name comVisible -AsBool
+    $comVisible = Get-VstsInput -Name comVisible
     $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
     $script:customAttributes = Get-VstsInput -Name customAttributes
 
@@ -434,6 +461,8 @@ try {
     $script:trademark = Use-Parameter "Trademark" "trademark" $script:trademark
 
     $script:informationalVersion = Use-Parameter "Informational Version" "informationalVersion" $script:informationalVersion
+
+    $comVisible = Use-ComVisibleParameter $comVisible
 
     $customAttributes = Use-CustomAttributesParameter $script:customAttributes
 
