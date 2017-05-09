@@ -76,7 +76,7 @@ Parameters include:
 * **Copyright**: Left blank, the value is not updated. Variables can be used.
 * **Trademark**: Left blank, the value is not updated. Variables can be used.
 * **Informational Version**: Left blank, the value is not updated. Variables can be used.
-* **Com Visible**: True or False
+* **Com Visible**: Select value for Com Visible. If 'Do Not Update', the value is not updated.
 * **File Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
 * **File Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
 * **File Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
