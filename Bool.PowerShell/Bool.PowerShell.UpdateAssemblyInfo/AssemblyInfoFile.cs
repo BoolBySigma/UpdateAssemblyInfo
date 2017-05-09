@@ -11,12 +11,8 @@
     /// <remarks>
     ///     To correctly parse multiline comments, it must start at the beginning of a line.
     /// </remarks>
-    internal sealed class AssemblyInfoFile
+    internal class AssemblyInfoFile
     {
-
-
-        #region Fields
-
         // parser for assembly attributes in C#, VB.Net and F#
         private static readonly Regex AssemblyAttributeParser = new Regex(@"^(?<start>\s*[\[<]<?\s*[Aa]ssembly\s*:\s*)(?<longname>(?<shortname>\w+?)(Attribute)?)(?<middle>\s*\(\s*""?)(?<value>.*?)(?<end>""?\s*\)\s*>?[>\]])", RegexOptions.Compiled);
 
@@ -38,37 +34,97 @@
         private bool? ensureAttribute = false;
    
         // programming language
-        private Language language = Language.CS;
+        private Language language;
 
-        private string attributePrefix = "[";
-
-        private string attributeSuffix = "]";
-
-        #endregion
-
-        #region Nested Types
-
-        // Contains an assembly attribute match result.
-        private class MatchResult
+        /// <summary>
+        ///     Gets or sets the attribute value.
+        /// </summary>
+        /// <param name="attributeName">
+        ///     The attribute name.
+        /// </param>
+        /// <value>
+        ///     The attribute value. If the attribute is not declared returns <see langword="null" />.
+        /// </value>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     The attribute <paramref name="attributeName" /> is not declared in the parsed file and cannot be set.
+        /// </exception>
+        /// <returns>string</returns>
+        public string this[string attributeName]
         {
-            // Gets or sets the string format to rewrite the attribute line with a new value.
-            public string Format { get; set; }
+            get
+            {
+                if (!this.attributes.ContainsKey(attributeName))
+                {
+                    if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
+                    {
+                        return this.CreateAttribute(attributeName);
+                    }
 
-            // Gets or sets the attribute value.
-            public string Value { get; set; }
+                    return null;
+                }
 
-            // Gets or sets the attribute line number in the original file.
-            public int LineNumber { get; set; }
+                return this.attributes[attributeName].Value;
+            }
+
+            set
+            {
+                // get match attribute result
+                var r = default(MatchResult);
+                if (!this.attributes.TryGetValue(attributeName, out r))
+                {
+                    // attribute not found
+                    throw new ArgumentOutOfRangeException(nameof(attributeName), string.Format("'{0}' is not an attribute in the specified AssemblyInfo file.", attributeName));
+                }
+
+                // update value & line
+                r.Value = value;
+                this.lines[r.LineNumber] = string.Format(r.Format, value);
+            }
         }
-        private enum Language
+
+        private string AttributePrefix
         {
-            CS,
-            VB
+            get
+            {
+                switch (this.language)
+                {
+                    case Language.Cs:
+                    {
+                        return "[";
+                    }
+                    case Language.Vb:
+                    {
+                        return "<";
+                    }
+                    default:
+                    {
+                        return "[<";
+                    }
+                }
+            }
         }
 
-        #endregion
-
-        #region Constructors
+        private string AttributeSuffix
+        {
+            get
+            {
+                switch (this.language)
+                {
+                    case Language.Cs:
+                    {
+                        return "]";
+                        }
+                    case Language.Vb:
+                    {
+                        return ">";
+                    }
+                    default:
+                    {
+                        return ">]";
+                    }
+                }
+            }
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="AssemblyInfoFile" /> class with the specified AssemblyInfo file.
@@ -76,19 +132,14 @@
         /// <param name="path">
         ///     The AssemblyInfo file to parse.
         /// </param>
+        /// <param name="ensureAttribute"></param>
         public AssemblyInfoFile(string path, bool? ensureAttribute)
         {
             this.ensureAttribute = ensureAttribute;
+            this.language = this.DetermineFileLanguage(path);
 
             using (var sr = File.OpenText(path))
             {
-                if (path.ToLower().EndsWith(".vb"))
-                {
-                    this.language = Language.VB;
-                    this.attributePrefix = "<";
-                    this.attributeSuffix = ">";
-                }
-
                 var line = default(string);
                 var lineNumber = 0;
                 var isComment = false;
@@ -149,98 +200,6 @@
             }
         }
 
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        ///     Gets or sets the attribute value.
-        /// </summary>
-        /// <param name="attributeName">
-        ///     The attribute name.
-        /// </param>
-        /// <value>
-        ///     The attribute value. If the attribute is not declared returns <see langword="null" />.
-        /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     The attribute <paramref name="attributeName" /> is not declared in the parsed file and cannot be set.
-        /// </exception>
-        /// <returns>string</returns>
-        public string this[string attributeName]
-        {
-            get
-            {
-                if (!this.attributes.ContainsKey(attributeName))
-                {
-                    if (this.ensureAttribute.HasValue && this.ensureAttribute.Value){                        
-                        return this.CreateAttribute(attributeName);
-                    }
-
-                    return null;
-                }
-
-                return this.attributes[attributeName].Value;
-            }
-
-            set
-            {
-                // get match attribute result
-                var r = default(MatchResult);
-                if (!this.attributes.TryGetValue(attributeName, out r))
-                {
-                    // attribute not found
-                    throw new ArgumentOutOfRangeException("attributeName", string.Format("'{0}' is not an attribute in the specified AssemblyInfo file.", attributeName));
-                }
-
-                // update value & line
-                r.Value = value;
-                this.lines[r.LineNumber] = string.Format(r.Format, value);
-            }
-        }
-
-        private string CreateAttributeFormat(string attributeName){
-            switch (attributeName) {
-                case "ComVisible": {
-                            return this.attributePrefix + "assembly: " + attributeName + "({0})" + this.attributeSuffix;
-                        }
-                default: {
-                            return this.attributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.attributeSuffix;
-                        }
-            }
-        }
-
-        private string CreateAttributeValue(string attributeName){
-            switch (attributeName) {
-                case "AssemblyVersion":
-                case "AssemblyFileVersion": {
-                        return "1.0.0.0";
-                }
-                default: {
-                        return string.Empty;
-                }
-            }
-        }
-
-        private string CreateAttribute(string attributeName){
-
-            var attributeValue = this.CreateAttributeValue(attributeName);
-            
-            this.lines.Add(attributeValue);
-            var lineNumber = this.lines.Count - 1;
-
-            this.attributes[attributeName] = new MatchResult {
-                    Format = this.CreateAttributeFormat(attributeName),
-                    LineNumber = lineNumber,
-                    Value = attributeValue
-                };
-
-            return attributeValue;
-        }
-        
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Writes the updated AssemblyInfo file to the specified <see cref="TextWriter" />.
         /// </summary>
@@ -255,6 +214,96 @@
             }
         }
 
-        #endregion
+        public string BooleanToString(bool value)
+        {
+            switch (language)
+            {
+                case Language.Cs:
+                case Language.Fs:
+                {
+                    return value.ToString().ToLower();
+                    }
+                case Language.Vb:
+                {
+                    return value.ToString();
+                    }
+                default:
+                {
+                    throw new Exception("Unsupported language");
+                }
+            }
+        }
+
+        private string CreateAttributeFormat(string attributeName)
+        {
+            switch (attributeName)
+            {
+                case "ComVisible":
+                {
+                    return this.AttributePrefix + "assembly: " + attributeName + "({0})" + this.AttributeSuffix;
+                }
+                default:
+                {
+                    return this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
+                }
+            }
+        }
+
+        private string CreateAttributeValue(string attributeName)
+        {
+            switch (attributeName)
+            {
+                case "AssemblyVersion":
+                case "AssemblyFileVersion":
+                {
+                    return "1.0.0.0";
+                }
+                default:
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+        private string CreateAttribute(string attributeName)
+        {
+            var attributeValue = this.CreateAttributeValue(attributeName);
+
+            this.lines.Add(attributeValue);
+            var lineNumber = this.lines.Count - 1;
+
+            this.attributes[attributeName] = new MatchResult
+            {
+                Format = this.CreateAttributeFormat(attributeName),
+                LineNumber = lineNumber,
+                Value = attributeValue
+            };
+
+            return attributeValue;
+        }
+
+        private Language DetermineFileLanguage(string path)
+        {
+            var extension = Path.GetExtension(path);
+            switch (extension)
+            {
+                case ".fs":
+                {
+                    return Language.Fs;
+                }
+                case ".vb":
+                {
+                    return Language.Vb;
+                }
+                case ".cs":
+                {
+                    return Language.Cs;
+                }
+                default:
+                {
+                    throw new ArgumentOutOfRangeException("File extension " + extension + "is not supported");
+                }
+            }
+        }
     }
 }

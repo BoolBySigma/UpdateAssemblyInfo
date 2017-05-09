@@ -10,7 +10,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-    public sealed class AssemblyInfoUpdater
+    public class AssemblyInfoUpdater
     {
         #region Methods
 
@@ -84,12 +84,12 @@
                     this.UpdateAttribute("AssemblyTitle", this.AssemblyTitle, true);
                     this.UpdateAttribute("AssemblyTrademark", this.AssemblyTrademark, true);
                     this.UpdateAttribute("AssemblyCulture", this.AssemblyCulture, false);
-                    this.UpdateAttribute("AssemblyDelaySign", this.AssemblyDelaySign.HasValue ? BooleanToString(path, this.AssemblyDelaySign.Value) : null, false);
+                    this.UpdateAttribute("AssemblyDelaySign", this.AssemblyDelaySign.HasValue ? this.file.BooleanToString(this.AssemblyDelaySign.Value) : null, false);
                     this.UpdateAttribute("Guid", this.Guid.HasValue ? this.Guid.Value.ToString() : null, false);
                     this.UpdateAttribute("AssemblyKeyFile", this.AssemblyKeyFile, false);
                     this.UpdateAttribute("AssemblyKeyName", this.AssemblyKeyName, false);
-                    this.UpdateAttribute("CLSCompliant", this.CLSCompliant.HasValue ? BooleanToString(path, this.CLSCompliant.Value) : null, false);
-                    this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? BooleanToString(path, this.ComVisible.Value) : null, false);
+                    this.UpdateAttribute("CLSCompliant", this.CLSCompliant.HasValue ? this.file.BooleanToString(this.CLSCompliant.Value) : null, false);
+                    this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? this.file.BooleanToString(this.ComVisible.Value) : null, false);
 
                     foreach (DictionaryEntry entry in this.CustomAttributes) {
                         this.UpdateAttribute(entry.Key.ToString(), entry.Value.ToString(), false);
@@ -498,22 +498,6 @@
         #endregion
 
         #region Private Helpers
-
-        // Returns the specified value as a string with the correct case based on the file extension.
-        private static string BooleanToString(string path, bool value)
-        {
-            switch (Path.GetExtension(path))
-            {
-                case ".cs":
-                case ".fs":
-                    return value.ToString().ToLower();
-
-                case ".vb":
-                    return value.ToString();
-            }
-
-            return null;
-        }
 
         // Updates and returns the version of the specified attribute.
         private string UpdateVersion(string attributeName, string format, Version maxVersion)
