@@ -104,6 +104,14 @@
     },
     {
       "name": "comVisible",
+      "type": "string",
+      "label": "Com Visible String",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": ""
+    },
+    {
+      "name": "comVisibleOld",
       "type": "boolean",
       "label": "Com Visible",
       "defaultValue": false,
