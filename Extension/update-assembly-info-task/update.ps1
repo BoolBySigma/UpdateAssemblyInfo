@@ -82,7 +82,7 @@ function Use-CustomAttributesParameter {
         $entryValue = $null
 
         if ($entry.Count -eq 1) {
-            Write-VstsTaskError -Message "Custom attribute '$entryKey' is missing value. Make sure the attribute is in form 'AttributeName=AttributeValue'."
+            Write-VstsTaskError -Message "Custom attribute '$entryKey' is missing a value. Make sure the attribute is in form 'AttributeName=AttributeValue'."
             $script:errors += 1
         }
         else {
