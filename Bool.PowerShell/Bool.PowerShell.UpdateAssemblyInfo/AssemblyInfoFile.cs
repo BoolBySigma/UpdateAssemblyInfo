@@ -13,6 +13,61 @@
     /// </remarks>
     internal sealed class AssemblyInfoFile
     {
+
+
+        #region Fields
+
+        // parser for assembly attributes in C#, VB.Net and F#
+        private static readonly Regex AssemblyAttributeParser = new Regex(@"^(?<start>\s*[\[<]<?\s*[Aa]ssembly\s*:\s*)(?<longname>(?<shortname>\w+?)(Attribute)?)(?<middle>\s*\(\s*""?)(?<value>.*?)(?<end>""?\s*\)\s*>?[>\]])", RegexOptions.Compiled);
+
+        // parser for line comment in C#, VB.Net and F#
+        private static readonly Regex LineCommentParser = new Regex(@"^\s*(//|')", RegexOptions.Compiled);
+
+        // parser for multiline comment start in C# and F#
+        private static readonly Regex MultilineCommentStartParser = new Regex(@"^\s*(/\*|\(\*)", RegexOptions.Compiled);
+
+        // parser for multiline comment end in C# and F#
+        private static readonly Regex MultilineCommentEndParser = new Regex(@".*?(\*/|\*\))", RegexOptions.Compiled);
+
+        // raw file lines
+        private readonly IList<string> lines = new List<string>();
+
+        // assembly attributes
+        private readonly IDictionary<string, MatchResult> attributes = new Dictionary<string, MatchResult>();
+
+        private bool? ensureAttribute = false;
+   
+        // programming language
+        private Language language = Language.CS;
+
+        private string attributePrefix = "[";
+
+        private string attributeSuffix = "]";
+
+        #endregion
+
+        #region Nested Types
+
+        // Contains an assembly attribute match result.
+        private class MatchResult
+        {
+            // Gets or sets the string format to rewrite the attribute line with a new value.
+            public string Format { get; set; }
+
+            // Gets or sets the attribute value.
+            public string Value { get; set; }
+
+            // Gets or sets the attribute line number in the original file.
+            public int LineNumber { get; set; }
+        }
+        private enum Language
+        {
+            CS,
+            VB
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -27,6 +82,13 @@
 
             using (var sr = File.OpenText(path))
             {
+                if (path.ToLower().EndsWith(".vb"))
+                {
+                    this.language = Language.VB;
+                    this.attributePrefix = "<";
+                    this.attributeSuffix = ">";
+                }
+
                 var line = default(string);
                 var lineNumber = 0;
                 var isComment = false;
@@ -139,10 +201,10 @@
         private string CreateAttributeFormat(string attributeName){
             switch (attributeName) {
                 case "ComVisible": {
-                            return "[assembly: " + attributeName + "({0})]";
+                            return this.attributePrefix + "assembly: " + attributeName + "({0})" + this.attributeSuffix;
                         }
                 default: {
-                            return "[assembly: " + attributeName + "(\"{0}\")]";
+                            return this.attributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.attributeSuffix;
                         }
             }
         }
@@ -192,47 +254,6 @@
                 writer.WriteLine(line);
             }
         }
-
-        #endregion
-
-        #region Nested Types
-
-        // Contains an assembly attribute match result.
-        private class MatchResult
-        {
-            // Gets or sets the string format to rewrite the attribute line with a new value.
-            public string Format { get; set; }
-
-            // Gets or sets the attribute value.
-            public string Value { get; set; }
-
-            // Gets or sets the attribute line number in the original file.
-            public int LineNumber { get; set; }
-        }
-
-        #endregion
-
-        #region Fields
-
-        // parser for assembly attributes in C#, VB.Net and F#
-        private static readonly Regex AssemblyAttributeParser = new Regex(@"^(?<start>\s*[\[<]<?\s*[Aa]ssembly\s*:\s*)(?<longname>(?<shortname>\w+?)(Attribute)?)(?<middle>\s*\(\s*""?)(?<value>.*?)(?<end>""?\s*\)\s*>?[>\]])", RegexOptions.Compiled);
-
-        // parser for line comment in C#, VB.Net and F#
-        private static readonly Regex LineCommentParser = new Regex(@"^\s*(//|')", RegexOptions.Compiled);
-
-        // parser for multiline comment start in C# and F#
-        private static readonly Regex MultilineCommentStartParser = new Regex(@"^\s*(/\*|\(\*)", RegexOptions.Compiled);
-
-        // parser for multiline comment end in C# and F#
-        private static readonly Regex MultilineCommentEndParser = new Regex(@".*?(\*/|\*\))", RegexOptions.Compiled);
-
-        // raw file lines
-        private readonly IList<string> lines = new List<string>();
-
-        // assembly attributes
-        private readonly IDictionary<string, MatchResult> attributes = new Dictionary<string, MatchResult>();
-
-        private bool? ensureAttribute = false;
 
         #endregion
     }
