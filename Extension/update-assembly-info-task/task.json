@@ -115,14 +115,6 @@
       "required": true,
       "helpMarkDown": "Select value for Com Visible."
     },
-    /*{
-      "name": "comVisibleOld",
-      "type": "boolean",
-      "label": "Com Visible",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": ""
-    },*/
     {
       "name": "fileVersionMajor",
       "type": "string",
