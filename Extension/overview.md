@@ -90,7 +90,7 @@ Example:
 `AttributeName1=AttributeValue1`
 `AttributeName2=AttributeValue2`
 `AttributeName3=AttributeValue3`
-Left blank, the value is not updated. Variables can be used.
+Left blank, no custom attributes are added. Variables can be used.
 
 ## Changelog
 * **2.0.27**: Added 'Do Not Update' option for Com Visible attribute.
