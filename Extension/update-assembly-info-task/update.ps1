@@ -64,33 +64,33 @@ function Use-CustomAttributesParameter {
         return @{}
     }
 
-    $pairs = $value.Split([Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
-    $pairs = $pairs.Where( {![string]::IsNullOrWhiteSpace($_)})
+    $entries = $value.Split([Environment]::NewLine, [System.StringSplitOptions]::RemoveEmptyEntries)
+    $entries = $entries.Where( {![string]::IsNullOrWhiteSpace($_)})
 
     $attributes = [ordered]@{}
 
-    $pairs | ForEach-Object {
+    $entries | ForEach-Object {
         $_ = $_.Trim()
-        $pair = $_.Split("=", [System.StringSplitOptions]::RemoveEmptyEntries)
-        if ($pair.Count -eq 0){
+        $entry = $_.Split("=", [System.StringSplitOptions]::RemoveEmptyEntries)
+        if ($entry.Count -eq 0){
             Write-VstsTaskError -Message "Custom attribute '$_' is invalid. Make sure the attribute is in form 'AttributeName=AttributeValue'."
             $script:errors += 1
             return
         }
 
-        $pairKey = $pair[0].Trim()
-        $pairValue = $null
+        $entryKey = $entry[0].Trim()
+        $entryValue = $null
 
-        if ($pair.Count -eq 1) {
-            Write-VstsTaskError -Message "Custom attribute '$pairKey' is missing value. Make sure the attribute is in form 'AttributeName=AttributeValue'."
+        if ($entry.Count -eq 1) {
+            Write-VstsTaskError -Message "Custom attribute '$entryKey' is missing value. Make sure the attribute is in form 'AttributeName=AttributeValue'."
             $script:errors += 1
         }
         else {
-            $pairValue = $pair[1].Trim()
+            $entryValue = $entry[1].Trim()
         }
 
-        Write-VstsTaskDebug -Message "attribute key: $pairKey, value: $pairValue"
-        $attributes.Add($pairKey, $pairValue)
+        Write-VstsTaskDebug -Message "attribute key: $entryKey, value: $entryValue"
+        $attributes.Add($entryKey, $entryValue)
     }
 
     return $attributes
