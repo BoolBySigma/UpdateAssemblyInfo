@@ -102,9 +102,9 @@ function Use-ComVisibleParameter {
         $value
     )
 
-    Write-VstsTaskDebug -Message "Use-CustomAttributesParameter"
+    Write-VstsTaskDebug -Message "Use-ComVisibleParameter"
 
-    $value = $value.ToLower();
+    $value = $value.ToLower()
     Write-VstsTaskDebug -Message "value: $value"
 
     if ($value -eq "none"){

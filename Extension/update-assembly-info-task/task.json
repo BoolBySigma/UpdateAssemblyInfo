@@ -108,21 +108,21 @@
       "label": "Com Visible",
       "defaultValue": "none",
       "options": {
-        "none": "Unchanged",
+        "none": "Do Not Update",
         "true": "True",
         "false": "False"
       },
       "required": true,
-      "helpMarkDown": "Choose whether to compile a project (defined in a tsconfig.json file) or files."
+      "helpMarkDown": "Select value for Com Visible."
     },
-    {
+    /*{
       "name": "comVisibleOld",
       "type": "boolean",
       "label": "Com Visible",
       "defaultValue": false,
       "required": false,
       "helpMarkDown": ""
-    },
+    },*/
     {
       "name": "fileVersionMajor",
       "type": "string",
