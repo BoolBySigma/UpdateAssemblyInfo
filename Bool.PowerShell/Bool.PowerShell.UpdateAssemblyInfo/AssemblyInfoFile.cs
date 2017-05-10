@@ -68,25 +68,26 @@
 
             set
             {
-                // get match attribute result
+                var r = this.attributes[attributeName];
+                if (r == null)
+                {
+                    return;
+                }
+                r.Value = value;
+                this.lines[r.LineNumber] = string.Format(r.Format, value);
+
+                /*// get match attribute result
                 var r = default(MatchResult);
                 if (!this.attributes.TryGetValue(attributeName, out r))
                 {
-                    /*if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
-                    {
-                        r = this.CreateAttribute(attributeName);
-                    }
-                    else
-                    {*/
                         throw new ArgumentOutOfRangeException(nameof(attributeName),
                             string.Format("'{0}' is not an attribute in the specified AssemblyInfo file.",
                                 attributeName));
-                    //}
                 }
 
                 // update value & line
                 r.Value = value;
-                this.lines[r.LineNumber] = string.Format(r.Format, value);
+                this.lines[r.LineNumber] = string.Format(r.Format, value);*/
             }
         }
 
