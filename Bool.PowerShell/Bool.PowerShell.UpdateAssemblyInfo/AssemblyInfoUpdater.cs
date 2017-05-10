@@ -10,7 +10,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-    public class AssemblyInfoUpdater
+    internal class AssemblyInfoUpdater
     {
         #region Methods
 
@@ -559,12 +559,6 @@
         // Updates and returns the value of the specified attribute.
         private string UpdateAttribute(string attributeName, string attributeValue, bool replaceTokens)
         {
-            /*if (attributeValue == null || this.file[attributeName] == null)
-            {
-                // do nothing
-                return string.Empty;
-            }*/
-
             if (string.IsNullOrEmpty(attributeValue))
             {
                 return string.Empty;

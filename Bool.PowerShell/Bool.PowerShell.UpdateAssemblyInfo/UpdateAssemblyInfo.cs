@@ -44,7 +44,7 @@
             this.WriteObject(result);
         }
 
-        #region Properties
+        #region Parameters
 
         /// <summary>
         ///     Sets the AssemblyInfo files to update.
@@ -376,6 +376,21 @@
         [Parameter()]
         public bool? ComVisible { get; set; }
 
+        [Description("Specifiy whether or not to add missing attribute.")]
+        [Parameter()]
+        public bool? EnsureAttribute { get; set; }
+
+        /// <summary>
+        ///     Gets the custom attributes.
+        /// </summary>
+        [Description("Gets the custom attributes.")]
+        [Parameter()]
+        public Hashtable CustomAttributes { get; set; }
+
+        #endregion
+
+        #region Properties
+
         /// <summary>
         ///     Gets the max updated assembly version.
         /// </summary>
@@ -411,17 +426,6 @@
         /// </summary>
         [Description("Gets the updated assembly informational versions.")]
         public IEnumerable<string> AssemblyInformationalVersions { get; set; }
-
-        [Description("Specifiy whether or not to add missing attribute.")]
-        [Parameter()]
-        public bool? EnsureAttribute { get; set; }
-
-        /// <summary>
-        ///     Gets the custom attributes.
-        /// </summary>
-        [Description("Gets the custom attributes.")]
-        [Parameter()]
-        public Hashtable CustomAttributes { get; set; }
 
         #endregion
     }

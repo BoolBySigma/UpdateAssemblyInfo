@@ -1,6 +1,6 @@
 ﻿namespace Bool.PowerShell.UpdateAssemblyInfo
 {
-    public class UpdateResult
+    internal class UpdateResult
     {
         public string File { get; set; }
 

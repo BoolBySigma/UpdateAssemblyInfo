@@ -34,7 +34,7 @@
         private bool? ensureAttribute = false;
    
         // programming language
-        private Language language;
+        private readonly Language language;
 
         /// <summary>
         ///     Gets or sets the attribute value.
@@ -80,6 +80,7 @@
                     }
                 }
                 r.Value = value;
+                r.Format = this.CreateAttributeFormat(value);
                 this.lines[r.LineNumber] = string.Format(r.Format, value);
             }
         }
@@ -236,19 +237,20 @@
             }
         }
 
-        private string CreateAttributeFormat(string attributeName)
+        private string CreateAttributeFormat(string attributeValue)
         {
-            switch (attributeName)
+            var stringFormat = this.AttributePrefix + "assembly: " + attributeValue + "(\"{0}\")" + this.AttributeSuffix;
+            if (string.IsNullOrEmpty(attributeValue))
             {
-                case "ComVisible":
-                {
-                    return this.AttributePrefix + "assembly: " + attributeName + "({0})" + this.AttributeSuffix;
-                }
-                default:
-                {
-                    return this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
-                }
+                return stringFormat;
             }
+
+            if (bool.TryParse(attributeValue, out bool isBoolean))
+            {
+                return this.AttributePrefix + "assembly: " + attributeValue + "({0})" + this.AttributeSuffix;
+            }
+
+            return stringFormat;
         }
 
         private string CreateAttributeValue(string attributeName)
@@ -276,7 +278,7 @@
 
             this.attributes[attributeName] = new MatchResult
             {
-                Format = this.CreateAttributeFormat(attributeName),
+                Format = this.CreateAttributeFormat(null),
                 LineNumber = lineNumber,
                 Value = attributeValue
             };
