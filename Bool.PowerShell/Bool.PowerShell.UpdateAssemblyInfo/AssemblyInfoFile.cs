@@ -68,7 +68,15 @@
 
             set
             {
-                var r = default(MatchResult);
+                var r = this.attributes[attributeName];
+                if (r == null)
+                {
+                    return;
+                }
+                r.Value = value;
+                this.lines[r.LineNumber] = string.Format(r.Format, value);
+
+                /*var r = default(MatchResult);
                 if (!this.attributes.TryGetValue(attributeName, out r))
                 {
                     if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
@@ -81,7 +89,7 @@
                     }
                 }
                 r.Value = value;
-                this.lines[r.LineNumber] = string.Format(r.Format, value);
+                this.lines[r.LineNumber] = string.Format(r.Format, value);*/
 
                 /*// get match attribute result
                 var r = default(MatchResult);
