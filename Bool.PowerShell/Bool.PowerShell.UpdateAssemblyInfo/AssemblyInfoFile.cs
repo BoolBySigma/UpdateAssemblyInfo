@@ -72,7 +72,7 @@
                 {
                     if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
                     {
-                        r = this.CreateAttribute(attributeName);
+                        r = this.CreateAttribute(attributeName, value);
                     }
                     else
                     {
@@ -80,7 +80,6 @@
                     }
                 }
                 r.Value = value;
-                r.Format = this.CreateAttributeFormat(value);
                 this.lines[r.LineNumber] = string.Format(r.Format, value);
             }
         }
@@ -237,9 +236,9 @@
             }
         }
 
-        private string CreateAttributeFormat(string attributeValue)
+        private string CreateAttributeFormat(string attributeName, string attributeValue)
         {
-            var stringFormat = this.AttributePrefix + "assembly: " + attributeValue + "(\"{0}\")" + this.AttributeSuffix;
+            var stringFormat = this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
             if (string.IsNullOrEmpty(attributeValue))
             {
                 return stringFormat;
@@ -247,7 +246,7 @@
 
             if (bool.TryParse(attributeValue, out bool isBoolean))
             {
-                return this.AttributePrefix + "assembly: " + attributeValue + "({0})" + this.AttributeSuffix;
+                return this.AttributePrefix + "assembly: " + attributeName + "({0})" + this.AttributeSuffix;
             }
 
             return stringFormat;
@@ -271,14 +270,22 @@
 
         private MatchResult CreateAttribute(string attributeName)
         {
-            var attributeValue = this.CreateAttributeValue(attributeName);
+            return this.CreateAttribute(attributeName, string.Empty);
+        }
+
+        private MatchResult CreateAttribute(string attributeName, string attributeValue)
+        {
+            if (string.IsNullOrEmpty(attributeValue))
+            {
+                attributeValue = this.CreateAttributeValue(attributeName);
+            }
 
             this.lines.Add(attributeValue);
             var lineNumber = this.lines.Count - 1;
 
             this.attributes[attributeName] = new MatchResult
             {
-                Format = this.CreateAttributeFormat(null),
+                Format = this.CreateAttributeFormat(attributeName, attributeValue),
                 LineNumber = lineNumber,
                 Value = attributeValue
             };
