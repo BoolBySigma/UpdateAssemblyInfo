@@ -509,10 +509,7 @@
             var oldValue = this.file[attributeName];
             if (oldValue == null)
             {
-                if (!(this.EnsureAttribute.HasValue && this.EnsureAttribute.Value))
-                {
-                    return string.Empty;
-                }
+                return string.Empty;
             }
 
             // parse old version (handle * character)
@@ -571,14 +568,6 @@
             if (string.IsNullOrEmpty(attributeValue))
             {
                 return string.Empty;
-            }
-            
-            if (this.file[attributeName] == null)
-            {
-                if (!(this.EnsureAttribute.HasValue && this.EnsureAttribute.Value))
-                {
-                    return string.Empty;
-                }
             }
 
             this.file[attributeName] = replaceTokens ? this.ReplaceTokens(attributeValue, default(int)) : attributeValue;

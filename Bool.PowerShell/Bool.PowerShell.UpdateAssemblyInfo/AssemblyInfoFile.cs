@@ -55,10 +55,10 @@
             {
                 if (!this.attributes.ContainsKey(attributeName))
                 {
-                    /*if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
+                    if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
                     {
                         return this.CreateAttribute(attributeName);
-                    }*/
+                    }
 
                     return null;
                 }
@@ -72,16 +72,16 @@
                 var r = default(MatchResult);
                 if (!this.attributes.TryGetValue(attributeName, out r))
                 {
-                    if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
+                    /*if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
                     {
                         r = this.CreateAttribute(attributeName);
                     }
                     else
-                    {
+                    {*/
                         throw new ArgumentOutOfRangeException(nameof(attributeName),
                             string.Format("'{0}' is not an attribute in the specified AssemblyInfo file.",
                                 attributeName));
-                    }
+                    //}
                 }
 
                 // update value & line
@@ -273,7 +273,7 @@
             }
         }
 
-        private MatchResult CreateAttribute(string attributeName)
+        private string CreateAttribute(string attributeName)
         {
             var attributeValue = this.CreateAttributeValue(attributeName);
 
@@ -287,7 +287,7 @@
                 Value = attributeValue
             };
 
-            return this.attributes[attributeName];
+            return attributeValue;
         }
 
         private Language DetermineFileLanguage(string path)
