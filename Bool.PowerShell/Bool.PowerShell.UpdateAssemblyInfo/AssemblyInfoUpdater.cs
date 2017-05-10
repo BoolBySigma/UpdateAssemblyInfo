@@ -502,7 +502,12 @@
         // Updates and returns the version of the specified attribute.
         private string UpdateVersion(string attributeName, string format, Version maxVersion)
         {
-            if (string.IsNullOrWhiteSpace(format)) {
+            /*if (string.IsNullOrWhiteSpace(format)) {
+                return string.Empty;
+            }*/
+            
+            if (string.IsNullOrEmpty(format) || (this.EnsureAttribute.HasValue && !this.EnsureAttribute.Value))
+            {
                 return string.Empty;
             }
 
@@ -559,9 +564,14 @@
         // Updates and returns the value of the specified attribute.
         private string UpdateAttribute(string attributeName, string attributeValue, bool replaceTokens)
         {
-            if (attributeValue == null || this.file[attributeName] == null)
+            /*if (attributeValue == null || this.file[attributeName] == null)
             {
                 // do nothing
+                return string.Empty;
+            }*/
+
+            if (attributeValue == null || (this.EnsureAttribute.HasValue && !this.EnsureAttribute.Value))
+            {
                 return string.Empty;
             }
 
