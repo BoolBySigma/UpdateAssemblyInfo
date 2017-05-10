@@ -32,9 +32,9 @@
         private readonly IDictionary<string, MatchResult> attributes = new Dictionary<string, MatchResult>();
 
         private bool? ensureAttribute = false;
-   
+
         // programming language
-        private readonly Language language;
+        private Language language;
 
         /// <summary>
         ///     Gets or sets the attribute value.
@@ -72,7 +72,7 @@
                 {
                     if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
                     {
-                        r = this.CreateAttribute(attributeName, value);
+                        r = this.CreateAttribute(attributeName);
                     }
                     else
                     {
@@ -115,7 +115,7 @@
                     case Language.Cs:
                     {
                         return "]";
-                        }
+                    }
                     case Language.Vb:
                     {
                         return ">";
@@ -224,11 +224,11 @@
                 case Language.Fs:
                 {
                     return value.ToString().ToLower();
-                    }
+                }
                 case Language.Vb:
                 {
                     return value.ToString();
-                    }
+                }
                 default:
                 {
                     throw new Exception("Unsupported language");
@@ -236,20 +236,19 @@
             }
         }
 
-        private string CreateAttributeFormat(string attributeName, string attributeValue)
+        private string CreateAttributeFormat(string attributeName)
         {
-            var stringFormat = this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
-            if (string.IsNullOrEmpty(attributeValue))
+            switch (attributeName)
             {
-                return stringFormat;
+                case "ComVisible":
+                {
+                    return this.AttributePrefix + "assembly: " + attributeName + "({0})" + this.AttributeSuffix;
+                }
+                default:
+                {
+                    return this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
+                }
             }
-
-            if (bool.TryParse(attributeValue, out bool isBoolean))
-            {
-                return this.AttributePrefix + "assembly: " + attributeName + "({0})" + this.AttributeSuffix;
-            }
-
-            return stringFormat;
         }
 
         private string CreateAttributeValue(string attributeName)
@@ -270,22 +269,14 @@
 
         private MatchResult CreateAttribute(string attributeName)
         {
-            return this.CreateAttribute(attributeName, string.Empty);
-        }
-
-        private MatchResult CreateAttribute(string attributeName, string attributeValue)
-        {
-            if (string.IsNullOrEmpty(attributeValue))
-            {
-                attributeValue = this.CreateAttributeValue(attributeName);
-            }
+            var attributeValue = this.CreateAttributeValue(attributeName);
 
             this.lines.Add(attributeValue);
             var lineNumber = this.lines.Count - 1;
 
             this.attributes[attributeName] = new MatchResult
             {
-                Format = this.CreateAttributeFormat(attributeName, attributeValue),
+                Format = this.CreateAttributeFormat(attributeName),
                 LineNumber = lineNumber,
                 Value = attributeValue
             };
