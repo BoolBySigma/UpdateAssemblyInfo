@@ -6,7 +6,7 @@ namespace Bool.PowerShell.UpdateAssemblyInfo
         public string Format { get; set; }
 
         // Gets or sets the attribute value.
-        public string Value { get; set; }
+        public object Value { get; set; }
 
         // Gets or sets the attribute line number in the original file.
         public int LineNumber { get; set; }

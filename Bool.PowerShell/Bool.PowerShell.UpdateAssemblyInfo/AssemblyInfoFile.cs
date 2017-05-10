@@ -26,7 +26,7 @@
         private static readonly Regex MultilineCommentEndParser = new Regex(@".*?(\*/|\*\))", RegexOptions.Compiled);
 
         // raw file lines
-        private readonly IList<string> lines = new List<string>();
+        private readonly IList<object> lines = new List<object>();
 
         // assembly attributes
         private readonly IDictionary<string, MatchResult> attributes = new Dictionary<string, MatchResult>();
@@ -49,7 +49,7 @@
         ///     The attribute <paramref name="attributeName" /> is not declared in the parsed file and cannot be set.
         /// </exception>
         /// <returns>string</returns>
-        public string this[string attributeName]
+        public object this[string attributeName]
         {
             get
             {
@@ -79,8 +79,17 @@
                         return;
                     }
                 }
-                r.Value = value;
-                this.lines[r.LineNumber] = string.Format(r.Format, value);
+
+                if (value is bool)
+                {
+                    r.Value = this.BooleanToString(value);
+                    r.Format = this.CreateAttributeFormat(attributeName, value);
+                }
+                else
+                {
+                    r.Value = value;
+                }
+                this.lines[r.LineNumber] = string.Format(r.Format, r.Value);
             }
         }
 
@@ -216,7 +225,7 @@
             }
         }
 
-        public string BooleanToString(bool value)
+        private string BooleanToString(object value)
         {
             switch (language)
             {
@@ -236,9 +245,16 @@
             }
         }
 
-        private string CreateAttributeFormat(string attributeName)
+        private string CreateAttributeFormat(string attributeName, object attributeValue)
         {
-            switch (attributeName)
+            if (attributeValue is bool)
+            {
+                return this.AttributePrefix + "assembly: " + attributeName + "({0})" + this.AttributeSuffix;
+            }
+
+            return this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
+
+            /*switch (attributeName)
             {
                 case "ComVisible":
                 {
@@ -248,10 +264,10 @@
                 {
                     return this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
                 }
-            }
+            }*/
         }
 
-        private string CreateAttributeValue(string attributeName)
+        private object CreateAttributeValue(string attributeName)
         {
             switch (attributeName)
             {
@@ -267,16 +283,19 @@
             }
         }
 
-        private MatchResult CreateAttribute(string attributeName)
+        private MatchResult CreateAttribute(string attributeName, object attributeValue = null)
         {
-            var attributeValue = this.CreateAttributeValue(attributeName);
+            if (attributeValue == null)
+            {
+                attributeValue = this.CreateAttributeValue(attributeName);
+            }
 
             this.lines.Add(attributeValue);
             var lineNumber = this.lines.Count - 1;
 
             this.attributes[attributeName] = new MatchResult
             {
-                Format = this.CreateAttributeFormat(attributeName),
+                Format = this.CreateAttributeFormat(attributeName, attributeValue),
                 LineNumber = lineNumber,
                 Value = attributeValue
             };

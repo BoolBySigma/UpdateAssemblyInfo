@@ -87,6 +87,10 @@ function Use-CustomAttributesParameter {
         }
         else {
             $entryValue = $entry[1].Trim()
+            $boolResult = $null
+            if ([bool]::TryParse($entryValue, [ref]$boolResult)){
+                $entryValue = $boolResult
+            }
         }
 
         Write-VstsTaskDebug -Message "attribute key: $entryKey, value: $entryValue"

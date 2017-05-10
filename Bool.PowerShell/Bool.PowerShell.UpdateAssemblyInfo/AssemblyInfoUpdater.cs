@@ -10,7 +10,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-    internal class AssemblyInfoUpdater
+    public class AssemblyInfoUpdater
     {
         #region Methods
 
@@ -67,7 +67,7 @@
                         fileVersions.Add(parsedVersion);
                     }
 
-                    var infoVersion = this.UpdateAttribute("AssemblyInformationalVersion", this.AssemblyInformationalVersion, true);
+                    var infoVersion = this.UpdateAttribute("AssemblyInformationalVersion", this.AssemblyInformationalVersion, true).ToString();
                     if (string.Compare(infoVersion, this.MaxAssemblyInformationalVersion, StringComparison.Ordinal) > 0)
                     {
                         this.MaxAssemblyInformationalVersion = infoVersion;
@@ -84,15 +84,20 @@
                     this.UpdateAttribute("AssemblyTitle", this.AssemblyTitle, true);
                     this.UpdateAttribute("AssemblyTrademark", this.AssemblyTrademark, true);
                     this.UpdateAttribute("AssemblyCulture", this.AssemblyCulture, false);
-                    this.UpdateAttribute("AssemblyDelaySign", this.AssemblyDelaySign.HasValue ? this.file.BooleanToString(this.AssemblyDelaySign.Value) : null, false);
+                    this.UpdateAttribute("AssemblyDelaySign", this.AssemblyDelaySign.HasValue ? (object) this.AssemblyDelaySign.Value : null, false);
                     this.UpdateAttribute("Guid", this.Guid.HasValue ? this.Guid.Value.ToString() : null, false);
                     this.UpdateAttribute("AssemblyKeyFile", this.AssemblyKeyFile, false);
                     this.UpdateAttribute("AssemblyKeyName", this.AssemblyKeyName, false);
-                    this.UpdateAttribute("CLSCompliant", this.CLSCompliant.HasValue ? this.file.BooleanToString(this.CLSCompliant.Value) : null, false);
-                    this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? this.file.BooleanToString(this.ComVisible.Value) : null, false);
+                    this.UpdateAttribute("CLSCompliant", this.CLSCompliant.HasValue ? (object) this.CLSCompliant.Value : null, false);
+                    this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? (object) this.ComVisible.Value : null, false);
 
-                    foreach (DictionaryEntry entry in this.CustomAttributes) {
-                        this.UpdateAttribute(entry.Key.ToString(), entry.Value.ToString(), false);
+                    if (this.CustomAttributes != null)
+                    {
+                        foreach (DictionaryEntry entry in this.CustomAttributes)
+                        {
+                            this.UpdateAttribute(entry.Key.ToString(), entry.Value, false);
+                        }
+
                     }
 
                     // write to file (unset and set back ReadOnly attribute if present).
@@ -506,11 +511,13 @@
                 return string.Empty;
             }
 
-            var oldValue = this.file[attributeName];
-            if (oldValue == null)
+            var oldObject = this.file[attributeName];
+            if (oldObject == null)
             {
                 return string.Empty;
             }
+
+            var oldValue = oldObject.ToString();
 
             // parse old version (handle * character)
             var containsWildcard = oldValue.Contains('*');
@@ -557,14 +564,18 @@
         }
 
         // Updates and returns the value of the specified attribute.
-        private string UpdateAttribute(string attributeName, string attributeValue, bool replaceTokens)
+        private object UpdateAttribute(string attributeName, object attributeValue, bool replaceTokens)
         {
-            if (string.IsNullOrEmpty(attributeValue))
+            if (attributeValue == null)
             {
                 return string.Empty;
             }
+            /*if (string.IsNullOrEmpty(attributeValue))
+            {
+                return string.Empty;
+            }*/
 
-            this.file[attributeName] = replaceTokens ? this.ReplaceTokens(attributeValue, default(int)) : attributeValue;
+            this.file[attributeName] = replaceTokens ? this.ReplaceTokens(attributeValue.ToString(), default(int)) : attributeValue;
 
             return this.file[attributeName];
         }
