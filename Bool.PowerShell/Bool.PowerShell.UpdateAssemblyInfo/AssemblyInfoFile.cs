@@ -68,8 +68,8 @@
 
             set
             {
-                var r = this.attributes[attributeName];
-                if (r == null)
+                var r = default(MatchResult);
+                if (!this.attributes.TryGetValue(attributeName, out r))
                 {
                     return;
                 }
