@@ -57,7 +57,7 @@
                 {
                     if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
                     {
-                        return this.CreateAttribute(attributeName);
+                        return this.CreateAttribute(attributeName).Value;
                     }
 
                     return null;
@@ -71,7 +71,14 @@
                 var r = default(MatchResult);
                 if (!this.attributes.TryGetValue(attributeName, out r))
                 {
-                    return;
+                    if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
+                    {
+                        r = this.CreateAttribute(attributeName);
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 r.Value = value;
                 this.lines[r.LineNumber] = string.Format(r.Format, value);
@@ -274,7 +281,7 @@
             }
         }
 
-        private string CreateAttribute(string attributeName)
+        private MatchResult CreateAttribute(string attributeName)
         {
             var attributeValue = this.CreateAttributeValue(attributeName);
 
@@ -288,7 +295,7 @@
                 Value = attributeValue
             };
 
-            return attributeValue;
+            return this.attributes[attributeValue];
         }
 
         private Language DetermineFileLanguage(string path)
