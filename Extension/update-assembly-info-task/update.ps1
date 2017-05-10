@@ -299,6 +299,24 @@ function Set-NullIfEmpty {
     return $value
 }
 
+function Set-VersionNullIfCurrent {
+    param(
+        [string]
+        $parameterName,
+        [string]
+        $value
+    )
+
+    Write-VstsTaskDebug -Message "Set-VersionNullIfCurrent`: $parameterName"
+
+    if ($value.Equals("`$(current).`$(current).`$(current).`$(current)")) {
+        Write-VstsTaskDebug -Message "$parameterName`: `$null"
+        return $null
+    }
+
+    return $value
+}
+
 function Get-DisplayValue {
     param(
         [string]
@@ -442,11 +460,13 @@ try {
     $fileVersion = "$script:fileVersionMajor.$script:fileVersionMinor.$script:fileVersionBuild.$script:fileVersionRevision"
     Write-VstsTaskDebug -Message "fileVersion: $fileVersion"
     $script:fileVersion = $fileVersion
+    $fileVersion = Set-VersionNullIfCurrent "fileVersion" $fileVersion
 
     Write-VstsTaskDebug -Message "formatting assembly version"
     $assemblyVersion = "$script:assemblyVersionMajor.$script:assemblyVersionMinor.$script:assemblyVersionBuild.$script:assemblyVersionRevision"
     Write-VstsTaskDebug -Message "assmeblyVersion: $assemblyVersion"
     $script:assemblyVersion = $assemblyVersion
+    $assemblyVersion = Set-VersionNullIfCurrent "assemblyVersion" $assemblyVersion
 
     $script:description = Use-Parameter "Description" "description" $script:description
     
@@ -481,8 +501,8 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Trademark"; Value = (Get-DisplayValue "trademark" $script:trademark)}
     $parameters += New-Object PSObject -Property @{Parameter = "Informational Version"; Value = (Get-DisplayValue "informationalVersion" $script:informationalVersion)}
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
-    $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $fileVersion}
-    $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $assemblyVersion}
+    $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $script:fileVersion}
+    $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $script:assemblyVersion}
     $customAttributes.GetEnumerator() | ForEach-Object { $parameters += New-Object PSObject -Property @{Parameter = "$($_.Key)"; Value = "$($_.Value)"} }
     $parameters | format-table -property Parameter, Value
 
