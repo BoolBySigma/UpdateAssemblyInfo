@@ -295,7 +295,7 @@
                 Value = attributeValue
             };
 
-            return this.attributes[attributeValue];
+            return this.attributes[attributeName];
         }
 
         private Language DetermineFileLanguage(string path)
