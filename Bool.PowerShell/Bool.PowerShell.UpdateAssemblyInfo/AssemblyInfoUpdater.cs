@@ -507,9 +507,12 @@
             }
 
             var oldValue = this.file[attributeName];
-            if (oldValue == null && (this.EnsureAttribute.HasValue && !this.EnsureAttribute.Value))
+            if (oldValue == null)
             {
-                return string.Empty;
+                if (!(this.EnsureAttribute.HasValue && this.EnsureAttribute.Value))
+                {
+                    return string.Empty;
+                }
             }
 
             // parse old version (handle * character)
@@ -570,9 +573,12 @@
                 return string.Empty;
             }
             
-            if (this.file[attributeName] == null && (this.EnsureAttribute.HasValue && !this.EnsureAttribute.Value))
+            if (this.file[attributeName] == null)
             {
-                return string.Empty;
+                if (!(this.EnsureAttribute.HasValue && this.EnsureAttribute.Value))
+                {
+                    return string.Empty;
+                }
             }
 
             this.file[attributeName] = replaceTokens ? this.ReplaceTokens(attributeValue, default(int)) : attributeValue;
