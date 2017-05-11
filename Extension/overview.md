@@ -77,6 +77,7 @@ Parameters include:
 * **Trademark**: Left blank, the value is not updated. Variables can be used.
 * **Informational Version**: Left blank, the value is not updated. Variables can be used.
 * **Com Visible**: Select value for Com Visible. If 'Do Not Update', the value is not updated.
+* **CLS Compliant**: Select value for CLS Compliant. If 'Do Not Update', the value is not updated.
 * **File Version - Major**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
 * **File Version - Minor**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
 * **File Version - Build**: Left blank, the value is not updated. Variables can be used, eg. `$(Build.BuildId)`. Must be a numeric value.
@@ -94,14 +95,15 @@ If using attribute values 'True', 'true', 'False' or 'false' the custom attribut
 Left blank, no custom attributes are added. Variables can be used.
 
 ## Changelog
+* **2.0.31**: Added CLS Compliant attribute.
 * **2.0.27**: Added 'Do Not Update' option for Com Visible attribute.
 * **2.0.25**: Added support for custom attributes.
 * **2.0.23**: Added $(Rev) variable.
 * **2.0.20**: Added $(DayOfYear) variable.
 * **2.0.18**: Added $(Date:{...}) variable. Enables adding missing attributes.
 * **2.0.13**: Added support for alternate file names and output parameters.
-* **2.0.11**: Added 'Com Visible' functionality.
-* **2.0.0**: Added 'Assembly Version' functionality.
+* **2.0.11**: Added 'Com Visible' attribute.
+* **2.0.0**: Added 'Assembly Version' attributes.
 
 ## Having Problems?
 Please [create an issue on our Github](https://github.com/BoolBySigma/UpdateAssemblyInfo/issues) and we will try to help you.
