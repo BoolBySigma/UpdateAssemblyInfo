@@ -116,6 +116,19 @@
       "helpMarkDown": "Select value for Com Visible."
     },
     {
+      "name": "clsCompliant",
+      "type": "radio",
+      "label": "CLS Compliant",
+      "defaultValue": "none",
+      "options": {
+        "none": "Do Not Update",
+        "true": "True",
+        "false": "False"
+      },
+      "required": false,
+      "helpMarkDown": "Select value for CLS Compliant."
+    },
+    {
       "name": "fileVersionMajor",
       "type": "string",
       "label": "Major",

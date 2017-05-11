@@ -100,13 +100,17 @@ function Use-CustomAttributesParameter {
     return $attributes
 }
 
-function Use-ComVisibleParameter {
+function Use-BooleanParameter {
     param(
+        [string]
+        $displayName,
+        [string]
+        $parameterName,
         [string]
         $value
     )
 
-    Write-VstsTaskDebug -Message "Use-ComVisibleParameter"
+    Write-VstsTaskDebug -Message "Use-BooleanParameter: $parameterName"
 
     $value = $value.ToLower()
     Write-VstsTaskDebug -Message "value: $value"
@@ -123,7 +127,7 @@ function Use-ComVisibleParameter {
         return $true
     }
 
-    Write-VstsTaskError -Message "'$value' is not a valid value for Com Visible."
+    Write-VstsTaskError -Message "'$value' is not a valid value for $displayName."
     $script:errors += 1
 }
 
@@ -433,6 +437,7 @@ try {
     $script:assemblyVersionRevision = Get-VstsInput -Name assemblyVersionRevision
     $script:informationalVersion = Get-VstsInput -Name informationalVersion
     $comVisible = Get-VstsInput -Name comVisible
+    $clsCompliant = Get-VstsInput -Name clsCompliant
     $ensureAttribute = Get-VstsInput -Name ensureAttribute -AsBool
     $script:customAttributes = Get-VstsInput -Name customAttributes
 
@@ -486,7 +491,9 @@ try {
 
     $script:informationalVersion = Use-Parameter "Informational Version" "informationalVersion" $script:informationalVersion
 
-    $comVisible = Use-ComVisibleParameter $comVisible
+    $comVisible = Use-BooleanParameter "Com Visible" "comVisible" $comVisible
+
+    $clsCompliant = Use-BooleanParameter "CLS Compliant" "clsCompliant" $clsCompliant
 
     $customAttributes = Use-CustomAttributesParameter $script:customAttributes
 
@@ -505,6 +512,7 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Trademark"; Value = (Get-DisplayValue "trademark" $script:trademark)}
     $parameters += New-Object PSObject -Property @{Parameter = "Informational Version"; Value = (Get-DisplayValue "informationalVersion" $script:informationalVersion)}
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
+    $parameters += New-Object PSObject -Property @{Parameter = "CLS Compliant"; Value = $clsCompliant}
     $parameters += New-Object PSObject -Property @{Parameter = "File Version"; Value = $script:fileVersion}
     $parameters += New-Object PSObject -Property @{Parameter = "Assembly Version"; Value = $script:assemblyVersion}
     $customAttributes.GetEnumerator() | ForEach-Object { $parameters += New-Object PSObject -Property @{Parameter = "$($_.Key)"; Value = "$($_.Value)"} }
@@ -529,7 +537,7 @@ try {
         Write-VstsTaskDebug -Message "files:"
         Write-VstsTaskDebug -Message "$files"
         Write-Output "Updating..."
-        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $script:description -AssemblyConfiguration $script:configuration -AssemblyCompany $script:company -AssemblyProduct $script:product -AssemblyCopyright $script:copyright -AssemblyTrademark $script:trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $script:informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -EnsureAttribute $ensureAttribute -CustomAttributes $customAttributes
+        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $script:description -AssemblyConfiguration $script:configuration -AssemblyCompany $script:company -AssemblyProduct $script:product -AssemblyCopyright $script:copyright -AssemblyTrademark $script:trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $script:informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -CLSCompliant $clsCompliant -EnsureAttribute $ensureAttribute -CustomAttributes $customAttributes
 
         Write-Output "Updated:"
         $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
