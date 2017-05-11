@@ -34,7 +34,7 @@
         private bool? ensureAttribute = false;
 
         // programming language
-        private Language language;
+        private readonly Language language;
 
         /// <summary>
         ///     Gets or sets the attribute value.

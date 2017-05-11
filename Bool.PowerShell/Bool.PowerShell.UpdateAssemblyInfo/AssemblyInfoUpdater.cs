@@ -12,136 +12,11 @@
 
     public class AssemblyInfoUpdater
     {
-        #region Methods
-
-        /// <summary>
-        ///     Executes the logic for this workflow activity.
-        /// </summary>
-        public List<UpdateResult> InternalExecute()
-        {
-            // initialize values
-            var now = DateTime.Now;
-            var version = string.Empty;
-            var fileVersion = string.Empty;
-            var versions = new List<Version>();
-            var fileVersions = new List<Version>();
-            var infoVersions = new List<string>();
-            this.tokenEvaluators = new Dictionary<string, Func<string, string>> { { "current", p => "-1" }, { "increment", p => "-1" }, { "date", p => now.ToString(p, CultureInfo.InvariantCulture) }, { "version", p => version }, { "fileversion", p => fileVersion } };
-
-            this.MaxAssemblyVersion = new Version(0, 0, 0, 0);
-            this.MaxAssemblyFileVersion = new Version(0, 0, 0, 0);
-            this.MaxAssemblyInformationalVersion = string.Empty;
-            this.AssemblyVersions = new List<Version>();
-            this.AssemblyFileVersions = new List<Version>();
-            this.AssemblyInformationalVersions = new List<string>();
-
-            var result = new List<UpdateResult>();
-
-            // update all files
-            var files = this.Files;
-            if (files != null && files.Any())
-            {
-                foreach (var path in files)
-                {
-                    // load file
-                    if (!File.Exists(path))
-                    {
-                        throw new FileNotFoundException("AssemblyInfo file not found.", path);
-                    }
-
-                    this.file = new AssemblyInfoFile(path, this.EnsureAttribute);
-
-                    // update version attributes
-                    version = this.UpdateVersion("AssemblyVersion", this.AssemblyVersion, this.MaxAssemblyVersion);
-
-                    var parsedVersion = default(Version);
-                    if (Version.TryParse(version, out parsedVersion))
-                    {
-                        versions.Add(parsedVersion);
-                    }
-
-                    fileVersion = this.UpdateVersion("AssemblyFileVersion", this.AssemblyFileVersion, this.MaxAssemblyFileVersion);
-
-                    if (Version.TryParse(fileVersion, out parsedVersion))
-                    {
-                        fileVersions.Add(parsedVersion);
-                    }
-
-                    var infoVersion = this.UpdateAttribute("AssemblyInformationalVersion", this.AssemblyInformationalVersion, true).ToString();
-                    if (string.Compare(infoVersion, this.MaxAssemblyInformationalVersion, StringComparison.Ordinal) > 0)
-                    {
-                        this.MaxAssemblyInformationalVersion = infoVersion;
-                    }
-
-                    infoVersions.Add(infoVersion);
-
-                    // update other attributes
-                    this.UpdateAttribute("AssemblyCompany", this.AssemblyCompany, true);
-                    this.UpdateAttribute("AssemblyConfiguration", this.AssemblyConfiguration, true);
-                    this.UpdateAttribute("AssemblyCopyright", this.AssemblyCopyright, true);
-                    this.UpdateAttribute("AssemblyDescription", this.AssemblyDescription, true);
-                    this.UpdateAttribute("AssemblyProduct", this.AssemblyProduct, true);
-                    this.UpdateAttribute("AssemblyTitle", this.AssemblyTitle, true);
-                    this.UpdateAttribute("AssemblyTrademark", this.AssemblyTrademark, true);
-                    this.UpdateAttribute("AssemblyCulture", this.AssemblyCulture, false);
-                    this.UpdateAttribute("AssemblyDelaySign", this.AssemblyDelaySign.HasValue ? (object) this.AssemblyDelaySign.Value : null, false);
-                    this.UpdateAttribute("Guid", this.Guid.HasValue ? this.Guid.Value.ToString() : null, false);
-                    this.UpdateAttribute("AssemblyKeyFile", this.AssemblyKeyFile, false);
-                    this.UpdateAttribute("AssemblyKeyName", this.AssemblyKeyName, false);
-                    this.UpdateAttribute("CLSCompliant", this.CLSCompliant.HasValue ? (object) this.CLSCompliant.Value : null, false);
-                    this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? (object) this.ComVisible.Value : null, false);
-
-                    if (this.CustomAttributes != null)
-                    {
-                        foreach (DictionaryEntry entry in this.CustomAttributes)
-                        {
-                            this.UpdateAttribute(entry.Key.ToString(), entry.Value, false);
-                        }
-
-                    }
-
-                    // write to file (unset and set back ReadOnly attribute if present).
-                    var fileAttributes = File.GetAttributes(path);
-                    var attributesChanged = false;
-
-                    if ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    {
-                        File.SetAttributes(path, fileAttributes ^ FileAttributes.ReadOnly);
-                        attributesChanged = true;
-                    }
-
-                    using (var sw = new StreamWriter(path, false, Encoding.UTF8))
-                    {
-                        this.file.Write(sw);
-                    }
-
-                    if (attributesChanged)
-                    {
-                        File.SetAttributes(path, FileAttributes.ReadOnly);
-                    }
-
-                    result.Add(new UpdateResult()
-                    {
-                        File = path,
-                        FileVersion = fileVersion,
-                        AssemblyVersion = version
-                    });
-                }
-
-                this.AssemblyVersions = versions;
-                this.AssemblyFileVersions = fileVersions;
-                this.AssemblyInformationalVersions = infoVersions;
-            }
-
-            return result;
-        }
-
-        #endregion
-
         #region Fields
 
         // token parser.
-        private static readonly Regex TokenParser = new Regex(@"\$\((?<token>[^:\)]*)(:(?<param>[^\)]+))?\)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex TokenParser = new Regex(@"\$\((?<token>[^:\)]*)(:(?<param>[^\)]+))?\)",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         // version parser.
         private static readonly Regex VersionParser = new Regex(@"\d+\.\d+\.\d+\.\d+", RegexOptions.Compiled);
@@ -368,7 +243,8 @@
         /// <remarks>
         ///     Setting the value to null will disable updating this attribute.
         /// </remarks>
-        [Description("Specify the name of the key conteiner to use to generate a strong name. (null to disable update)")]
+        [Description(
+            "Specify the name of the key conteiner to use to generate a strong name. (null to disable update)")]
         public string AssemblyKeyName { get; set; }
 
         /// <summary>
@@ -502,12 +378,146 @@
 
         #endregion
 
-        #region Private Helpers
+        /// <summary>
+        ///     Executes the logic for this workflow activity.
+        /// </summary>
+        public List<UpdateResult> InternalExecute()
+        {
+            // initialize values
+            var now = DateTime.Now;
+            var version = string.Empty;
+            var fileVersion = string.Empty;
+            var versions = new List<Version>();
+            var fileVersions = new List<Version>();
+            var infoVersions = new List<string>();
+            this.tokenEvaluators = new Dictionary<string, Func<string, string>>
+            {
+                {"current", p => "-1"},
+                {"increment", p => "-1"},
+                {"date", p => now.ToString(p, CultureInfo.InvariantCulture)},
+                {"version", p => version},
+                {"fileversion", p => fileVersion}
+            };
+
+            this.MaxAssemblyVersion = new Version(0, 0, 0, 0);
+            this.MaxAssemblyFileVersion = new Version(0, 0, 0, 0);
+            this.MaxAssemblyInformationalVersion = string.Empty;
+            this.AssemblyVersions = new List<Version>();
+            this.AssemblyFileVersions = new List<Version>();
+            this.AssemblyInformationalVersions = new List<string>();
+
+            var result = new List<UpdateResult>();
+
+            // update all files
+            var files = this.Files;
+            if (files != null && files.Any())
+            {
+                foreach (var path in files)
+                {
+                    // load file
+                    if (!File.Exists(path))
+                    {
+                        throw new FileNotFoundException("AssemblyInfo file not found.", path);
+                    }
+
+                    this.file = new AssemblyInfoFile(path, this.EnsureAttribute);
+
+                    // update version attributes
+                    version = this.UpdateVersion("AssemblyVersion", this.AssemblyVersion, this.MaxAssemblyVersion);
+
+                    var parsedVersion = default(Version);
+                    if (Version.TryParse(version, out parsedVersion))
+                    {
+                        versions.Add(parsedVersion);
+                    }
+
+                    fileVersion = this.UpdateVersion("AssemblyFileVersion", this.AssemblyFileVersion,
+                        this.MaxAssemblyFileVersion);
+
+                    if (Version.TryParse(fileVersion, out parsedVersion))
+                    {
+                        fileVersions.Add(parsedVersion);
+                    }
+
+                    var infoVersion = this.UpdateAttribute("AssemblyInformationalVersion",
+                        this.AssemblyInformationalVersion, true).ToString();
+                    if (string.Compare(infoVersion, this.MaxAssemblyInformationalVersion, StringComparison.Ordinal) > 0)
+                    {
+                        this.MaxAssemblyInformationalVersion = infoVersion;
+                    }
+
+                    infoVersions.Add(infoVersion);
+
+                    // update other attributes
+                    this.UpdateAttribute("AssemblyCompany", this.AssemblyCompany, true);
+                    this.UpdateAttribute("AssemblyConfiguration", this.AssemblyConfiguration, true);
+                    this.UpdateAttribute("AssemblyCopyright", this.AssemblyCopyright, true);
+                    this.UpdateAttribute("AssemblyDescription", this.AssemblyDescription, true);
+                    this.UpdateAttribute("AssemblyProduct", this.AssemblyProduct, true);
+                    this.UpdateAttribute("AssemblyTitle", this.AssemblyTitle, true);
+                    this.UpdateAttribute("AssemblyTrademark", this.AssemblyTrademark, true);
+                    this.UpdateAttribute("AssemblyCulture", this.AssemblyCulture, false);
+                    this.UpdateAttribute("AssemblyDelaySign",
+                        this.AssemblyDelaySign.HasValue ? (object) this.AssemblyDelaySign.Value : null, false);
+                    this.UpdateAttribute("Guid", this.Guid.HasValue ? this.Guid.Value.ToString() : null, false);
+                    this.UpdateAttribute("AssemblyKeyFile", this.AssemblyKeyFile, false);
+                    this.UpdateAttribute("AssemblyKeyName", this.AssemblyKeyName, false);
+                    this.UpdateAttribute("CLSCompliant",
+                        this.CLSCompliant.HasValue ? (object) this.CLSCompliant.Value : null, false);
+                    this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? (object) this.ComVisible.Value : null,
+                        false);
+
+                    if (this.CustomAttributes != null)
+                    {
+                        foreach (DictionaryEntry entry in this.CustomAttributes)
+                        {
+                            this.UpdateAttribute(entry.Key.ToString(), entry.Value, false);
+                        }
+
+                    }
+
+                    // write to file (unset and set back ReadOnly attribute if present).
+                    var fileAttributes = File.GetAttributes(path);
+                    var attributesChanged = false;
+
+                    if ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    {
+                        File.SetAttributes(path, fileAttributes ^ FileAttributes.ReadOnly);
+                        attributesChanged = true;
+                    }
+
+                    using (var sw = new StreamWriter(path, false, Encoding.UTF8))
+                    {
+                        this.file.Write(sw);
+                    }
+
+                    if (attributesChanged)
+                    {
+                        File.SetAttributes(path, FileAttributes.ReadOnly);
+                    }
+
+                    result.Add(new UpdateResult()
+                    {
+                        File = path,
+                        FileVersion = fileVersion,
+                        AssemblyVersion = version
+                    });
+                }
+
+                this.AssemblyVersions = versions;
+                this.AssemblyFileVersions = fileVersions;
+                this.AssemblyInformationalVersions = infoVersions;
+            }
+
+            return result;
+        }
+
 
         // Updates and returns the version of the specified attribute.
         private string UpdateVersion(string attributeName, string format, Version maxVersion)
         {
-            if (string.IsNullOrEmpty(format)) {
+            if (string.IsNullOrEmpty(format))
+            {
                 return string.Empty;
             }
 
@@ -539,7 +549,8 @@
 
             if (!VersionParser.IsMatch(oldValue))
             {
-                throw new FormatException("Current value for attribute '" + attributeName + "' is not in a correct version format.");
+                throw new FormatException("Current value for attribute '" + attributeName +
+                                          "' is not in a correct version format.");
             }
 
             var version = new Version(oldValue);
@@ -548,12 +559,17 @@
             var tokens = format.Split('.');
             if (tokens.Length != 4)
             {
-                throw new FormatException("Specified value for attribute '" + attributeName + "'  is not a correct version format.");
+                throw new FormatException("Specified value for attribute '" + attributeName +
+                                          "'  is not a correct version format.");
             }
 
-            version = new Version(Convert.ToInt32(this.ReplaceTokens(tokens[0], version.Major)), Convert.ToInt32(this.ReplaceTokens(tokens[1], version.Minor)), Convert.ToInt32(this.ReplaceTokens(tokens[2], version.Build)), Convert.ToInt32(this.ReplaceTokens(tokens[3], version.Revision)));
+            version = new Version(Convert.ToInt32(this.ReplaceTokens(tokens[0], version.Major)),
+                Convert.ToInt32(this.ReplaceTokens(tokens[1], version.Minor)),
+                Convert.ToInt32(this.ReplaceTokens(tokens[2], version.Build)),
+                Convert.ToInt32(this.ReplaceTokens(tokens[3], version.Revision)));
 
-            this.file[attributeName] = string.Format(versionPattern, version.Major, version.Minor, version.Build, version.Revision);
+            this.file[attributeName] = string.Format(versionPattern, version.Major, version.Minor, version.Build,
+                version.Revision);
 
             if (version > maxVersion)
             {
@@ -575,7 +591,9 @@
                 return string.Empty;
             }*/
 
-            this.file[attributeName] = replaceTokens ? this.ReplaceTokens(attributeValue.ToString(), default(int)) : attributeValue;
+            this.file[attributeName] = replaceTokens
+                ? this.ReplaceTokens(attributeValue.ToString(), default(int))
+                : attributeValue;
 
             return this.file[attributeName];
         }
@@ -591,17 +609,15 @@
             return TokenParser.Replace(
                 value,
                 m =>
+                {
+                    var evaluator = default(Func<string, string>);
+                    if (!this.tokenEvaluators.TryGetValue(m.Groups["token"].Value, out evaluator))
                     {
-                        var evaluator = default(Func<string, string>);
-                        if (!this.tokenEvaluators.TryGetValue(m.Groups["token"].Value, out evaluator))
-                        {
-                            throw new FormatException("Unknown token '" + m.Groups["token"].Value + "'.");
-                        }
+                        throw new FormatException("Unknown token '" + m.Groups["token"].Value + "'.");
+                    }
 
-                        return evaluator(m.Groups["param"].Value);
-                    });
+                    return evaluator(m.Groups["param"].Value);
+                });
         }
-
-        #endregion
     }
 }
