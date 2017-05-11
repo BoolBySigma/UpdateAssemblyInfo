@@ -90,6 +90,7 @@ Example:
 `AttributeName1=AttributeValue1`
 `AttributeName2=AttributeValue2`
 `AttributeName3=AttributeValue3`
+If using attribute values 'True', 'true', 'False' or 'false' the custom attribute will be treated as a boolean attribute.
 Left blank, no custom attributes are added. Variables can be used.
 
 ## Changelog
