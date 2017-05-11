@@ -253,18 +253,6 @@
             }
 
             return this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
-
-            /*switch (attributeName)
-            {
-                case "ComVisible":
-                {
-                    return this.AttributePrefix + "assembly: " + attributeName + "({0})" + this.AttributeSuffix;
-                }
-                default:
-                {
-                    return this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
-                }
-            }*/
         }
 
         private object CreateAttributeValue(string attributeName)
