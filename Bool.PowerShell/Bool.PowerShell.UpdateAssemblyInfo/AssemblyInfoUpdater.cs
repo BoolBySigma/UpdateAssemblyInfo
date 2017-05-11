@@ -586,10 +586,6 @@
             {
                 return string.Empty;
             }
-            /*if (string.IsNullOrEmpty(attributeValue))
-            {
-                return string.Empty;
-            }*/
 
             this.file[attributeName] = replaceTokens
                 ? this.ReplaceTokens(attributeValue.ToString(), default(int))
