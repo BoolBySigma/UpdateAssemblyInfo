@@ -439,8 +439,9 @@
                         fileVersions.Add(parsedVersion);
                     }
 
-                    var infoVersion = this.UpdateAttribute("AssemblyInformationalVersion",
-                        this.AssemblyInformationalVersion, true).ToString();
+                    var infoVersionAttribute = this.UpdateAttribute("AssemblyInformationalVersion",
+                        this.AssemblyInformationalVersion, true);
+                    var infoVersion = (infoVersionAttribute == null) ? string.Empty : infoVersionAttribute.ToString();
                     if (string.Compare(infoVersion, this.MaxAssemblyInformationalVersion, StringComparison.Ordinal) > 0)
                     {
                         this.MaxAssemblyInformationalVersion = infoVersion;
