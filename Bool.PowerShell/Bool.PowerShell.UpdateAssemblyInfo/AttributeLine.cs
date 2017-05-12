@@ -1,6 +1,6 @@
 namespace Bool.PowerShell.UpdateAssemblyInfo
 {
-    internal class MatchResult
+    internal class AttributeLine
     {
         // Gets or sets the string format to rewrite the attribute line with a new value.
         public string Format { get; set; }

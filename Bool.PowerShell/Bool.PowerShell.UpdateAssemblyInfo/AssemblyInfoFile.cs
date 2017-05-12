@@ -29,12 +29,13 @@
         private readonly IList<object> lines = new List<object>();
 
         // assembly attributes
-        private readonly IDictionary<string, MatchResult> attributes = new Dictionary<string, MatchResult>();
+        private readonly IDictionary<string, AttributeLine> attributes = new Dictionary<string, AttributeLine>();
 
         private bool? ensureAttribute = false;
-
-        // programming language
+        
         private readonly Language language;
+
+        private UpdateAssemblyInfo cmdlet;
 
         /// <summary>
         ///     Gets or sets the attribute value.
@@ -68,7 +69,7 @@
 
             set
             {
-                if (!this.attributes.TryGetValue(attributeName, out MatchResult r))
+                if (!this.attributes.TryGetValue(attributeName, out AttributeLine r))
                 {
                     if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
                     {
@@ -144,9 +145,13 @@
         ///     The AssemblyInfo file to parse.
         /// </param>
         /// <param name="ensureAttribute"></param>
-        public AssemblyInfoFile(string path, bool? ensureAttribute)
+        public AssemblyInfoFile(UpdateAssemblyInfo cmdlet, string path, bool? ensureAttribute)
         {
+            this.cmdlet = cmdlet;
+            this.cmdlet.WriteDebug("AssemblyInfoFile");
+            this.cmdlet.WriteDebug("path: " + path);
             this.ensureAttribute = ensureAttribute;
+            this.cmdlet.WriteDebug("ensureAttribute: " + ensureAttribute);
             this.language = this.DetermineFileLanguage(path);
 
             using (var sr = File.OpenText(path))
@@ -154,10 +159,11 @@
                 var line = default(string);
                 var lineNumber = 0;
                 var isComment = false;
-
-                // read lines one by one
+                
+                this.cmdlet.WriteDebug("file begin");
                 while ((line = sr.ReadLine()) != null)
                 {
+                    this.cmdlet.WriteDebug(line);
                     this.lines.Add(line);
 
                     if (LineCommentParser.IsMatch(line))
@@ -202,12 +208,19 @@
 
                         if (!this.attributes.ContainsKey(attributeName))
                         {
-                            this.attributes[attributeName] = new MatchResult { Format = matches.Groups["start"].Value + matches.Groups["longname"].Value + matches.Groups["middle"].Value + "{0}" + matches.Groups["end"].Value, LineNumber = lineNumber, Value = matches.Groups["value"].Value };
+                            this.attributes[attributeName] = new AttributeLine
+                            {
+                                Format = matches.Groups["start"].Value + matches.Groups["longname"].Value +
+                                         matches.Groups["middle"].Value + "{0}" + matches.Groups["end"].Value,
+                                LineNumber = lineNumber,
+                                Value = matches.Groups["value"].Value
+                            };
                         }
                     }
 
                     ++lineNumber;
                 }
+                this.cmdlet.WriteDebug("file end");
             }
         }
 
@@ -219,6 +232,7 @@
         /// </param>
         public void Write(TextWriter writer)
         {
+            this.cmdlet.WriteDebug("Write");
             foreach (var line in this.lines)
             {
                 writer.WriteLine(line);
@@ -227,6 +241,8 @@
 
         private string BooleanToString(object value)
         {
+            this.cmdlet.WriteDebug("BooleanToString");
+            this.cmdlet.WriteDebug("value: " + value);
             switch (language)
             {
                 case Language.Cs:
@@ -247,8 +263,10 @@
 
         private string CreateAttributeFormat(string attributeName, object attributeValue)
         {
+            this.cmdlet.WriteDebug("CreateAttributeFormat");
             if (attributeValue is bool)
             {
+                this.cmdlet.WriteDebug("attribute value is boolean");
                 return this.AttributePrefix + "assembly: " + attributeName + "({0})" + this.AttributeSuffix;
             }
 
@@ -257,6 +275,8 @@
 
         private object CreateAttributeValue(string attributeName)
         {
+            this.cmdlet.WriteDebug("CreateAttributeValue");
+            this.cmdlet.WriteDebug("attributeName: " + attributeName);
             switch (attributeName)
             {
                 case "AssemblyVersion":
@@ -271,29 +291,41 @@
             }
         }
 
-        private MatchResult CreateAttribute(string attributeName, object attributeValue = null)
+        private AttributeLine CreateAttribute(string attributeName, object attributeValue = null)
         {
+            this.cmdlet.WriteDebug("CreateAttribute");
+            this.cmdlet.WriteDebug("attributeName: " + attributeName);
+            this.cmdlet.WriteDebug("attributeValue: " + attributeValue);
             if (attributeValue == null)
             {
+                this.cmdlet.WriteDebug("no attribute value");
                 attributeValue = this.CreateAttributeValue(attributeName);
             }
 
             this.lines.Add(attributeValue);
             var lineNumber = this.lines.Count - 1;
 
-            this.attributes[attributeName] = new MatchResult
+            var attributeLine = new AttributeLine
             {
                 Format = this.CreateAttributeFormat(attributeName, attributeValue),
                 LineNumber = lineNumber,
                 Value = attributeValue
             };
+            this.cmdlet.WriteDebug("attributeLine.Format: " + attributeLine.Format);
+            this.cmdlet.WriteDebug("attributeLine.LineNumber: " + attributeLine.LineNumber);
+            this.cmdlet.WriteDebug("attributeLine.Value: " + attributeLine.Value);
+
+            this.attributes[attributeName] = attributeLine;
 
             return this.attributes[attributeName];
         }
 
         private Language DetermineFileLanguage(string path)
         {
+            this.cmdlet.WriteDebug("DetermineLanguage");
+            this.cmdlet.WriteDebug("path: " + path);
             var extension = Path.GetExtension(path);
+            this.cmdlet.WriteDebug("extension: " + extension);
             switch (extension)
             {
                 case ".fs":

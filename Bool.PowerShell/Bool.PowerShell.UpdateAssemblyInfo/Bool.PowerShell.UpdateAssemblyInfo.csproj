@@ -52,7 +52,7 @@
     <Compile Include="AssemblyInfoFile.cs" />
     <Compile Include="AssemblyInfoUpdater.cs" />
     <Compile Include="Language.cs" />
-    <Compile Include="MatchResult.cs" />
+    <Compile Include="AttributeLine.cs" />
     <Compile Include="UpdateAssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdateResult.cs" />

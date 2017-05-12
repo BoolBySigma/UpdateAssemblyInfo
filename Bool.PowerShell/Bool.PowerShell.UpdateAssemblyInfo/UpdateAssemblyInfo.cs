@@ -18,7 +18,7 @@
 
         protected override void ProcessRecord()
         {
-            this.WriteDebug("Updating..");
+            this.WriteDebug("ProcessRecord");
             this.updater.Cmdlet = this;
             this.updater.Files = this.Files;
             this.updater.AssemblyVersion = this.AssemblyVersion;
