@@ -4,7 +4,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -334,47 +333,13 @@
         [Description("Specify whether the assembly is COM visible. (null to disable update)")]
         public bool? ComVisible { get; set; }
 
-        /// <summary>
-        ///     Gets the max updated assembly version.
-        /// </summary>
-        [Description("Gets the max computed assembly version.")]
-        public Version MaxAssemblyVersion { get; set; }
-
-        /// <summary>
-        ///     Gets the max updated assembly file version.
-        /// </summary>
-        [Description("Gets the max computed assembly file version.")]
-        public Version MaxAssemblyFileVersion { get; set; }
-
-        /// <summary>
-        ///     Gets the max updated assembly informational version.
-        /// </summary>
-        [Description("Gets the max computed assembly informational version.")]
-        public string MaxAssemblyInformationalVersion { get; set; }
-
-        /// <summary>
-        ///     Gets the updated assembly versions.
-        /// </summary>
-        [Description("Gets the updated assembly versions.")]
-        public IEnumerable<Version> AssemblyVersions { get; set; }
-
-        /// <summary>
-        ///     Gets the max updated assembly file versions.
-        /// </summary>
-        [Description("Gets the updated assembly file versions.")]
-        public IEnumerable<Version> AssemblyFileVersions { get; set; }
-
-        /// <summary>
-        ///     Gets the updated assembly informational versions.
-        /// </summary>
-        [Description("Gets the updated assembly informational versions.")]
-        public IEnumerable<string> AssemblyInformationalVersions { get; set; }
-
         [Description("Specifiy whether or not to add missing attribute.")]
         public bool? EnsureAttribute { get; set; }
 
         [Description("Gets the custom attributes.")]
         public Hashtable CustomAttributes { get; set; }
+
+        public UpdateAssemblyInfo Cmdlet { get; set; }
 
         #endregion
 
@@ -383,131 +348,92 @@
         /// </summary>
         public List<UpdateResult> InternalExecute()
         {
-            // initialize values
-            var now = DateTime.Now;
+            this.Cmdlet.WriteDebug("Internal execute");
             var version = string.Empty;
             var fileVersion = string.Empty;
-            var versions = new List<Version>();
-            var fileVersions = new List<Version>();
-            var infoVersions = new List<string>();
             this.tokenEvaluators = new Dictionary<string, Func<string, string>>
             {
                 {"current", p => "-1"},
-                {"increment", p => "-1"},
-                {"date", p => now.ToString(p, CultureInfo.InvariantCulture)},
+                //{"increment", p => "-1"},
                 {"version", p => version},
                 {"fileversion", p => fileVersion}
             };
 
-            this.MaxAssemblyVersion = new Version(0, 0, 0, 0);
-            this.MaxAssemblyFileVersion = new Version(0, 0, 0, 0);
-            this.MaxAssemblyInformationalVersion = string.Empty;
-            this.AssemblyVersions = new List<Version>();
-            this.AssemblyFileVersions = new List<Version>();
-            this.AssemblyInformationalVersions = new List<string>();
-
             var result = new List<UpdateResult>();
-
-            // update all files
-            var files = this.Files;
-            if (files != null && files.Any())
+            
+            if (this.Files == null || !this.Files.Any())
             {
-                foreach (var path in files)
+                return result;
+            }
+
+            foreach (var path in this.Files)
+            {
+                if (!File.Exists(path))
                 {
-                    // load file
-                    if (!File.Exists(path))
-                    {
-                        throw new FileNotFoundException("AssemblyInfo file not found.", path);
-                    }
-
-                    this.file = new AssemblyInfoFile(path, this.EnsureAttribute);
-
-                    // update version attributes
-                    version = this.UpdateVersion("AssemblyVersion", this.AssemblyVersion, this.MaxAssemblyVersion);
-
-                    var parsedVersion = default(Version);
-                    if (Version.TryParse(version, out parsedVersion))
-                    {
-                        versions.Add(parsedVersion);
-                    }
-
-                    fileVersion = this.UpdateVersion("AssemblyFileVersion", this.AssemblyFileVersion,
-                        this.MaxAssemblyFileVersion);
-
-                    if (Version.TryParse(fileVersion, out parsedVersion))
-                    {
-                        fileVersions.Add(parsedVersion);
-                    }
-
-                    var infoVersionAttribute = this.UpdateAttribute("AssemblyInformationalVersion",
-                        this.AssemblyInformationalVersion, true);
-                    var infoVersion = (infoVersionAttribute == null) ? string.Empty : infoVersionAttribute.ToString();
-                    if (string.Compare(infoVersion, this.MaxAssemblyInformationalVersion, StringComparison.Ordinal) > 0)
-                    {
-                        this.MaxAssemblyInformationalVersion = infoVersion;
-                    }
-
-                    infoVersions.Add(infoVersion);
-
-                    // update other attributes
-                    this.UpdateAttribute("AssemblyCompany", this.AssemblyCompany, true);
-                    this.UpdateAttribute("AssemblyConfiguration", this.AssemblyConfiguration, true);
-                    this.UpdateAttribute("AssemblyCopyright", this.AssemblyCopyright, true);
-                    this.UpdateAttribute("AssemblyDescription", this.AssemblyDescription, true);
-                    this.UpdateAttribute("AssemblyProduct", this.AssemblyProduct, true);
-                    this.UpdateAttribute("AssemblyTitle", this.AssemblyTitle, true);
-                    this.UpdateAttribute("AssemblyTrademark", this.AssemblyTrademark, true);
-                    this.UpdateAttribute("AssemblyCulture", this.AssemblyCulture, false);
-                    this.UpdateAttribute("AssemblyDelaySign",
-                        this.AssemblyDelaySign.HasValue ? (object) this.AssemblyDelaySign.Value : null, false);
-                    this.UpdateAttribute("Guid", this.Guid.HasValue ? this.Guid.Value.ToString() : null, false);
-                    this.UpdateAttribute("AssemblyKeyFile", this.AssemblyKeyFile, false);
-                    this.UpdateAttribute("AssemblyKeyName", this.AssemblyKeyName, false);
-                    this.UpdateAttribute("CLSCompliant",
-                        this.CLSCompliant.HasValue ? (object) this.CLSCompliant.Value : null, false);
-                    this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? (object) this.ComVisible.Value : null,
-                        false);
-
-                    if (this.CustomAttributes != null)
-                    {
-                        foreach (DictionaryEntry entry in this.CustomAttributes)
-                        {
-                            this.UpdateAttribute(entry.Key.ToString(), entry.Value, false);
-                        }
-
-                    }
-
-                    // write to file (unset and set back ReadOnly attribute if present).
-                    var fileAttributes = File.GetAttributes(path);
-                    var attributesChanged = false;
-
-                    if ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    {
-                        File.SetAttributes(path, fileAttributes ^ FileAttributes.ReadOnly);
-                        attributesChanged = true;
-                    }
-
-                    using (var sw = new StreamWriter(path, false, Encoding.UTF8))
-                    {
-                        this.file.Write(sw);
-                    }
-
-                    if (attributesChanged)
-                    {
-                        File.SetAttributes(path, FileAttributes.ReadOnly);
-                    }
-
-                    result.Add(new UpdateResult()
-                    {
-                        File = path,
-                        FileVersion = fileVersion,
-                        AssemblyVersion = version
-                    });
+                    throw new FileNotFoundException("AssemblyInfo file not found.", path);
                 }
 
-                this.AssemblyVersions = versions;
-                this.AssemblyFileVersions = fileVersions;
-                this.AssemblyInformationalVersions = infoVersions;
+                this.file = new AssemblyInfoFile(path, this.EnsureAttribute);
+
+                // update version attributes
+                version = this.UpdateVersion("AssemblyVersion", this.AssemblyVersion);
+                fileVersion = this.UpdateVersion("AssemblyFileVersion", this.AssemblyFileVersion);
+
+                var infoVersion = this.UpdateAttribute("AssemblyInformationalVersion", this.AssemblyInformationalVersion, true);
+
+                // update other attributes
+                this.UpdateAttribute("AssemblyCompany", this.AssemblyCompany, true);
+                this.UpdateAttribute("AssemblyConfiguration", this.AssemblyConfiguration, true);
+                this.UpdateAttribute("AssemblyCopyright", this.AssemblyCopyright, true);
+                this.UpdateAttribute("AssemblyDescription", this.AssemblyDescription, true);
+                this.UpdateAttribute("AssemblyProduct", this.AssemblyProduct, true);
+                this.UpdateAttribute("AssemblyTitle", this.AssemblyTitle, true);
+                this.UpdateAttribute("AssemblyTrademark", this.AssemblyTrademark, true);
+                this.UpdateAttribute("AssemblyCulture", this.AssemblyCulture, false);
+                this.UpdateAttribute("AssemblyDelaySign",
+                    this.AssemblyDelaySign.HasValue ? (object) this.AssemblyDelaySign.Value : null, false);
+                this.UpdateAttribute("Guid", this.Guid.HasValue ? this.Guid.Value.ToString() : null, false);
+                this.UpdateAttribute("AssemblyKeyFile", this.AssemblyKeyFile, false);
+                this.UpdateAttribute("AssemblyKeyName", this.AssemblyKeyName, false);
+                this.UpdateAttribute("CLSCompliant",
+                    this.CLSCompliant.HasValue ? (object) this.CLSCompliant.Value : null, false);
+                this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? (object) this.ComVisible.Value : null,
+                    false);
+
+                if (this.CustomAttributes != null)
+                {
+                    foreach (DictionaryEntry entry in this.CustomAttributes)
+                    {
+                        this.UpdateAttribute(entry.Key.ToString(), entry.Value, false);
+                    }
+                }
+
+                // write to file (unset and set back ReadOnly attribute if present).
+                var fileAttributes = File.GetAttributes(path);
+                var attributesChanged = false;
+
+                if ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                {
+                    File.SetAttributes(path, fileAttributes ^ FileAttributes.ReadOnly);
+                    attributesChanged = true;
+                }
+
+                using (var sw = new StreamWriter(path, false, Encoding.UTF8))
+                {
+                    this.file.Write(sw);
+                }
+
+                if (attributesChanged)
+                {
+                    File.SetAttributes(path, FileAttributes.ReadOnly);
+                }
+
+                result.Add(new UpdateResult()
+                {
+                    File = path,
+                    FileVersion = fileVersion,
+                    AssemblyVersion = version
+                });
             }
 
             return result;
@@ -515,7 +441,7 @@
 
 
         // Updates and returns the version of the specified attribute.
-        private string UpdateVersion(string attributeName, string format, Version maxVersion)
+        private string UpdateVersion(string attributeName, string format)
         {
             if (string.IsNullOrEmpty(format))
             {
@@ -571,11 +497,6 @@
 
             this.file[attributeName] = string.Format(versionPattern, version.Major, version.Minor, version.Build,
                 version.Revision);
-
-            if (version > maxVersion)
-            {
-                maxVersion = version;
-            }
 
             return version.ToString();
         }

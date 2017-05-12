@@ -18,6 +18,8 @@
 
         protected override void ProcessRecord()
         {
+            this.WriteDebug("Updating..");
+            this.updater.Cmdlet = this;
             this.updater.Files = this.Files;
             this.updater.AssemblyVersion = this.AssemblyVersion;
             this.updater.AssemblyFileVersion = this.AssemblyFileVersion;
@@ -43,9 +45,7 @@
 
             this.WriteObject(result);
         }
-
-        #region Parameters
-
+        
         /// <summary>
         ///     Sets the AssemblyInfo files to update.
         /// </summary>
@@ -386,47 +386,5 @@
         [Description("Gets the custom attributes.")]
         [Parameter()]
         public Hashtable CustomAttributes { get; set; }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        ///     Gets the max updated assembly version.
-        /// </summary>
-        [Description("Gets the max computed assembly version.")]
-        public Version MaxAssemblyVersion { get; set; }
-
-        /// <summary>
-        ///     Gets the max updated assembly file version.
-        /// </summary>
-        [Description("Gets the max computed assembly file version.")]
-        public Version MaxAssemblyFileVersion { get; set; }
-
-        /// <summary>
-        ///     Gets the max updated assembly informational version.
-        /// </summary>
-        [Description("Gets the max computed assembly informational version.")]
-        public string MaxAssemblyInformationalVersion { get; set; }
-
-        /// <summary>
-        ///     Gets the updated assembly versions.
-        /// </summary>
-        [Description("Gets the updated assembly versions.")]
-        public IEnumerable<Version> AssemblyVersions { get; set; }
-
-        /// <summary>
-        ///     Gets the max updated assembly file versions.
-        /// </summary>
-        [Description("Gets the updated assembly file versions.")]
-        public IEnumerable<Version> AssemblyFileVersions { get; set; }
-
-        /// <summary>
-        ///     Gets the updated assembly informational versions.
-        /// </summary>
-        [Description("Gets the updated assembly informational versions.")]
-        public IEnumerable<string> AssemblyInformationalVersions { get; set; }
-
-        #endregion
     }
 }
