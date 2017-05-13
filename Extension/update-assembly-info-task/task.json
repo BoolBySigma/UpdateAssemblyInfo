@@ -95,6 +95,14 @@
       "helpMarkDown": "Left blank, the value is not updated. Variables can be used."
     },
     {
+      "name": "culture",
+      "type": "string",
+      "label": "Culture",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Left blank, the value is not updated. Variables can be used."
+    },
+    {
       "name": "informationalVersion",
       "type": "string",
       "label": "Informational Version",

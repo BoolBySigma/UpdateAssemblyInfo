@@ -357,6 +357,7 @@ function Test-BuildNumberRevisionVariableUsed {
         $script:product,
         $script:copyright,
         $script:trademark,
+        $script:culture,
         $script:fileVersionMajor,
         $script:fileVersionMinor,
         $script:fileVersionBuild,
@@ -426,6 +427,7 @@ try {
     $script:company = Get-VstsInput -Name company
     $script:product = Get-VstsInput -Name product
     $script:copyright = Get-VstsInput -Name copyright
+    $script:culture = Get-VstsInput -Name culture
     $script:trademark = Get-VstsInput -Name trademark
     $script:fileVersionMajor = Get-VstsInput -Name fileVersionMajor
     $script:fileVersionMinor = Get-VstsInput -Name fileVersionMinor
@@ -487,6 +489,8 @@ try {
 
     $script:copyright = Use-Parameter "Copyright" "copyright" $script:copyright
 
+    $script:culture = Use-Parameter "Culture" "culture" $script:culture
+
     $script:trademark = Use-Parameter "Trademark" "trademark" $script:trademark
 
     $script:informationalVersion = Use-Parameter "Informational Version" "informationalVersion" $script:informationalVersion
@@ -510,6 +514,7 @@ try {
     $parameters += New-Object PSObject -Property @{Parameter = "Product"; Value = (Get-DisplayValue "product" $script:product)}
     $parameters += New-Object PSObject -Property @{Parameter = "Copyright"; Value = (Get-DisplayValue "copyright" $script:copyright)}
     $parameters += New-Object PSObject -Property @{Parameter = "Trademark"; Value = (Get-DisplayValue "trademark" $script:trademark)}
+    $parameters += New-Object PSObject -Property @{Parameter = "Culture"; Value = (Get-DisplayValue "culture" $script:culture)}
     $parameters += New-Object PSObject -Property @{Parameter = "Informational Version"; Value = (Get-DisplayValue "informationalVersion" $script:informationalVersion)}
     $parameters += New-Object PSObject -Property @{Parameter = "Com Visible"; Value = $comVisible}
     $parameters += New-Object PSObject -Property @{Parameter = "CLS Compliant"; Value = $clsCompliant}
@@ -537,7 +542,7 @@ try {
         Write-VstsTaskDebug -Message "files:"
         Write-VstsTaskDebug -Message "$files"
         Write-Output "Updating..."
-        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $script:description -AssemblyConfiguration $script:configuration -AssemblyCompany $script:company -AssemblyProduct $script:product -AssemblyCopyright $script:copyright -AssemblyTrademark $script:trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $script:informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -CLSCompliant $clsCompliant -EnsureAttribute $ensureAttribute -CustomAttributes $customAttributes
+        $updateResult = Update-AssemblyInfo -Files $files -AssemblyDescription $script:description -AssemblyConfiguration $script:configuration -AssemblyCompany $script:company -AssemblyProduct $script:product -AssemblyCopyright $script:copyright -AssemblyTrademark $script:trademark -AssemblyFileVersion $fileVersion -AssemblyInformationalVersion $script:informationalVersion -AssemblyVersion $assemblyVersion -ComVisible $comVisible -CLSCompliant $clsCompliant -EnsureAttribute $ensureAttribute -CustomAttributes $customAttributes -AssemblyCulture $script:culture
 
         Write-Output "Updated:"
         $result += $updateResult | ForEach-Object { New-Object PSObject -Property @{File = $_.File; FileVersion = $_.FileVersion; AssemblyVersion = $_.AssemblyVersion } }
