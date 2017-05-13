@@ -233,10 +233,13 @@
         public void Write(TextWriter writer)
         {
             this.cmdlet.WriteDebug("Write");
+            this.cmdlet.WriteDebug("file begin");
             foreach (var line in this.lines)
             {
+                this.cmdlet.WriteDebug(line.ToString());
                 writer.WriteLine(line);
             }
+            this.cmdlet.WriteDebug("file end");
         }
 
         private string BooleanToString(object value)
