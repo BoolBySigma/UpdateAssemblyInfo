@@ -75,6 +75,7 @@ Parameters include:
 * **Product**: Left blank, the value is not updated. Variables can be used.
 * **Copyright**: Left blank, the value is not updated. Variables can be used.
 * **Trademark**: Left blank, the value is not updated. Variables can be used.
+* **Culture**: Left blank, the value is not updated. Variables can be used.
 * **Informational Version**: Left blank, the value is not updated. Variables can be used.
 * **Com Visible**: Select value for Com Visible. If 'Do Not Update', the value is not updated.
 * **CLS Compliant**: Select value for CLS Compliant. If 'Do Not Update', the value is not updated.
