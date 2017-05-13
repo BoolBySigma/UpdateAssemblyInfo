@@ -96,6 +96,7 @@ If using attribute values 'True', 'true', 'False' or 'false' the custom attribut
 Left blank, no custom attributes are added. Variables can be used.
 
 ## Changelog
+* **2.0.33**: Added 'Culture' attribute.
 * **2.0.31**: Added 'CLS Compliant' attribute.
 * **2.0.27**: Added 'Do Not Update' option for Com Visible attribute.
 * **2.0.25**: Added support for custom attributes.
