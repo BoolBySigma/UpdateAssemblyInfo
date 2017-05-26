@@ -16,6 +16,7 @@
     "chai": "^3.5.0"
   },
   "dependencies": {
+    "mocha": "^3.4.2",
     "vsts-task-lib": "^2.0.5"
   }
 }
