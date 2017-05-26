@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/_suite.js"
+    "test": "mocha tests/_suite.js",
+    "test-report": "mocha --reporter xunit tests/_suite.js > tests/test-report.xml"
   },
   "author": "",
   "license": "ISC",
@@ -13,10 +14,10 @@
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.21",
     "assert": "^1.4.1",
-    "chai": "^3.5.0"
+    "chai": "^3.5.0",
+    "mocha": "^3.4.2"
   },
   "dependencies": {
-    "mocha": "^3.4.2",
     "vsts-task-lib": "^2.0.5"
   }
 }
