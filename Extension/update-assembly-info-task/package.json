@@ -1,0 +1,21 @@
+{
+  "name": "update-assembly-info-task",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/_suite.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^3.5.2",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.21",
+    "assert": "^1.4.1",
+    "chai": "^3.5.0"
+  },
+  "dependencies": {
+    "vsts-task-lib": "^2.0.5"
+  }
+}
