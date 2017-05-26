@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/_suite.js",
-    "test-report": "mocha --reporter xunit tests/_suite.js > tests/test-report.xml"
+    "test-report": "mocha --reporter mocha-junit-reporter tests/_suite.js > $null"
   },
   "author": "",
   "license": "ISC",
@@ -15,7 +15,8 @@
     "@types/node": "^7.0.21",
     "assert": "^1.4.1",
     "chai": "^3.5.0",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "mocha-junit-reporter": "^1.13.0"
   },
   "dependencies": {
     "vsts-task-lib": "^2.0.5"
