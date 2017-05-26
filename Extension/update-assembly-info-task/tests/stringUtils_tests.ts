@@ -24,7 +24,7 @@ describe('StringUtils', function () {
         });
 
         it('should return false if contains characters', function () {
-            assert.isTrue(StringUtils.isNullOrEmpty('a'));
+            assert.isFalse(StringUtils.isNullOrEmpty('a'));
         });
     });
 });
