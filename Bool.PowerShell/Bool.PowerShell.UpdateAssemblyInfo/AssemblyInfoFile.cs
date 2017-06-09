@@ -14,7 +14,10 @@
     internal class AssemblyInfoFile
     {
         // parser for assembly attributes in C#, VB.Net and F#
-        private static readonly Regex AssemblyAttributeParser = new Regex(@"^(?<start>\s*[\[<]<?\s*[Aa]ssembly\s*:\s*)(?<longname>(?<shortname>\w+?)(Attribute)?)(?<middle>\s*\(\s*""?)(?<value>.*?)(?<end>""?\s*\)\s*>?[>\]])", RegexOptions.Compiled);
+        private static readonly Regex AssemblyAttributeParser =
+            new Regex(
+                @"^(?<start>\s*[\[<]<?\s*[Aa]ssembly\s*:\s*)(?<longname>(?<shortname>\w+?)(Attribute)?)(?<middle>\s*\(\s*""?)(?<value>.*?)(?<end>""?\s*\)\s*>?[>\]])",
+                RegexOptions.Compiled);
 
         // parser for line comment in C#, VB.Net and F#
         private static readonly Regex LineCommentParser = new Regex(@"^\s*(//|')", RegexOptions.Compiled);
@@ -26,16 +29,16 @@
         private static readonly Regex MultilineCommentEndParser = new Regex(@".*?(\*/|\*\))", RegexOptions.Compiled);
 
         // raw file lines
-        private readonly IList<object> lines = new List<object>();
+        private readonly IList<object> _lines = new List<object>();
 
         // assembly attributes
-        private readonly IDictionary<string, AttributeLine> attributes = new Dictionary<string, AttributeLine>();
+        private readonly IDictionary<string, AttributeLine> _attributes = new Dictionary<string, AttributeLine>();
 
-        private bool? ensureAttribute = false;
+        private bool? _ensureAttribute;
         
-        private readonly Language language;
+        private readonly Language _language;
 
-        private UpdateAssemblyInfo cmdlet;
+        private readonly UpdateAssemblyInfo _cmdlet;
 
         /// <summary>
         ///     Gets or sets the attribute value.
@@ -54,43 +57,36 @@
         {
             get
             {
-                if (!this.attributes.ContainsKey(attributeName))
+                if (!_attributes.ContainsKey(attributeName))
                 {
-                    if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
-                    {
-                        return this.CreateAttribute(attributeName).Value;
-                    }
+                    if (_ensureAttribute.HasValue && _ensureAttribute.Value)
+                        return CreateAttribute(attributeName).Value;
 
                     return null;
                 }
 
-                return this.attributes[attributeName].Value;
+                return _attributes[attributeName].Value;
             }
 
             set
             {
-                if (!this.attributes.TryGetValue(attributeName, out AttributeLine r))
+                if (!_attributes.TryGetValue(attributeName, out AttributeLine r))
                 {
-                    if (this.ensureAttribute.HasValue && this.ensureAttribute.Value)
-                    {
-                        r = this.CreateAttribute(attributeName);
-                    }
+                    if (_ensureAttribute.HasValue && _ensureAttribute.Value)
+                        r = CreateAttribute(attributeName);
                     else
-                    {
                         return;
-                    }
                 }
 
                 if (value is bool)
                 {
-                    r.Value = this.BooleanToString(value);
-                    r.Format = this.CreateAttributeFormat(attributeName, value);
+                    r.Value = BooleanToString(value);
+                    r.Format = CreateAttributeFormat(attributeName, value);
                 }
                 else
-                {
                     r.Value = value;
-                }
-                this.lines[r.LineNumber] = string.Format(r.Format, r.Value);
+
+                _lines[r.LineNumber] = string.Format(r.Format, r.Value);
             }
         }
 
@@ -98,20 +94,14 @@
         {
             get
             {
-                switch (this.language)
+                switch (_language)
                 {
                     case Language.Cs:
-                    {
                         return "[";
-                    }
                     case Language.Vb:
-                    {
                         return "<";
-                    }
                     default:
-                    {
                         return "[<";
-                    }
                 }
             }
         }
@@ -120,20 +110,14 @@
         {
             get
             {
-                switch (this.language)
+                switch (_language)
                 {
                     case Language.Cs:
-                    {
                         return "]";
-                    }
                     case Language.Vb:
-                    {
                         return ">";
-                    }
                     default:
-                    {
                         return ">]";
-                    }
                 }
             }
         }
@@ -147,24 +131,24 @@
         /// <param name="ensureAttribute"></param>
         public AssemblyInfoFile(UpdateAssemblyInfo cmdlet, string path, bool? ensureAttribute)
         {
-            this.cmdlet = cmdlet;
-            this.cmdlet.WriteDebug("AssemblyInfoFile");
-            this.cmdlet.WriteDebug("path: " + path);
-            this.ensureAttribute = ensureAttribute;
-            this.cmdlet.WriteDebug("ensureAttribute: " + ensureAttribute);
-            this.language = this.DetermineFileLanguage(path);
+            _cmdlet = cmdlet;
+            _cmdlet.WriteDebug("AssemblyInfoFile");
+            _cmdlet.WriteDebug("path: " + path);
+            _ensureAttribute = ensureAttribute;
+            _cmdlet.WriteDebug("ensureAttribute: " + ensureAttribute);
+            _language = DetermineFileLanguage(path);
 
             using (var sr = File.OpenText(path))
             {
-                var line = default(string);
+                string line;
                 var lineNumber = 0;
                 var isComment = false;
                 
-                this.cmdlet.WriteDebug("file begin");
+                _cmdlet.WriteDebug("file begin");
                 while ((line = sr.ReadLine()) != null)
                 {
-                    this.cmdlet.WriteDebug(line);
-                    this.lines.Add(line);
+                    _cmdlet.WriteDebug(line);
+                    _lines.Add(line);
 
                     if (LineCommentParser.IsMatch(line))
                     {
@@ -206,9 +190,9 @@
                         // line contains assembly attribute, save result
                         var attributeName = matches.Groups["shortname"].Value;
 
-                        if (!this.attributes.ContainsKey(attributeName))
+                        if (!_attributes.ContainsKey(attributeName))
                         {
-                            this.attributes[attributeName] = new AttributeLine
+                            _attributes[attributeName] = new AttributeLine
                             {
                                 Format = matches.Groups["start"].Value + matches.Groups["longname"].Value +
                                          matches.Groups["middle"].Value + "{0}" + matches.Groups["end"].Value,
@@ -220,7 +204,8 @@
 
                     ++lineNumber;
                 }
-                this.cmdlet.WriteDebug("file end");
+
+                _cmdlet.WriteDebug("file end");
             }
         }
 
@@ -232,121 +217,103 @@
         /// </param>
         public void Write(TextWriter writer)
         {
-            this.cmdlet.WriteDebug("Write");
-            this.cmdlet.WriteDebug("file begin");
-            foreach (var line in this.lines)
+            _cmdlet.WriteDebug("Write");
+            _cmdlet.WriteDebug("file begin");
+            foreach (var line in _lines)
             {
-                this.cmdlet.WriteDebug(line.ToString());
+                _cmdlet.WriteDebug(line.ToString());
                 writer.WriteLine(line);
             }
-            this.cmdlet.WriteDebug("file end");
+            _cmdlet.WriteDebug("file end");
         }
 
         private string BooleanToString(object value)
         {
-            this.cmdlet.WriteDebug("BooleanToString");
-            this.cmdlet.WriteDebug("value: " + value);
-            switch (language)
+            _cmdlet.WriteDebug("BooleanToString");
+            _cmdlet.WriteDebug($"value: {value}");
+            switch (_language)
             {
                 case Language.Cs:
                 case Language.Fs:
-                {
                     return value.ToString().ToLower();
-                }
                 case Language.Vb:
-                {
                     return value.ToString();
-                }
                 default:
-                {
                     throw new Exception("Unsupported language");
-                }
             }
         }
 
         private string CreateAttributeFormat(string attributeName, object attributeValue)
         {
-            this.cmdlet.WriteDebug("CreateAttributeFormat");
+            _cmdlet.WriteDebug("CreateAttributeFormat");
             if (attributeValue is bool)
             {
-                this.cmdlet.WriteDebug("attribute value is boolean");
-                return this.AttributePrefix + "assembly: " + attributeName + "({0})" + this.AttributeSuffix;
+                _cmdlet.WriteDebug("attribute value is boolean");
+                return $"{AttributePrefix}assembly: {attributeName}({{0}}){AttributeSuffix}";
             }
 
-            return this.AttributePrefix + "assembly: " + attributeName + "(\"{0}\")" + this.AttributeSuffix;
+            return $"{AttributePrefix}assembly: {attributeName}(\"{{0}}\"){AttributeSuffix}";
         }
 
         private object CreateAttributeValue(string attributeName)
         {
-            this.cmdlet.WriteDebug("CreateAttributeValue");
-            this.cmdlet.WriteDebug("attributeName: " + attributeName);
+            _cmdlet.WriteDebug("CreateAttributeValue");
+            _cmdlet.WriteDebug($"attributeName: {attributeName}");
             switch (attributeName)
             {
                 case "AssemblyVersion":
                 case "AssemblyFileVersion":
-                {
                     return "1.0.0.0";
-                }
                 default:
-                {
                     return string.Empty;
-                }
             }
         }
 
         private AttributeLine CreateAttribute(string attributeName, object attributeValue = null)
         {
-            this.cmdlet.WriteDebug("CreateAttribute");
-            this.cmdlet.WriteDebug("attributeName: " + attributeName);
-            this.cmdlet.WriteDebug("attributeValue: " + attributeValue);
+            _cmdlet.WriteDebug("CreateAttribute");
+            _cmdlet.WriteDebug($"attributeName: {attributeName}");
+            _cmdlet.WriteDebug($"attributeValue: {attributeValue}");
             if (attributeValue == null)
             {
-                this.cmdlet.WriteDebug("no attribute value");
-                attributeValue = this.CreateAttributeValue(attributeName);
+                _cmdlet.WriteDebug("no attribute value");
+                attributeValue = CreateAttributeValue(attributeName);
             }
 
-            this.lines.Add(attributeValue);
-            var lineNumber = this.lines.Count - 1;
+            _lines.Add(attributeValue);
+            var lineNumber = _lines.Count - 1;
 
             var attributeLine = new AttributeLine
             {
-                Format = this.CreateAttributeFormat(attributeName, attributeValue),
+                Format = CreateAttributeFormat(attributeName, attributeValue),
                 LineNumber = lineNumber,
                 Value = attributeValue
             };
-            this.cmdlet.WriteDebug("attributeLine.Format: " + attributeLine.Format);
-            this.cmdlet.WriteDebug("attributeLine.LineNumber: " + attributeLine.LineNumber);
-            this.cmdlet.WriteDebug("attributeLine.Value: " + attributeLine.Value);
+            _cmdlet.WriteDebug($"attributeLine.Format: {attributeLine.Format}");
+            _cmdlet.WriteDebug($"attributeLine.LineNumber: {attributeLine.LineNumber}");
+            _cmdlet.WriteDebug($"attributeLine.Value: {attributeLine.Value}");
 
-            this.attributes[attributeName] = attributeLine;
+            _attributes[attributeName] = attributeLine;
 
-            return this.attributes[attributeName];
+            return _attributes[attributeName];
         }
 
         private Language DetermineFileLanguage(string path)
         {
-            this.cmdlet.WriteDebug("DetermineLanguage");
-            this.cmdlet.WriteDebug("path: " + path);
+            _cmdlet.WriteDebug("DetermineLanguage");
+            _cmdlet.WriteDebug($"path: {path}");
             var extension = Path.GetExtension(path);
-            this.cmdlet.WriteDebug("extension: " + extension);
+            _cmdlet.WriteDebug($"extension: {extension}");
             switch (extension)
             {
                 case ".fs":
-                {
                     return Language.Fs;
-                }
                 case ".vb":
-                {
                     return Language.Vb;
-                }
                 case ".cs":
-                {
                     return Language.Cs;
-                }
                 default:
-                {
                     throw new ArgumentOutOfRangeException("File extension " + extension + "is not supported");
-                }
             }
         }
     }

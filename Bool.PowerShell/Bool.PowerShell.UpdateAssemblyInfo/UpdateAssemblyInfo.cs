@@ -2,48 +2,47 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Management.Automation;
 
     [Cmdlet(VerbsData.Update, "AssemblyInfo", ConfirmImpact = ConfirmImpact.Low, SupportsShouldProcess = false, SupportsTransactions = false)]
     public class UpdateAssemblyInfo : Cmdlet
     {
-        private readonly AssemblyInfoUpdater updater;
+        private readonly AssemblyInfoUpdater _updater;
 
         public UpdateAssemblyInfo()
         {
-            this.updater = new AssemblyInfoUpdater();
+            _updater = new AssemblyInfoUpdater();
         }
 
         protected override void ProcessRecord()
         {
-            this.WriteDebug("ProcessRecord");
-            this.updater.Cmdlet = this;
-            this.updater.Files = this.Files;
-            this.updater.AssemblyVersion = this.AssemblyVersion;
-            this.updater.AssemblyFileVersion = this.AssemblyFileVersion;
-            this.updater.AssemblyInformationalVersion = this.AssemblyInformationalVersion;
+            WriteDebug("ProcessRecord");
+            _updater.Cmdlet = this;
+            _updater.Files = Files;
+            _updater.AssemblyVersion = AssemblyVersion;
+            _updater.AssemblyFileVersion = AssemblyFileVersion;
+            _updater.AssemblyInformationalVersion = AssemblyInformationalVersion;
 
-            this.updater.AssemblyCompany = this.AssemblyCompany;
-            this.updater.AssemblyConfiguration = this.AssemblyConfiguration;
-            this.updater.AssemblyCopyright = this.AssemblyCopyright;
-            this.updater.AssemblyCulture = this.AssemblyCulture;
-            this.updater.AssemblyDelaySign = this.AssemblyDelaySign;
-            this.updater.AssemblyDescription = this.AssemblyDescription;
-            this.updater.AssemblyKeyFile = this.AssemblyKeyFile;
-            this.updater.AssemblyKeyName = this.AssemblyKeyName;
-            this.updater.AssemblyProduct = this.AssemblyProduct;
-            this.updater.AssemblyTitle = this.AssemblyTitle;
-            this.updater.AssemblyTrademark = this.AssemblyTrademark;
-            this.updater.CLSCompliant = this.CLSCompliant;
-            this.updater.ComVisible = this.ComVisible;
-            this.updater.Guid = this.Guid;
-            this.updater.EnsureAttribute = this.EnsureAttribute;
-            this.updater.CustomAttributes = this.CustomAttributes;
-            var result = this.updater.InternalExecute();
+            _updater.AssemblyCompany = AssemblyCompany;
+            _updater.AssemblyConfiguration = AssemblyConfiguration;
+            _updater.AssemblyCopyright = AssemblyCopyright;
+            _updater.AssemblyCulture = AssemblyCulture;
+            _updater.AssemblyDelaySign = AssemblyDelaySign;
+            _updater.AssemblyDescription = AssemblyDescription;
+            _updater.AssemblyKeyFile = AssemblyKeyFile;
+            _updater.AssemblyKeyName = AssemblyKeyName;
+            _updater.AssemblyProduct = AssemblyProduct;
+            _updater.AssemblyTitle = AssemblyTitle;
+            _updater.AssemblyTrademark = AssemblyTrademark;
+            _updater.CLSCompliant = CLSCompliant;
+            _updater.ComVisible = ComVisible;
+            _updater.Guid = Guid;
+            _updater.EnsureAttribute = EnsureAttribute;
+            _updater.CustomAttributes = CustomAttributes;
+            var result = _updater.InternalExecute();
 
-            this.WriteObject(result);
+            WriteObject(result);
         }
         
         /// <summary>
