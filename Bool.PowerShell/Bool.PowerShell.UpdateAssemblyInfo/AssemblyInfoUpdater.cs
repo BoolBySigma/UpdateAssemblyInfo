@@ -355,13 +355,13 @@
             var assemblyFileVersion = string.Empty;
             _tokenEvaluators = new Dictionary<string, Func<string, string>>
             {
-                {"current", p => "-1"},                
+                {"current", p => "-1"},
                 {"version", p => assemblyVersion},
                 {"fileversion", p => assemblyFileVersion}
             };
 
             var updateResults = new List<UpdateResult>();
-            
+
             if (Files == null || !Files.Any())
             {
                 Cmdlet.WriteDebug("no files");
@@ -394,13 +394,13 @@
                 UpdateAttribute("AssemblyTrademark", AssemblyTrademark, true);
                 UpdateAttribute("AssemblyCulture", AssemblyCulture, false);
                 UpdateAttribute("AssemblyDelaySign",
-                    AssemblyDelaySign.HasValue ? (object) AssemblyDelaySign.Value : null, false);
+                    AssemblyDelaySign.HasValue ? (object)AssemblyDelaySign.Value : null, false);
                 UpdateAttribute("Guid", Guid?.ToString(), false);
                 UpdateAttribute("AssemblyKeyFile", AssemblyKeyFile, false);
                 UpdateAttribute("AssemblyKeyName", AssemblyKeyName, false);
                 UpdateAttribute("CLSCompliant",
-                    CLSCompliant.HasValue ? (object) CLSCompliant.Value : null, false);
-                UpdateAttribute("ComVisible", ComVisible.HasValue ? (object) ComVisible.Value : null,
+                    CLSCompliant.HasValue ? (object)CLSCompliant.Value : null, false);
+                UpdateAttribute("ComVisible", ComVisible.HasValue ? (object)ComVisible.Value : null,
                     false);
 
                 if (CustomAttributes != null)
@@ -466,21 +466,9 @@
 
             // parse old version (handle * character)
             var containsWildcard = oldValue.Contains('*');
-            var versionPattern = "{0}.{1}.{2}.{3}";
 
             if (containsWildcard)
-            {
-                if (oldValue.Split('.').Length == 3)
-                {
-                    oldValue = oldValue.Replace("*", "0.0");
-                    versionPattern = "{0}.{1}.*";
-                }
-                else
-                {
-                    oldValue = oldValue.Replace("*", "0");
-                    versionPattern = "{0}.{1}.{2}.*";
-                }
-            }
+                oldValue = oldValue.Replace("*", oldValue.Split('.').Length == 3 ? "0.0" : "0");
 
             if (!VersionParser.IsMatch(oldValue))
                 throw new FormatException(
@@ -494,15 +482,19 @@
                 throw new FormatException(
                     $"Specified value for attribute \'{attributeName}\'  is not a correct version format.");
 
-            version = new Version(Convert.ToInt32(ReplaceTokens(tokens[0], version.Major)),
-                Convert.ToInt32(ReplaceTokens(tokens[1], version.Minor)),
-                Convert.ToInt32(ReplaceTokens(tokens[2], version.Build)),
-                Convert.ToInt32(ReplaceTokens(tokens[3], version.Revision)));
+            var major = Convert.ToInt32(ReplaceTokens(tokens[0], version.Major));
+            var minor = Convert.ToInt32(ReplaceTokens(tokens[1], version.Minor));
+            var build = Convert.ToInt32(ReplaceTokens(tokens[2], version.Build));
+            var revision = Convert.ToInt32(ReplaceTokens(tokens[3], version.Revision));
+
+            if (build >= 0 && revision >= 0)
+                version = new Version(major, minor, build, revision);
+            else if (build >= 0)
+                version = new Version(major, minor, build);
+
             Cmdlet.WriteDebug("version: " + version);
 
-
-            _file[attributeName] = string.Format(versionPattern, version.Major, version.Minor, version.Build,
-                version.Revision);
+            _file[attributeName] = version.ToString();
 
             return version.ToString();
         }
