@@ -510,6 +510,12 @@
             {
                 Cmdlet.WriteDebug("no attribute value");
                 return string.Empty;
+            }            
+
+            if (string.IsNullOrEmpty(attributeValue.ToString()))
+            {
+                this.Cmdlet.WriteDebug("no attribute value");
+                return string.Empty;
             }
 
             _file[attributeName] = replaceTokens
