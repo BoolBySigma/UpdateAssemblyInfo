@@ -75,6 +75,30 @@ describe('AttributeParser', function () {
             let foundAttribute = parser.containsAttribute('[assembly: CustomAttribute("value")]');
             assert.isTrue(foundAttribute);
         });
+
+        it('should return false for malformed attribute', function(){
+            let parser = new AttributeParser(Language.Cs);
+            let foundAttribute = parser.containsAttribute('[assemb: CustomAttribute]');
+            assert.isFalse(foundAttribute);
+        });
+
+        it('should return false for empty', function(){            
+            let parser = new AttributeParser(Language.Cs);
+            let foundAttribute = parser.containsAttribute('');
+            assert.isFalse(foundAttribute);
+        });
+
+        it('should return false for null', function(){            
+            let parser = new AttributeParser(Language.Cs);
+            let foundAttribute = parser.containsAttribute(null);
+            assert.isFalse(foundAttribute);
+        });
+
+        it('should return false for undefined', function(){            
+            let parser = new AttributeParser(Language.Cs);
+            let foundAttribute = parser.containsAttribute(undefined);
+            assert.isFalse(foundAttribute);
+        });
     });
 
     describe('parseAttribute', function () {

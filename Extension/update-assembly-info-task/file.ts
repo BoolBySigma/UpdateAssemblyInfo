@@ -76,6 +76,9 @@ export class File {
     }
 
     createAttribute = function (options: IAttributeUpateOptions): IAttribute {
+        if (!options.ensureAttribute){
+            throw new Error('Ensure attribute not enabled');
+        }
         let length: number = this.lines.push('');
         let lineIndex = length - 1;
         let format = this.createAttributeFormat(options);

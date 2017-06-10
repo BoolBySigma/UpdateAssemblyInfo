@@ -177,21 +177,43 @@ describe('File', function () {
     });
 
     describe('createAttribute', function () {
+        it('should throw ensure attribute not enabled error if ensureAttribute is false', function () {
+            assert.throws(function () {
+                let file = new File(null, { contents: '' });
+                let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: false });
+            }, 'Ensure attribute not enabled');
+        });
+
+        it('should not throw ensure attribute not enabled error if ensureAttribute is true', function () {
+            assert.doesNotThrow(function () {
+                let file = new File(null, { contents: '' });
+                let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: true });
+            }, 'Ensure attribute not enabled');
+        });
+
         it('should return attribute with name CustomAttribute', function () {
             let file = new File(null, { contents: '' });
-            let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: false });
+            let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: true });
             assert.equal(attribute.name, 'CustomAttribute');
         });
 
         it('should return attribute with boolean value false', function () {
             let file = new File(null, { contents: '' });
-            let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: false });
+            let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: true });
+            assert.isBoolean(attribute.value);
             assert.equal(attribute.value, false);
         });
 
-        it('should return attribute with name lineIndex 1', function () {
+        it('should return attribute with string value CustomValue', function () {
+            let file = new File(null, { contents: '' });
+            let attribute = file.createAttribute({ name: 'CustomAttribute', value: 'CustomValue', ensureAttribute: true });
+            assert.isString(attribute.value);
+            assert.equal(attribute.value, 'CustomValue');
+        });
+
+        it('should return attribute with lineIndex 1', function () {
             let file = new File(null, { contents: 'firstLine' });
-            let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: false });
+            let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: true });
             assert.equal(attribute.lineIndex, 1);
         });
     });

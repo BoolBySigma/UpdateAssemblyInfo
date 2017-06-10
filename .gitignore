@@ -305,9 +305,5 @@ jspm_packages
 .taskkey
 
 *.js
-/Bool.PowerShell/ConsoleApp1
-/Bool.PowerShell/ConsoleApp1
-/Bool.PowerShell/ConsoleApp1/Properties/AssemblyInfo.cs
-/Bool.PowerShell/ConsoleApp1/Program.cs
-/Bool.PowerShell/ConsoleApp1/ConsoleApp1.csproj
-/Bool.PowerShell/ConsoleApp1/App.config
+
+test-results.xml
