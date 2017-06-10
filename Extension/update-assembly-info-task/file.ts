@@ -81,7 +81,7 @@ export class File {
         }
         let length: number = this.lines.push('');
         let lineIndex = length - 1;
-        let format = this.createAttributeFormat(options);
+        let format = this.createAttributeFormat();
         return new Attribute(options.name, options.value, this.language, format, lineIndex);
     }
 
