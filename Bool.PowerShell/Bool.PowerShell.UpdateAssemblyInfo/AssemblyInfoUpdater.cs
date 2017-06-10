@@ -18,13 +18,14 @@
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         // version parser.
-        private static readonly Regex VersionParser = new Regex(@"\d+\.\d+\.\d+\.\d+", RegexOptions.Compiled);
+        private static readonly Regex VersionParser =
+            new Regex(@"([0-9]+)\.([0-9]+)(.([0-9]+))?(.([0-9]+))?", RegexOptions.Compiled);
 
         // AssemblyInfo file access helper.
-        private AssemblyInfoFile file;
+        private AssemblyInfoFile _file;
 
         // token values.
-        private IDictionary<string, Func<string, string>> tokenEvaluators;
+        private IDictionary<string, Func<string, string>> _tokenEvaluators;
 
         #endregion
 
@@ -348,69 +349,64 @@
         /// </summary>
         public List<UpdateResult> InternalExecute()
         {
-            this.Cmdlet.WriteDebug("InternalExecute");
+            Cmdlet.WriteDebug("InternalExecute");
 
             var assemblyVersion = string.Empty;
             var assemblyFileVersion = string.Empty;
-            this.tokenEvaluators = new Dictionary<string, Func<string, string>>
+            _tokenEvaluators = new Dictionary<string, Func<string, string>>
             {
                 {"current", p => "-1"},
-                //{"increment", p => "-1"},
                 {"version", p => assemblyVersion},
                 {"fileversion", p => assemblyFileVersion}
             };
 
             var updateResults = new List<UpdateResult>();
-            
-            if (this.Files == null || !this.Files.Any())
+
+            if (Files == null || !Files.Any())
             {
-                this.Cmdlet.WriteDebug("no files");
+                Cmdlet.WriteDebug("no files");
                 return updateResults;
             }
 
-            foreach (var path in this.Files)
+            foreach (var path in Files)
             {
-                this.Cmdlet.WriteDebug("path: " + path);
+                Cmdlet.WriteDebug("path: " + path);
                 if (!File.Exists(path))
-                {
                     throw new FileNotFoundException("AssemblyInfo file not found.", path);
-                }
 
-                this.file = new AssemblyInfoFile(this.Cmdlet, path, this.EnsureAttribute);
+                _file = new AssemblyInfoFile(Cmdlet, path, EnsureAttribute);
 
-                assemblyVersion = this.UpdateVersion("AssemblyVersion", this.AssemblyVersion);
-                this.Cmdlet.WriteDebug("assemblyVersion: " + assemblyVersion);
-                assemblyFileVersion = this.UpdateVersion("AssemblyFileVersion", this.AssemblyFileVersion);
-                this.Cmdlet.WriteDebug("assemblyFileVersion: " + assemblyFileVersion);
+                assemblyVersion = UpdateVersion("AssemblyVersion", AssemblyVersion);
+                Cmdlet.WriteDebug("assemblyVersion: " + assemblyVersion);
+                assemblyFileVersion = UpdateVersion("AssemblyFileVersion", AssemblyFileVersion);
+                Cmdlet.WriteDebug("assemblyFileVersion: " + assemblyFileVersion);
 
-                var infoVersion = this.UpdateAttribute("AssemblyInformationalVersion", this.AssemblyInformationalVersion, true);
-                this.Cmdlet.WriteDebug("infoVersion: " + infoVersion);
+                var infoVersion = UpdateAttribute("AssemblyInformationalVersion", AssemblyInformationalVersion, true);
+                Cmdlet.WriteDebug("infoVersion: " + infoVersion);
 
                 // update other attributes
-                this.UpdateAttribute("AssemblyCompany", this.AssemblyCompany, true);
-                this.UpdateAttribute("AssemblyConfiguration", this.AssemblyConfiguration, true);
-                this.UpdateAttribute("AssemblyCopyright", this.AssemblyCopyright, true);
-                this.UpdateAttribute("AssemblyDescription", this.AssemblyDescription, true);
-                this.UpdateAttribute("AssemblyProduct", this.AssemblyProduct, true);
-                this.UpdateAttribute("AssemblyTitle", this.AssemblyTitle, true);
-                this.UpdateAttribute("AssemblyTrademark", this.AssemblyTrademark, true);
-                this.UpdateAttribute("AssemblyCulture", this.AssemblyCulture, false);
-                this.UpdateAttribute("AssemblyDelaySign",
-                    this.AssemblyDelaySign.HasValue ? (object) this.AssemblyDelaySign.Value : null, false);
-                this.UpdateAttribute("Guid", this.Guid.HasValue ? this.Guid.Value.ToString() : null, false);
-                this.UpdateAttribute("AssemblyKeyFile", this.AssemblyKeyFile, false);
-                this.UpdateAttribute("AssemblyKeyName", this.AssemblyKeyName, false);
-                this.UpdateAttribute("CLSCompliant",
-                    this.CLSCompliant.HasValue ? (object) this.CLSCompliant.Value : null, false);
-                this.UpdateAttribute("ComVisible", this.ComVisible.HasValue ? (object) this.ComVisible.Value : null,
+                UpdateAttribute("AssemblyCompany", AssemblyCompany, true);
+                UpdateAttribute("AssemblyConfiguration", AssemblyConfiguration, true);
+                UpdateAttribute("AssemblyCopyright", AssemblyCopyright, true);
+                UpdateAttribute("AssemblyDescription", AssemblyDescription, true);
+                UpdateAttribute("AssemblyProduct", AssemblyProduct, true);
+                UpdateAttribute("AssemblyTitle", AssemblyTitle, true);
+                UpdateAttribute("AssemblyTrademark", AssemblyTrademark, true);
+                UpdateAttribute("AssemblyCulture", AssemblyCulture, false);
+                UpdateAttribute("AssemblyDelaySign",
+                    AssemblyDelaySign.HasValue ? (object)AssemblyDelaySign.Value : null, false);
+                UpdateAttribute("Guid", Guid?.ToString(), false);
+                UpdateAttribute("AssemblyKeyFile", AssemblyKeyFile, false);
+                UpdateAttribute("AssemblyKeyName", AssemblyKeyName, false);
+                UpdateAttribute("CLSCompliant",
+                    CLSCompliant.HasValue ? (object)CLSCompliant.Value : null, false);
+                UpdateAttribute("ComVisible", ComVisible.HasValue ? (object)ComVisible.Value : null,
                     false);
 
-                if (this.CustomAttributes != null)
+                if (CustomAttributes != null)
                 {
-                    foreach (DictionaryEntry entry in this.CustomAttributes)
-                    {
-                        this.UpdateAttribute(entry.Key.ToString(), entry.Value, false);
-                    }
+                    foreach (DictionaryEntry entry in CustomAttributes)
+                        UpdateAttribute(entry.Key.ToString(), entry.Value, false);
                 }
 
                 // write to file (unset and set back ReadOnly attribute if present).
@@ -424,24 +420,21 @@
                 }
 
                 using (var sw = new StreamWriter(path, false, Encoding.UTF8))
-                {
-                    this.file.Write(sw);
-                }
+                    _file.Write(sw);
 
                 if (attributesChanged)
-                {
                     File.SetAttributes(path, FileAttributes.ReadOnly);
-                }
 
-                var updateResult = new UpdateResult()
+                var updateResult = new UpdateResult
                 {
                     File = path,
                     FileVersion = assemblyFileVersion,
                     AssemblyVersion = assemblyVersion
                 };
-                this.Cmdlet.WriteDebug("updateResult.File: " + updateResult.File);
-                this.Cmdlet.WriteDebug("updateResult.FileVersion: " + updateResult.FileVersion);
-                this.Cmdlet.WriteDebug("updateResult.AssemblyVersion: " + updateResult.AssemblyVersion);
+
+                Cmdlet.WriteDebug("updateResult.File: " + updateResult.File);
+                Cmdlet.WriteDebug("updateResult.FileVersion: " + updateResult.FileVersion);
+                Cmdlet.WriteDebug("updateResult.AssemblyVersion: " + updateResult.AssemblyVersion);
 
                 updateResults.Add(updateResult);
             }
@@ -449,72 +442,59 @@
             return updateResults;
         }
 
-
         // Updates and returns the version of the specified attribute.
         private string UpdateVersion(string attributeName, string format)
         {
-            this.Cmdlet.WriteDebug("UpdateVersion");
-            this.Cmdlet.WriteDebug("attributeName: " + attributeName);
-            this.Cmdlet.WriteDebug("format: " + format);
+            Cmdlet.WriteDebug("UpdateVersion");
+            Cmdlet.WriteDebug("attributeName: " + attributeName);
+            Cmdlet.WriteDebug("format: " + format);
             if (string.IsNullOrEmpty(format))
             {
-                this.Cmdlet.WriteDebug("no format");
+                Cmdlet.WriteDebug("no format");
                 return string.Empty;
             }
 
-            var oldObject = this.file[attributeName];
+            var oldObject = _file[attributeName];
             if (oldObject == null)
             {
-                this.Cmdlet.WriteDebug("attributeLine not found");
+                Cmdlet.WriteDebug("attributeLine not found");
                 return string.Empty;
             }
 
             var oldValue = oldObject.ToString();
-            this.Cmdlet.WriteDebug("oldValue: " + oldValue);
+            Cmdlet.WriteDebug("oldValue: " + oldValue);
 
             // parse old version (handle * character)
             var containsWildcard = oldValue.Contains('*');
-            var versionPattern = "{0}.{1}.{2}.{3}";
 
             if (containsWildcard)
-            {
-                if (oldValue.Split('.').Length == 3)
-                {
-                    oldValue = oldValue.Replace("*", "0.0");
-                    versionPattern = "{0}.{1}.*";
-                }
-                else
-                {
-                    oldValue = oldValue.Replace("*", "0");
-                    versionPattern = "{0}.{1}.{2}.*";
-                }
-            }
+                oldValue = oldValue.Replace("*", oldValue.Split('.').Length == 3 ? "0.0" : "0");
 
             if (!VersionParser.IsMatch(oldValue))
-            {
-                throw new FormatException("Current value for attribute '" + attributeName +
-                                          "' is not in a correct version format.");
-            }
+                throw new FormatException(
+                    $"Current value for attribute \'{attributeName}\' is not in a correct version format.");
 
             var version = new Version(oldValue);
 
             // update version
             var tokens = format.Split('.');
             if (tokens.Length != 4)
-            {
-                throw new FormatException("Specified value for attribute '" + attributeName +
-                                          "'  is not a correct version format.");
-            }
+                throw new FormatException(
+                    $"Specified value for attribute \'{attributeName}\'  is not a correct version format.");
 
-            version = new Version(Convert.ToInt32(this.ReplaceTokens(tokens[0], version.Major)),
-                Convert.ToInt32(this.ReplaceTokens(tokens[1], version.Minor)),
-                Convert.ToInt32(this.ReplaceTokens(tokens[2], version.Build)),
-                Convert.ToInt32(this.ReplaceTokens(tokens[3], version.Revision)));
-            this.Cmdlet.WriteDebug("version: " + version);
+            var major = Convert.ToInt32(ReplaceTokens(tokens[0], version.Major));
+            var minor = Convert.ToInt32(ReplaceTokens(tokens[1], version.Minor));
+            var build = Convert.ToInt32(ReplaceTokens(tokens[2], version.Build));
+            var revision = Convert.ToInt32(ReplaceTokens(tokens[3], version.Revision));
 
+            if (build >= 0 && revision >= 0)
+                version = new Version(major, minor, build, revision);
+            else if (build >= 0)
+                version = new Version(major, minor, build);
 
-            this.file[attributeName] = string.Format(versionPattern, version.Major, version.Minor, version.Build,
-                version.Revision);
+            Cmdlet.WriteDebug("version: " + version);
+
+            _file[attributeName] = version.ToString();
 
             return version.ToString();
         }
@@ -522,43 +502,41 @@
         // Updates and returns the value of the specified attribute.
         private object UpdateAttribute(string attributeName, object attributeValue, bool replaceTokens)
         {
-            this.Cmdlet.WriteDebug("UpdateAttribute");
-            this.Cmdlet.WriteDebug("attributeName: " + attributeName);
-            this.Cmdlet.WriteDebug("attributeValue: " + attributeValue);
-            this.Cmdlet.WriteDebug("replaceTokens: " + replaceTokens);
+            Cmdlet.WriteDebug("UpdateAttribute");
+            Cmdlet.WriteDebug($"attributeName: {attributeName}");
+            Cmdlet.WriteDebug($"attributeValue: {attributeValue}");
+            Cmdlet.WriteDebug($"replaceTokens: {replaceTokens}");
             if (attributeValue == null)
             {
-                this.Cmdlet.WriteDebug("no attribute value");
+                Cmdlet.WriteDebug("no attribute value");
                 return string.Empty;
             }
 
-            this.file[attributeName] = replaceTokens
-                ? this.ReplaceTokens(attributeValue.ToString(), default(int))
+            _file[attributeName] = replaceTokens
+                ? ReplaceTokens(attributeValue.ToString(), default(int))
                 : attributeValue;
 
-            return this.file[attributeName];
+            return _file[attributeName];
         }
 
         // Expands the specified token.
         private string ReplaceTokens(string value, int current)
         {
-            this.Cmdlet.WriteDebug("ReplaceTokens");
-            this.Cmdlet.WriteDebug("value: " + value);
-            this.Cmdlet.WriteDebug("current: " + current);
+            Cmdlet.WriteDebug("ReplaceTokens");
+            Cmdlet.WriteDebug($"value: {value}");
+            Cmdlet.WriteDebug($"current: {current}");
             // define replace functions
-            this.tokenEvaluators["current"] = p => current.ToString();
-            this.tokenEvaluators["increment"] = p => (current + 1).ToString();
+            _tokenEvaluators["current"] = p => current.ToString();
+            _tokenEvaluators["increment"] = p => (current + 1).ToString();
 
             // replace tokens
             return TokenParser.Replace(
                 value,
                 m =>
                 {
-                    var evaluator = default(Func<string, string>);
-                    if (!this.tokenEvaluators.TryGetValue(m.Groups["token"].Value, out evaluator))
-                    {
-                        throw new FormatException("Unknown token '" + m.Groups["token"].Value + "'.");
-                    }
+                    Func<string, string> evaluator;
+                    if (!_tokenEvaluators.TryGetValue(m.Groups["token"].Value, out evaluator))
+                        throw new FormatException($"Unknown token \'{m.Groups["token"].Value}\'.");
 
                     return evaluator(m.Groups["param"].Value);
                 });

@@ -475,7 +475,7 @@ try {
 
     Write-VstsTaskDebug -Message "formatting assembly version"
     $assemblyVersion = "$script:assemblyVersionMajor.$script:assemblyVersionMinor.$script:assemblyVersionBuild.$script:assemblyVersionRevision"
-    Write-VstsTaskDebug -Message "assmeblyVersion: $assemblyVersion"
+    Write-VstsTaskDebug -Message "assemblyVersion: $assemblyVersion"
     $script:assemblyVersion = $assemblyVersion
     $assemblyVersion = Set-VersionNullIfCurrent "assemblyVersion" $assemblyVersion
 
