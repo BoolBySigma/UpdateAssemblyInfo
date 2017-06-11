@@ -24,6 +24,36 @@ describe('File', function () {
             }, 'threw file not found error');
         });
 
+        it('should find 10 lines in file with 10 lines', function () {
+            let filePath = path.join(__dirname, 'files/assemblyInfo_singlelinecomments.cs');
+            let file = new File(filePath);
+            assert.equal(file.lines.length, 10);
+        });
+
+        it('should find 3 attributes in file with 3 attributes and 3 single-line commented attributes', function () {
+            let filePath = path.join(__dirname, 'files/assemblyInfo_singlelinecomments.cs');
+            let file = new File(filePath);
+            assert.equal(Object.keys(file.attributes).length, 3);
+        });
+
+        it('should find 3 comment lines in file with 3 single-line commented attributes', function () {
+            let filePath = path.join(__dirname, 'files/assemblyInfo_singlelinecomments.cs');
+            let file = new File(filePath);
+            assert.equal((file.lines.filter(line => line.isComment)).length, 3);
+        });
+
+        it('should find 3 attributes in file with 3 attributes and 3 multi-line commented attributes', function () {
+            let filePath = path.join(__dirname, 'files/assemblyInfo_multilinecomments.cs');
+            let file = new File(filePath);
+            assert.equal(Object.keys(file.attributes).length, 3);
+        });
+
+        it('should find 3 comment lines in file with 3 multi-line commented attributes', function () {
+            let filePath = path.join(__dirname, 'files/assemblyInfo_multilinecomments.cs');
+            let file = new File(filePath);
+            assert.equal((file.lines.filter(line => line.isComment)).length, 3);
+        });
+
         it('should find 5 lines', function () {
             let file = new File(null, { contents: 'line1\rline2\r\nline3\nline4\nline5' });
             assert.equal(file.lines.length, 5);
@@ -60,7 +90,7 @@ describe('File', function () {
             assert.equal(attribute.value, '2.2.2.2');
             assert.equal(attribute.toString(), '[assembly: AssemblyVersion("2.2.2.2")]');
             let line = file.lines[attribute.lineIndex];
-            assert.equal(line, '[assembly: AssemblyVersion("2.2.2.2")]');
+            assert.equal(line.text, '[assembly: AssemblyVersion("2.2.2.2")]');
         });
 
         it('should find AssemblyVersion attribute with indentations and update value to 2.2.2.2', function () {
@@ -69,7 +99,7 @@ describe('File', function () {
             assert.equal(attribute.value, '2.2.2.2');
             assert.equal(attribute.toString(), '    [    assembly    : AssemblyVersion    ("2.2.2.2"    )    ]    ');
             let line = file.lines[attribute.lineIndex];
-            assert.equal(line, '    [    assembly    : AssemblyVersion    ("2.2.2.2"    )    ]    ');
+            assert.equal(line.text, '    [    assembly    : AssemblyVersion    ("2.2.2.2"    )    ]    ');
         });
 
         it('should return attribute if not ensureAttribute and attribute exists', function () {
@@ -111,7 +141,7 @@ describe('File', function () {
             assert.equal(attribute.name, 'CustomAttribute');
             assert.equal(attribute.value, 'CustomValue');
             assert.equal(attribute.toString(), '[assembly: CustomAttribute("CustomValue")]');
-            assert.equal(line, '[assembly: CustomAttribute("CustomValue")]');
+            assert.equal(line.text, '[assembly: CustomAttribute("CustomValue")]');
         });
 
         it('should return new c-sharp formatted attribute with boolean value if ensureAttribute and attribute does not exist', function () {
@@ -123,7 +153,7 @@ describe('File', function () {
             assert.equal(attribute.name, 'CustomAttribute');
             assert.equal(attribute.value, false);
             assert.equal(attribute.toString(), '[assembly: CustomAttribute(false)]');
-            assert.equal(line, '[assembly: CustomAttribute(false)]');
+            assert.equal(line.text, '[assembly: CustomAttribute(false)]');
         });
 
         it('should return new vb formatted attribute with string value if ensureAttribute and attribute does not exist', function () {
@@ -136,7 +166,7 @@ describe('File', function () {
             assert.equal(attribute.name, 'CustomAttribute');
             assert.equal(attribute.value, 'CustomValue');
             assert.equal(attribute.toString(), '<Assembly: CustomAttribute("CustomValue")>');
-            assert.equal(line, '<Assembly: CustomAttribute("CustomValue")>');
+            assert.equal(line.text, '<Assembly: CustomAttribute("CustomValue")>');
         });
 
         it('should return new vb formatted attribute with boolean value if ensureAttribute and attribute does not exist', function () {
@@ -149,7 +179,7 @@ describe('File', function () {
             assert.equal(attribute.name, 'CustomAttribute');
             assert.equal(attribute.value, true);
             assert.equal(attribute.toString(), '<Assembly: CustomAttribute(True)>');
-            assert.equal(line, '<Assembly: CustomAttribute(True)>');
+            assert.equal(line.text, '<Assembly: CustomAttribute(True)>');
         });
     });
 

@@ -4,6 +4,7 @@ let expect = chai.expect;
 let assert = chai.assert;
 
 import { AttributeParser } from '../attributeParser';
+import { Line } from '../line';
 import { Language } from '../language';
 
 
@@ -23,35 +24,35 @@ describe('AttributeParser', function () {
 
         it('should find only AssemblyVersion attribute', function () {
             let parser = new AttributeParser(Language.Cs);
-            let attributes = parser.parse(['[assembly: AssemblyVersion("1.0.0.0")]']);
+            let attributes = parser.parse([new Line('[assembly: AssemblyVersion("1.0.0.0")]')]);
             assert.equal(Object.keys(attributes).length, 1);
             assert.equal(attributes['AssemblyVersion'].name, 'AssemblyVersion');
         });
 
         it('should find only AssemblyVersion attribute in line with indentation', function () {
             let parser = new AttributeParser(Language.Cs);
-            let attributes = parser.parse(['    [    assembly    : AssemblyVersion    (    "1.0.0.0"    )    ]    ']);
+            let attributes = parser.parse([new Line('    [    assembly    : AssemblyVersion    (    "1.0.0.0"    )    ]    ')]);
             assert.equal(Object.keys(attributes).length, 1);
             assert.equal(attributes['AssemblyVersion'].name, 'AssemblyVersion');
         });
 
         it('should find only AssemblyVersion attribute value in line with indentation', function () {
             let parser = new AttributeParser(Language.Cs);
-            let attributes = parser.parse(['    [    assembly    : AssemblyVersion    (    "1.0.0.0"    )    ]    ']);
+            let attributes = parser.parse([new Line('    [    assembly    : AssemblyVersion    (    "1.0.0.0"    )    ]    ')]);
             assert.equal(Object.keys(attributes).length, 1);
             assert.equal(attributes['AssemblyVersion'].value, '1.0.0.0');
         });
 
         it('should find only AssemblyFileVersion attribute in 3 lines', function () {
             let parser = new AttributeParser(Language.Cs);
-            let attributes = parser.parse(['line1', '[assembly: AssemblyFileVersion("1.0.0.0")]', 'line3']);
+            let attributes = parser.parse([new Line('line1'), new Line('[assembly: AssemblyFileVersion("1.0.0.0")]'), new Line('line3')]);
             assert.equal(Object.keys(attributes).length, 1);
             assert.equal(attributes['AssemblyFileVersion'].name, 'AssemblyFileVersion');
         });
 
         it('should find AssemblyFileVersion attribute on second line', function () {
             let parser = new AttributeParser(Language.Cs);
-            let attributes = parser.parse(['line1', '[assembly: AssemblyFileVersion("1.0.0.0")]', 'line3']);
+            let attributes = parser.parse([new Line('line1'), new Line('[assembly: AssemblyFileVersion("1.0.0.0")]'), new Line('line3')]);
             assert.equal(Object.keys(attributes).length, 1);
             assert.equal(attributes['AssemblyFileVersion'].lineIndex, 1);
         });

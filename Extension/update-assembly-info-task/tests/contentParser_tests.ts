@@ -56,14 +56,80 @@ describe('ContentParser', function () {
             let contents = 'line1\r\nline2';
             let parser = new ContentParser(Language.Cs);
             let lines = parser.parse(contents);
-            expect(lines[0]).equals('line1');
+            expect(lines[0].text).equals('line1');
         });
 
         it('last line text should be same as input', function () {
             let contents = 'line1\nline2';
             let parser = new ContentParser(Language.Cs);
             let lines = parser.parse(contents);
-            expect(lines[1]).equals('line2');
+            expect(lines[1].text).equals('line2');
+        });
+    });
+
+    describe('isSingleLineComment', function(){
+        it('should return true for line starting with //', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isSingleLineComment('// Text');
+            assert.isTrue(isComment);
+        });
+
+        it('should return true for line starting with \'', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isSingleLineComment('\' Text');
+            assert.isTrue(isComment);
+        });
+
+        it('should return false for line starting with [assembly: AssemblyVersion("1.0.0.0")]', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isSingleLineComment('[assembly: AssemblyVersion("1.0.0.0")]');
+            assert.isFalse(isComment);
+        });
+
+        it('should return false for line starting with \'   Text\'', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isSingleLineComment('   Text');
+            assert.isFalse(isComment);
+        });
+
+        it('should return true form line starting with /* and ending with */', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isSingleLineComment('/* Text */');
+            assert.isTrue(isComment);
+        });
+    });
+
+    describe('isMultiLineCommentStart', function(){
+        it('should return true for line starting with /*', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isMultiLineCommentStart('/*');
+            assert.isTrue(isComment);
+        });
+        
+        it('should return false for line starting with //', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isMultiLineCommentStart('//');
+            assert.isFalse(isComment);
+        });
+        
+        it('should return false for line starting with \'', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isMultiLineCommentStart('\'');
+            assert.isFalse(isComment);
+        });
+    });
+
+    describe('isMultiLineCommentEnd', function(){
+        it('should return true for line ending with */', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isMultiLineCommentEnd('*/');
+            assert.isTrue(isComment);
+        });
+        
+        it('should return false for line ending with //', function(){
+            let parser = new ContentParser(Language.Cs);
+            let isComment = parser.isMultiLineCommentEnd('//');
+            assert.isFalse(isComment);
         });
     });
 });

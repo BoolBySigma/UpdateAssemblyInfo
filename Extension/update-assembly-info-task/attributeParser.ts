@@ -1,6 +1,7 @@
 import { Language } from './language';
 import { BooleanUtils } from './booleanUtils';
 import { IAttribute, Attribute } from './attribute';
+import { Line } from './line';
 
 export class AttributeParser {
     attributeFormat = /^(\s*[\[<]<?\s*[Aa]ssembly\s*:\s*)(\w+?)(\s*\(\s*)(.*?)(\s*\)\s*>?[>\]].*)/;
@@ -10,14 +11,18 @@ export class AttributeParser {
         this.language = language;
     }
 
-    parse = function (lines: string[]): IAttribute[] {
+    parse = function (lines: Line[]): IAttribute[] {
         let attributes: IAttribute[] = [];
 
         for (let i in lines) {
-            let line = lines[i];
+            let line: Line = lines[i];
 
-            if (this.containsAttribute(line)) {
-                let attribute = this.parseAttribute(line);
+            if (line.isComment){
+                continue;
+            }
+
+            if (this.containsAttribute(line.text)) {
+                let attribute = this.parseAttribute(line.text);
                 attribute.lineIndex = i;
 
                 attributes[attribute.name] = attribute;
@@ -27,8 +32,8 @@ export class AttributeParser {
         return attributes;
     }
 
-    parseAttribute = function (text: string): IAttribute {
-        let match = this.attributeFormat.exec(text);
+    parseAttribute = function (line: string): IAttribute {
+        let match = this.attributeFormat.exec(line);
         let name = match[2];
         let value = this.parseValue(match[4]);
         let format = match[1] + '{0}' + match[3] + '{1}' + match[5];

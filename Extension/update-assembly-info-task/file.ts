@@ -4,11 +4,12 @@ import { BooleanUtils } from './booleanUtils';
 import { Language } from './language';
 import { IAttributeUpateOptions } from './iAttributeUpdateOptions';
 import { ContentParser } from './contentParser';
+import { Line } from './line';
 import { AttributeParser } from './attributeParser';
 import { IAttribute, Attribute } from './attribute';
 
 export class File {
-    lines: string[] = [];
+    lines: Line[] = [];
     attributes: IAttribute[] = [];
 
     language = Language.Cs;
@@ -69,8 +70,8 @@ export class File {
         }
 
         attribute.value = options.value;
-
-        this.lines[attribute.lineIndex] = attribute.toString();
+        
+        this.lines[attribute.lineIndex].text = attribute.toString();
 
         return attribute;
     }
@@ -79,7 +80,7 @@ export class File {
         if (!options.ensureAttribute){
             throw new Error('Ensure attribute not enabled');
         }
-        let length: number = this.lines.push('');
+        let length: number = this.lines.push(new Line(''));
         let lineIndex = length - 1;
         let format = this.createAttributeFormat();
         return new Attribute(options.name, options.value, this.language, format, lineIndex);
