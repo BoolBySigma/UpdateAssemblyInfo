@@ -7,6 +7,7 @@ import * as path from 'path';
 import { File } from '../file';
 import { Language } from '../language';
 import { Attribute } from '../attribute';
+import { AttributeUpdateOptions } from '../attributeUpdateOptions';
 
 describe('File', function () {
     describe('constructor', function () {
@@ -86,7 +87,7 @@ describe('File', function () {
     describe('updateAttribute', function () {
         it('should find AssemblyVersion attribute and update value to 2.2.2.2', function () {
             let file = new File(null, { contents: 'line1\r[assembly: AssemblyVersion("1.0.0.0")]\r\nline3\n[assembly: AssemblyFileVersion("1.0.0.0")]\nline5' });
-            let attribute = file.updateAttribute({ name: 'AssemblyVersion', value: '2.2.2.2', ensureAttribute: false });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('AssemblyVersion', '2.2.2.2', false));
             assert.equal(attribute.value, '2.2.2.2');
             assert.equal(attribute.toString(), '[assembly: AssemblyVersion("2.2.2.2")]');
             let line = file.lines[attribute.lineIndex];
@@ -95,7 +96,7 @@ describe('File', function () {
 
         it('should find AssemblyVersion attribute with indentations and update value to 2.2.2.2', function () {
             let file = new File(null, { contents: 'line1\r    [    assembly    : AssemblyVersion    ("1.0.0.0"    )    ]    \r\nline3\n[assembly: AssemblyFileVersion("1.0.0.0")]\nline5' });
-            let attribute = file.updateAttribute({ name: 'AssemblyVersion', value: '2.2.2.2', ensureAttribute: false });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('AssemblyVersion', '2.2.2.2', false));
             assert.equal(attribute.value, '2.2.2.2');
             assert.equal(attribute.toString(), '    [    assembly    : AssemblyVersion    ("2.2.2.2"    )    ]    ');
             let line = file.lines[attribute.lineIndex];
@@ -104,7 +105,7 @@ describe('File', function () {
 
         it('should return attribute if not ensureAttribute and attribute exists', function () {
             let file = new File(null, { contents: 'line1\r    [    assembly    : AssemblyVersion    ("1.0.0.0"    )    ]    \r\nline3\n[assembly: AssemblyFileVersion("1.0.0.0")]\nline5' });
-            let attribute = file.updateAttribute({ name: 'AssemblyVersion', value: 'CustomValue', ensureAttribute: false });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('AssemblyVersion', 'CustomValue', false));
             assert.instanceOf(attribute, Attribute);
             assert.equal(attribute.name, 'AssemblyVersion');
             assert.equal(attribute.value, 'CustomValue');
@@ -112,7 +113,7 @@ describe('File', function () {
 
         it('should return attribute if ensureAttribute and attribute exists', function () {
             let file = new File(null, { contents: 'line1\r    [    assembly    : AssemblyVersion    ("1.0.0.0"    )    ]    \r\nline3\n[assembly: AssemblyFileVersion("1.0.0.0")]\nline5' });
-            let attribute = file.updateAttribute({ name: 'AssemblyVersion', value: 'CustomValue', ensureAttribute: true });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('AssemblyVersion', 'CustomValue', true));
             assert.equal(attribute.name, 'AssemblyVersion');
             assert.equal(attribute.value, 'CustomValue');
             assert.instanceOf(attribute, Attribute);
@@ -120,13 +121,13 @@ describe('File', function () {
 
         it('should return null if not ensureAttribute and attribute does not exist', function () {
             let file = new File(null, { contents: 'line1\r    [    assembly    : AssemblyVersion    ("1.0.0.0"    )    ]    \r\nline3\n[assembly: AssemblyFileVersion("1.0.0.0")]\nline5' });
-            let attribute = file.updateAttribute({ name: 'CustomAttribute', value: 'CustomValue', ensureAttribute: false });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('CustomAttribute', 'CustomValue', false));
             assert.isNull(attribute);
         });
 
         it('should return new attribute if ensureAttribute and attribute does not exist', function () {
             let file = new File(null, { contents: 'line1\r    [    assembly    : AssemblyVersion    ("1.0.0.0"    )    ]    \r\nline3\n[assembly: AssemblyFileVersion("1.0.0.0")]\nline5' });
-            let attribute = file.updateAttribute({ name: 'CustomAttribute', value: 'CustomValue', ensureAttribute: true });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('CustomAttribute', 'CustomValue', true));
             assert.equal(attribute.name, 'CustomAttribute');
             assert.equal(attribute.value, 'CustomValue');
             assert.instanceOf(attribute, Attribute);
@@ -134,7 +135,7 @@ describe('File', function () {
 
         it('should return new c-sharp formatted attribute with string value if ensureAttribute and attribute does not exist', function () {
             let file = new File(null, { contents: 'line1\r    [    assembly    : AssemblyVersion    ("1.0.0.0"    )    ]    \r\nline3\n[assembly: AssemblyFileVersion("1.0.0.0")]\nline5' });
-            let attribute = file.updateAttribute({ name: 'CustomAttribute', value: 'CustomValue', ensureAttribute: true });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('CustomAttribute', 'CustomValue', true));
             let line = file.lines[attribute.lineIndex];
 
             assert.instanceOf(attribute, Attribute);
@@ -146,7 +147,7 @@ describe('File', function () {
 
         it('should return new c-sharp formatted attribute with boolean value if ensureAttribute and attribute does not exist', function () {
             let file = new File(null, { contents: 'line1\r    [    assembly    : AssemblyVersion    ("1.0.0.0"    )    ]    \r\nline3\n[assembly: AssemblyFileVersion("1.0.0.0")]\nline5' });
-            let attribute = file.updateAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: true });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('CustomAttribute', false, true));
             let line = file.lines[attribute.lineIndex];
 
             assert.instanceOf(attribute, Attribute);
@@ -159,7 +160,7 @@ describe('File', function () {
         it('should return new vb formatted attribute with string value if ensureAttribute and attribute does not exist', function () {
             let file = new File(null, { contents: 'line1\r    <    Assembly    : AssemblyVersion    ("1.0.0.0"    )    >    \r\nline3\n<Assembly: AssemblyFileVersion("1.0.0.0")>\nline5' });
             file.language = Language.Vb;
-            let attribute = file.updateAttribute({ name: 'CustomAttribute', value: 'CustomValue', ensureAttribute: true });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('CustomAttribute', 'CustomValue', true));
             let line = file.lines[attribute.lineIndex];
 
             assert.instanceOf(attribute, Attribute);
@@ -172,7 +173,7 @@ describe('File', function () {
         it('should return new vb formatted attribute with boolean value if ensureAttribute and attribute does not exist', function () {
             let file = new File(null, { contents: 'line1\r    <    Assembly    : AssemblyVersion    ("1.0.0.0"    )    >    \r\nline3\n<Assembly: AssemblyFileVersion("1.0.0.0")>\nline5' });
             file.language = Language.Vb;
-            let attribute = file.updateAttribute({ name: 'CustomAttribute', value: true, ensureAttribute: true });
+            let attribute = file.updateAttribute(new AttributeUpdateOptions('CustomAttribute', true, true));
             let line = file.lines[attribute.lineIndex];
 
             assert.instanceOf(attribute, Attribute);
@@ -210,40 +211,40 @@ describe('File', function () {
         it('should throw ensure attribute not enabled error if ensureAttribute is false', function () {
             assert.throws(function () {
                 let file = new File(null, { contents: '' });
-                let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: false });
+                let attribute = file.createAttribute(new AttributeUpdateOptions('CustomAttribute', false, false));
             }, 'Ensure attribute not enabled');
         });
 
         it('should not throw ensure attribute not enabled error if ensureAttribute is true', function () {
             assert.doesNotThrow(function () {
                 let file = new File(null, { contents: '' });
-                let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: true });
+                let attribute = file.createAttribute(new AttributeUpdateOptions('CustomAttribute', false, true));
             }, 'Ensure attribute not enabled');
         });
 
         it('should return attribute with name CustomAttribute', function () {
             let file = new File(null, { contents: '' });
-            let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: true });
+            let attribute = file.createAttribute(new AttributeUpdateOptions('CustomAttribute', false, true));
             assert.equal(attribute.name, 'CustomAttribute');
         });
 
         it('should return attribute with boolean value false', function () {
             let file = new File(null, { contents: '' });
-            let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: true });
+            let attribute = file.createAttribute(new AttributeUpdateOptions('CustomAttribute', false, true));
             assert.isBoolean(attribute.value);
             assert.equal(attribute.value, false);
         });
 
         it('should return attribute with string value CustomValue', function () {
             let file = new File(null, { contents: '' });
-            let attribute = file.createAttribute({ name: 'CustomAttribute', value: 'CustomValue', ensureAttribute: true });
+            let attribute = file.createAttribute(new AttributeUpdateOptions('CustomAttribute', 'CustomValue', true));
             assert.isString(attribute.value);
             assert.equal(attribute.value, 'CustomValue');
         });
 
         it('should return attribute with lineIndex 1', function () {
             let file = new File(null, { contents: 'firstLine' });
-            let attribute = file.createAttribute({ name: 'CustomAttribute', value: false, ensureAttribute: true });
+            let attribute = file.createAttribute(new AttributeUpdateOptions('CustomAttribute', false, true));
             assert.equal(attribute.lineIndex, 1);
         });
     });

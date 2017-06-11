@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { BooleanUtils } from './booleanUtils';
 import { Language } from './language';
-import { IAttributeUpateOptions } from './iAttributeUpdateOptions';
+import { AttributeUpdateOptions } from './attributeUpdateOptions';
 import { ContentParser } from './contentParser';
 import { Line } from './line';
 import { AttributeParser } from './attributeParser';
@@ -51,7 +51,7 @@ export class File {
         return Language.Fs;
     }
 
-    updateAttribute = function (options: IAttributeUpateOptions): IAttribute {
+    updateAttribute = function (options: AttributeUpdateOptions): IAttribute {
         let attribute: IAttribute = this.attributes[options.name];
 
         if (attribute === undefined || attribute === null) {
@@ -76,7 +76,7 @@ export class File {
         return attribute;
     }
 
-    createAttribute = function (options: IAttributeUpateOptions): IAttribute {
+    createAttribute = function (options: AttributeUpdateOptions): IAttribute {
         if (!options.ensureAttribute){
             throw new Error('Ensure attribute not enabled');
         }
