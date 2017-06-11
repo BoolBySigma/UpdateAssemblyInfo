@@ -6,11 +6,11 @@ import { AttributeUpdateOptions } from './attributeUpdateOptions';
 import { ContentParser } from './contentParser';
 import { Line } from './line';
 import { AttributeParser } from './attributeParser';
-import { IAttribute, Attribute } from './attribute';
+import { Attribute } from './attribute';
 
 export class File {
     lines: Line[] = [];
-    attributes: IAttribute[] = [];
+    attributes: Attribute[] = [];
 
     language = Language.Cs;
 
@@ -51,8 +51,8 @@ export class File {
         return Language.Fs;
     }
 
-    updateAttribute = function (options: AttributeUpdateOptions): IAttribute {
-        let attribute: IAttribute = this.attributes[options.name];
+    updateAttribute = function (options: AttributeUpdateOptions): Attribute {
+        let attribute: Attribute = this.attributes[options.name];
 
         if (attribute === undefined || attribute === null) {
             if (options.ensureAttribute) {
@@ -76,7 +76,7 @@ export class File {
         return attribute;
     }
 
-    createAttribute = function (options: AttributeUpdateOptions): IAttribute {
+    createAttribute = function (options: AttributeUpdateOptions): Attribute {
         if (!options.ensureAttribute){
             throw new Error('Ensure attribute not enabled');
         }

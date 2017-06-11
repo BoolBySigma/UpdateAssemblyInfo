@@ -1,12 +1,6 @@
 import { Language } from './language';
 
-export interface IAttribute {
-    name: string;
-    value: any;
-    lineIndex: number;
-}
-
-export class Attribute implements IAttribute {
+export class Attribute {
     name: string;
     value: any;
     language: Language;

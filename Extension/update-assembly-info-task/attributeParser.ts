@@ -1,6 +1,6 @@
 import { Language } from './language';
 import { BooleanUtils } from './booleanUtils';
-import { IAttribute, Attribute } from './attribute';
+import { Attribute } from './attribute';
 import { Line } from './line';
 
 export class AttributeParser {
@@ -11,8 +11,8 @@ export class AttributeParser {
         this.language = language;
     }
 
-    parse = function (lines: Line[]): IAttribute[] {
-        let attributes: IAttribute[] = [];
+    parse = function (lines: Line[]): Attribute[] {
+        let attributes: Attribute[] = [];
 
         for (let i in lines) {
             let line: Line = lines[i];
@@ -32,7 +32,7 @@ export class AttributeParser {
         return attributes;
     }
 
-    parseAttribute = function (line: string): IAttribute {
+    parseAttribute = function (line: string): Attribute {
         let match = this.attributeFormat.exec(line);
         let name = match[2];
         let value = this.parseValue(match[4]);
