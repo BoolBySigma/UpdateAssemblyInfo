@@ -13,12 +13,18 @@
     "@types/chai": "^3.5.2",
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.21",
+    "@types/numeral": "0.0.21",
     "assert": "^1.4.1",
     "chai": "^3.5.0",
     "mocha": "^3.4.2",
     "mocha-junit-reporter": "^1.13.0"
   },
   "dependencies": {
+    "current-day-number": "^1.0.6",
+    "dateformat": "^2.0.0",
+    "numeral": "^2.0.6",
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4",
     "vsts-task-lib": "^2.0.5"
   }
 }
